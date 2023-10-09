@@ -1,0 +1,1166 @@
+\chapter{A two-latent-class Frailty Cure Rate model for age at disease onset}{Joint work with Marco Bonetti\footnote{Carlo F. Dondena Research Center, Bocconi Institute of Data Science and Analytics, Department of Social and Political Sciences, Bocconi University, Milan, 20136, Italy, email: marco.bonetti@unibocconi.it}}
+\markboth{\textsc{A two-latent-class Frailty CR model for age at disease onset}}{\textsc{A two-latent-class Frailty CR model for age at disease onset}}\label{chapter:2}
+
+\begin{abstract}
+We are interested on a specific aspect of survival modeling, namely the investigation of family-specific risk with a particular emphasis on the genetic component present from birth, as opposed to the environmental component. We assume that the true genetic family risk is latent and remains constant from birth, that we call ``frailty''. Our goal is to estimate this true family risk, as assessing the risk is crucial in improving individual survival chances by tailoring screening and prevention strategies to each individual's risk level. To achieve this goal, we employ a frailty model on the time to breast cancer onset, using a binary risk classification to divide families into a low-risk group and a high-risk group. We compare this model to one that uses a strong risk factor, the family history indicator, to replace the latent binary risk. While the family history indicator solves the issue of latency, it is a weaker indicator of the complete detailed breast cancer familial history. 
+
+\textbf{keywords}: family history of breast cancer, frailty models, survival analysis
+\end{abstract}
+
+
+\section{Introduction}
+In 2020, female breast cancer overtook lung cancer as the most common cancer in the world. An estimated 2.3 million new cases of breast cancer were reported, constituting 12\% of all new cancer cases and 25\% of female cancer cases. BC ranked 5th in mortality, with 6.9\% among all cancer deaths, remaining the most common cause of cancer death in women (16\%). Indeed, about $12\%$ of women are estimated to experience breast cancer in their lifetime in the USA (see \cite{waks2019breast}). In Sweden the estimated risk of being diagnosed with breast cancer before age 75 was 9.4\% on average \cite{strandberg2022breast}.
+
+To tackle this world-spread issue, we want to use risk prediction models for breast cancer (BC) to identify families with the highest risk of developing BC and provide them with targeted and more intensive screening and prevention strategies. Indeed, classifying subjects into risk groups allows for the modification of screening schedules (more/less intensive) depending on the risk of development of the disease for a given woman, it allows for the implementation of additional prevention efforts, and for the reduction of unnecessary medical treatments, costs and psychological stress \cite{pepe2003statistical, skates2001screening}.
+
+Remarkable contributions to the breast cancer risk modeling field include the Gail model (refer to \cite{gail1989projecting}), which employs logistic regression to integrate risk factors, such as the number of first-degree relatives with breast cancer, with the aim to compute the long-term probability of developing breast cancer. The Tyrer and Cuzick (TC) model (refer to \cite{tyrer2004breast}) integrates personal risk factors and complete genetic analysis (involving also BRCA1 and BRCA2 gene mutations) to model the risk of developing breast cancer by combining the genetic and familial components. The Rosner and Colditz model (refer to \cite{rosner2008risk}) is based on a log model for incidence that is affected by reproductive risk factors, including age at menarche, age at menopause, and age at childbirth. These models have been implemented in various studies, such as those described in \cite{darabi2012breast} and \cite{evans1996fictitious}. Models for disease onset also include the popular two-hit Moolgavkar-Venson-Knudson (MVK) cell-splitting model, which has all subjects eventually experience the disease, if right censoring does not intervene to end observation of the time-to-event \cite{moolgavkar1979two}.
+
+Our objective is to develop a risk prediction model for age at breast cancer onset, say the beginning of the disease, that considers the familial nature of the risk, which is assumed to be latent and unchanged from birth. We allow for this latent risk, also known as frailty, to be discrete and comprise two risk levels (low and high), which we denote as 0 and 1, respectively. In the following, we explore a Multivariate Shared Frailty Cure Rate model for the study of this family-specific risk of disease onset, where frailty is referred to the latent risk, and for its prediction from the time-to-event information of a ``main subject'' vs. her closest family.
+
+About the notation we use, notice that we refer to ``multivariate'' when we jointly model all the time-to-events of a family, in opposition to ``univariate'' that allows to model only the time-to-event of one subject per family. We refer to ``main subject'' the family member that we randomly select when moving from the multivariate to the univariate model, and also the one we compute the family history on (indeed, also the family history is a subject-specific characteristic and the model that comprises it is univariate as well). 
+
+We seek to illustrate and quantify how family data can be better used to learn about family-specific risk of developing diseases by using such a multivariate survival model for disease onset instead of summary-based methods, as usually is easier and used in the literature. For example, we may use as summary the family history. Indeed, the family history is one of the strongest risk factors for BC development, among those ones with a a genetic nature, such as BRCA1, BRCA2, TP53, and SNPs, or a clinical and demographic nature, such as mammography density (MD) and body mass index (BMI) \cite{bravi2018risk}, \cite{lee2017differences}, \cite{strandberg2019statistical}, \cite{strandberg2022estimating}. 
+
+Family history is defined as the collection of the breast cancer experiences within a family and is represented as a binary variable that takes a value of one when at least one family member has or had breast cancer onset at the time of analysis, and zero if none had. While family history is a useful indicator of breast cancer risk, it is however considered weak since it only provides a summary of the clinical history experienced by a family. For comprehensive and complex data, family history may not fully capture the familial aggregation of breast cancer development.
+
+Lastly, to provide a comprehensive assessment, we also implement a Univariate Cure Rate Frailty model to determine the significant loss of information incurred when subjects are viewed as not part of a family sharing the same risk of BC development. 
+
+We introduce the univariate background of the Frailty Cure Rate model in Section \ref{sec:2.1}, the methods about the Multivariate Shared Frailty Cure Rate model in Section \ref{sec:2.2}. A comparison between the the univariate and the multivariate framework is run in Section \ref{sec:2.3}, and we close with some discussion in Section \ref{sec:2.4}. 
+
+\section{Univariate model for age at disease onset}\label{sec:2.1}
+\subsection{Latent Cure Rate survival models}
+The Univariate Frailty model \cite{duchateau2008frailty} on the time-to-event $T = t$ allows the hazard function $\lambda(t\mid r)$ to have a particular form including the frailty risk $R$ which captures the unobserved heterogeneity among subjects. The hazard is given by 
+\[
+\lambda(t\mid \alpha(r  )) = \alpha(r)\lambda_0(t),
+\] 
+where $\lambda_0(t)$ is the baseline hazard function that can assume a parametric distribution with parameter collection $\theta$ or a semiparametric form. The quantity $\alpha(r)$ is a general function of the risk, that we may use in the linear form $\lambda(t\mid R = r) = r\lambda_0(t)$. 
+
+The model can be extended to the inclusion of subject-specific covariates. In this case the frailty quantity explains the unobserved heterogeneity that the covariates are not able to capture. The hazard function is given by: \[
+\lambda_j(t\mid R = r) =r\lambda_0(t;x_j),
+\] 
+where $x_j$ are the covariates of the $j$th subject. The shared frailty hazard function allows to define the frailty as a family-specific quantity. Thus, this specification is used with clustered data, as it is our case, where the shared frailty hazard function is given by:
+\[
+\lambda_{ij}(t\mid R = r_i) = r_i\lambda_0(t;x_{ij}),
+\] 
+with $x_{ij}$ the $i$th subject-specific covariates in the $j$th family. 
+
+In the binary case, the latent quantity can be represented as $R = (0, 1)$, where typically the relation between the hazard functions is $\lambda_1(t) = \alpha\lambda_0(t)$. This assumption allows the hazard and survival functions of group ``0'' to coincide with the baseline functions, while $\alpha<1$ ensures coherence with the assumption of a highest-risk group in the population and thus we can rely on the assumption of proportional hazard. Therefore, we obtain: \begin{align*}
+    &\lambda_0(t) = \lambda(t\mid R=0) = \lambda_0(t;x_{ij}), \qquad S_0(t) = S(t\mid R=0) = S_0(t;x_{ij}), \\
+    &\lambda_1(t) = \lambda(t\mid R=1) =  \alpha \lambda_0(t;x_{ij}), \qquad S_1(t) = S(t\mid R=1) = [S_0(t;x_{ij}) ]^\alpha.
+\end{align*}
+
+Now, recall the Multivariate Shared Frailty survival model \cite{hougaard2012analysis} to describe modeling jointly the time-to-events in a family \cite{rodriguez2010multivariate}. We handle multiple time-to-event data by leveraging the assumption of conditional independence. For instance, consider the case where two women belong to the same family, resulting in dependent time-to-events. However, assuming conditional independence given the family (i.e. given the shared frailty risk), and letting $T_1 = t_1$ and $T_2 = t_2$ be the time-to-events of the two women in the family, and let $r$ denote the frailty value, the joint survival function factorizes given the risk, so that \begin{align*}
+    S_{12}(t_1,t_2\mid R) \overset{T_1\perp T_2\mid R}{=} S_1(t_1\mid R)S_2(t_2\mid R),
+\end{align*} where one therefore assumes conditional independence given the frailty term $R$. Recall that, if $R = 0$, we have \[
+    S_{12}(t_1,t_2) = S_0(t_1)S_0(t_2),
+\] while, if $R = 1$, we have \[
+    S_{12}(t_1,t_2) = S_1(t_1)S_1(t_2) = [S_0(t_1)S_0(t_2)]^\alpha.
+\] 
+
+It is important to notice that this case can be immediately extended to more than two survival times per cluster sharing the same risk $R$. More generally, the marginal survival function for $n_i$ subjects per family is given by: \[
+S_{1\dots n_i}(t_1,\dots,t_{n_i}) = h\prod_{j=1}^{n_i}S_0(t_j) + (1-h)\prod_{j=1}^{n_i}\left[S_0(t_j)\right]^\alpha,
+\] with $h$ the probability of belonging to the low-risk group of families. 
+% If $S_0(t)$ is specified parametrically, inference can be performed through the traditional numerical methods to maximize the observed data likelihood.
+
+Now, given the nature of the phenomenon, not all women will experience breast cancer onset, regardless of how long they will live. Therefore, we rely on the cure rate survival function \cite{mota2022new}, which can be considered as a mixture of a proper survival function, which models the fraction of individuals who will experience the event, that we call the ``cases'' and a degenerate distribution, which models the fraction of individuals who will not experience the event, that we call the ``non-cases''. We define a ``proper'' survival function, the one that tends to 0 when the time-to-events tends to $+\infty$, such as $\lim_{t \to+\infty}S(t) = 0$, and has probability equal to one that the time-to-event can not assumes value $+\infty$, such as $P(T<+\infty) = 1$. 
+
+Let $T$ indicate a non-negative time-to-event random variable, the survival function that defines a cure rate model takes the form: \[
+S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t)
+\] (see, e.g., \cite{bondi2023approximate}) with $\widetilde{S}_0(t)$ the proper survival function. Indeed, let the survival random variable $T$ be such that, conditionally on being a case, it is absolutely continuous, and let $\widetilde{f}_0(t)$ indicate the conditional density function of the cases corresponding to the proper survival function $\widetilde{S}_0(t)$. In contrast, the fraction $p_0$ is defined the ``cured fraction'', i.e. the fraction of the subjects who will never experience the event of interest, so that $T= \infty$ with probability $p_0$. Figure \ref{fig:cure_rate} shows the difference between a traditional (in blue) and a cure rate (in red) survival model on randomly generated data. 
+\begin{figure}[ht]
+        \centering
+        \includegraphics[width=\linewidth]{plots/Rplot04.pdf}
+        \caption{traditional survival function (in blue) vs. a cure rate survival function (in red).}
+  \label{fig:cure_rate}
+\end{figure}
+% code: KM_code_right-MVV.R from local problem
+
+The question of whether a cure rate model is appropriate for a given phenomenon can be addressed by noting that a traditional proper survival function can be seen as a special case of a cure rate model with $p_0=0$. In other words, allowing for a cure rate simply enlarges the set of available models, within which traditional survival functions are nested through such constraint. We believe that implementing a cure rate model is the right way to address this problem. 
+
+% \begin{lem}
+% If $S(t)$ follows a cure rate structure, then it does not admit a density with respect to the Lebesgue measure. 
+% \begin{proof}
+% Note that we have \begin{align}
+%     \label{formula:lemma_1}
+%     \lim_{t\to\infty}S(t)= \lim_{t\to\infty}(p+(1-p)\widetilde{S}(t))=p>0
+% \end{align}
+% Suppose that a density function $f(t)$ exists so that $S(t)=\lim_{t\to\infty}\int_t^\infty f(u)\text{d}u$ and $\int_0^\infty f(u)\text{d}u=1$. Then, we will prove that \begin{align*}
+%     &\lim_{t\to\infty}{\int_{t}^\infty f(u)\text{d}u}=0 \\
+%     &\lim_{t\to\infty}{\int_{t}^\infty f(u)\text{d}u} = \lim_{t\to\infty}{\int_{0}^\infty \mathbbm{1}(s\ge t)f(s)\text{d}s} 
+% \end{align*}
+% We apply the dominated convergence \cite{weir1973lebesgue}: \begin{align*}
+%     &\text{since }\mathbbm{1}(s\ge t)f(s) \le f(s) \ \forall s\ge 0 \text{ and } \int_0^\infty f(s)\text{d}s=1; \\
+%     &\Rightarrow \int_0^\infty \mathbbm{1}(s\ge t)f(s) \le \int_0^\infty f(s)\text{d}s = 1. \\
+%     &\text{Then, } \lim_{t\to\infty}S(t) = \lim_{t\to\infty}{\int_{t}^\infty f(s)\text{d}s} = \lim_{t\to\infty}{\int_{0}^\infty \mathbbm{1}(s\ge t)f(s)\text{d}s} \\
+%     &\qquad\qquad\qquad\quad\overset{\overset{DCI}{\downarrow}}{=} \int_{0}^\infty\lim_{t\to\infty} (\mathbbm{1}(s\ge t)f(s))\text{d}s=0,
+% \end{align*}
+% \end{proof}
+% \end{lem}
+
+% which contradicts formula \ref{formula:lemma_1}. Thus, as expected, a proper density function associated with a cure rate survival function does not exist. Indeed, the density function conditionally to the uncured rate proportion $f(t) = (1-p)\widetilde{f}(t)$ is improper, as the cure rate marginal density function.
+
+Thus, we assume that there exist two latent risk classes: low (or ``general'') risk (R=0) and high-risk (R=1). Let $h=P(R=1)$. For the two risk classes one has $S_r(t) = p_r + (1-p_r) \widetilde{S}_r(t)$, with $r \in \{0,1\}$ (see Figure \ref{fig:2.2} from a trivial simulation study in \texttt{R}), such that \begin{align*}
+&S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t) \\
+&S_1(t) = [p_0 + (1-p_0)\widetilde{S}_0(t)]^\alpha = p_1 + (1-p_1)\widetilde S_1(t)
+\end{align*}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{plots/Rplot02.pdf}
+    \caption{cure rate model with two latent risk groups.}
+\label{fig:2.2}
+\end{figure}
+\newline
+%qui
+Suppose for now that the two conditional distributions $\widetilde{S}_0(t)$ and $\widetilde{S}_1(t)$ can be chosen freely, and that to them correspond two given densities $\widetilde{f}_0(t)$ and $\widetilde{f}_1(t)$ with (possibly vector) parameters $\theta_0$ and $\theta_1$, respectively. Thus the complete (vector) parameter for the model is $\underline\theta = (p_0, p_1, \theta_0^T, \theta_1^T, h)^T$.
+
+Recall that the observed data $(\underline x=(x_1, x_2, \ldots, x_n)^T, \ \underline\delta=(\delta_1, \delta_2, \ldots, \delta_n)^T)$ is an i.i.d. sample of independently right-censored observed survival times from the population, where for the generic subject $i$, $x_{i}=\text{min}(t_{i}, c_{i})$, and $\delta_{i}=\mathbb{I}(t_{i} \le c_{i})$ following the usual notation that has $t_i$ indicate the survival time, where in our case is the age in years at breast cancer onset, and $c_i$ indicate the independent censoring time, both measured from the same origin. Without additional constraints, from the observed data $(\underline{x},\underline\delta)$ one may not identify the parameter vector $\underline\theta$. 
+
+\subsubsection*{A note on non-identifiability}
+When we talk about inference, we also want to deepen the topic of parameter identifiability. This argument is very interesting and not easy to manage in the case of two risk groups. Due to the complicate nature of this phenomenon, we explore different scenarios in the following lines as: (I) identifiability of the classical survival function $S_0(t) = \widetilde{S}_0(t)$; (II) identifiability of the cure rate survival function $S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t)$, with $\widetilde{S}_0(t)$ a proper survival function; (III) identifiability of the Lehmann structure $S_1(t) = [S_0(t)]^{\alpha(z)}$; 
+% (IV) identifiability of the cure rate survival model $S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t)$; 
+(IV) identifiability of the cure rate Lehmann structure $S_1(t) = [p_0 + (1-p_0)\widetilde{S}_0(t)]^{\alpha(z)}$; (V) identifiability of the marginal cure rate survival function $S(t) = (1-h)S_0(t) + hS_1(t)$. Notice that we generalize the form of $\alpha(z)$ to be in function of covariates $z$, but it may be also a constant. 
+
+Trivially cases (I), (II), and (III) can be proved. The proof of case (IV) follows. 
+\begin{proof}
+\begin{align*}
+    &S_1(t) = [p_0 + (1-p_0)\widetilde{S}_0(t)]^{\alpha(z)} = p_0^{\alpha(z)} + \left(1-p_0^{\alpha(z)}\right)\widetilde{S}_1(t;\alpha(z)) \\
+    &[p_0 + (1-p_0)\widetilde{S}_0(t;\theta)]^{\alpha(z)} = [p_0 + (1-p_0)\widetilde{S}_0(t;\theta')]^{\alpha'(z)} \quad \forall z \\ 
+    &\alpha(z)\log[p_0 + (1-p_0)\widetilde{S}_0(t;\theta)] = \alpha'(z)\log[p_0 + (1-p_0)\widetilde{S}_0(t;\theta')] \\ 
+    &\underbrace{\dfrac{\alpha(z)}{\alpha'(z)}}_\text{not in function of t} = \underbrace{\dfrac{\log[p_0 + (1-p_0)\widetilde{S}_0(t;\theta)]}{\log[p_0 + (1-p_0)\widetilde{S}_0(t;\theta')]}}_\text{not in function of z} = c. 
+\end{align*}
+Since, \begin{align*}
+    &\lim_{t\to\infty}\widetilde{S}_0(t;\theta) = 0, \ \lim_{t\to\infty}\log(p_0+(1-p_0)\widetilde{S}_0(t;\theta)) = \log(p_0) \Rightarrow c = 1 \\
+    &\Rightarrow \alpha(z) = \alpha'(z). 
+\end{align*}
+Then also, \begin{align*}
+    &\log[p_0 + (1-p_0)\widetilde{S}_0(t;\theta)] = \log[p_0 + (1-p_0)\widetilde{S}_0(t;\theta')] \\
+    &\Rightarrow p_0 + (1-p_0)\widetilde{S}_0(t;\theta) = p_0 + (1-p_0)\widetilde{S}_0(t;\theta') \\
+    &\Rightarrow \widetilde{S}_0(t;\theta) = \widetilde{S}_0(t;\theta') \\
+    &\Rightarrow \theta = \theta'
+\end{align*}
+\end{proof}
+That proved the identifiability of the cure rate Lehmann survival function, in the case where the baseline survival function $S_0(t;\theta)$ has a parametric distribution. 
+
+The case (V) seems trickier than the other cases. The marginal survival function $S(t)$ can be expressed in terms of both the baseline $S_0(t)$ and the distribution of the frailty risk $R$. This relationship is determined through the moment generating function (MGF) of $R$ evaluated at the argument $\log \left( S_0(t) \right)$. Thus, the marginal survival function is given by
+\begin{eqnarray*}
+S(t) &=&    \mathbb{E}_R \left[ S_0(t) ^R   \right] = \mathbb{E}_R \left[{\rm e}^{ R \, \log(S_0(t)) }  \right] = MGF_R \left(  \log \left(S_0(t) \right) \right).
+\end{eqnarray*}
+
+As long as the integral converges, this form applies to many multiplicative frailty models. Recall that if $P(R \geq 0)=1$, the MGF coincides with the Laplace transform of the random variable $R$, evaluated at minus the argument.
+
+Again, we structure the two-latent-class frailty model that has $R \in  \{0,1\}$ as a binary multiplicative frailty model, since under proportional hazards assumption the two hazard functions $\lambda_0 (t) = \lambda(t \mid R=0)$ and $\lambda_1 (t) = \lambda(t \mid R=1)$ are such that $\lambda_1(t) = \alpha \, \lambda_0(t)$ for the constant $\alpha=\lambda_1(t) / \lambda_0(t)$ for any $t$. As a consequence, the survival time $T$ has the two conditional survival distributions $S_0(t)=P(T \leq t \mid R=0)$ and $S_1(t) = P(T \leq t \mid R=1)$, and its distribution can be described as a multiplicative frailty model with frailty random variable $R$ such that $R = 1$ w.p. $P(R=1)=1-h$ and $R=1 \iff \alpha=\lambda_1(t) / \lambda_0(t)$ w.p. $P(R=r)=h$. For such a random variable the MGF is
+\[
+MGF_R (u) = \mathbb{E}_R(e^{ur}) = {\rm e}^{u} (1-h) + {\rm e}^{u\alpha} h = {\rm e}^u
++ \left( {\rm e}^{u\alpha} -{\rm e}^u \right)  h = e^u(1-h) + e^{u\alpha}\]
+and as a consequence the marginal survival distribution of $T$ is equal to
+\[
+S(t) = MGF_R \left( \log(S_0(t)) \right) = {\rm e}^{\log ( S_0(t))} (1-h) + {\rm e}^{\log(S_0(t)) \alpha} = S_0(t) (1-h) + S_1(t) h.
+\] where, recall, the two survival functions follow a cure rate structure, such that $S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t)$ and $S_1(t) = p_1 + (1-p_1)\widetilde{S}_1(t)$. At this point we obtain the complete form of the marginal survival distribution of $T$, without specifying the baseline survival function that can be fixed later. The model, which may be seen as a double mixture of survival function, is not identifiable unless some constraint is set. The two conditional distributions $\widetilde{S}_0(t)$ and $\widetilde{S}_1(t)$ can in principle be chosen freely, and let us assume that they follow two given parametric distributions with densities $\widetilde f_0(t)$ and $\widetilde f_1(t)$ with (possibly vector) parameters $\theta_0$ and $\theta_1$, respectively. Thus the complete (vector) parameter for the model is $\underline\theta = (p_0, p_1, \theta_0^T, \theta_1^T, h)^T$, as already defined above.
+
+Let us ignore the presence of administrative right censoring, and therefore assume that all censored observations are all (and the only) ``non-cases.'' This is a case in which more information is available on the model parameters, since additional right censoring would reduce the information available on the ``cases.'' The generic contribution $l_i$ to the likelihood function by subject $i$ with observed data $(x_i,\delta_i)$ is
+\[
+L_i(\underline\theta; (x_i,\delta_i)) = \left[ (1-h)(1-p_0) \widetilde{f}_0(x_i) + h(1-p_1) \widetilde{f}_1(x_i) \right]^{\delta_i} \left[ (1-h)\,p_0+h\, p_1 \right]^{1-\delta_i},
+\]
+so that the likelihood function is equal to
+\begin{align*}
+&L(\underline\theta; (\underline x,\underline\delta)) = \prod_{i=1}^n L_i(\underline\theta; (x_i,\delta_i)) \\
+&=\prod_{i \in cases} \left[ (1-h)(1-p_0) \widetilde{f}_0(x_i) + h(1-p_1) \widetilde{f}_1(x_i) \right]   \prod_{i \in non-cases} \left[ (1-h)\,p_0+h\, p_1 \right]  \\
+&= \left\{ \prod_{i \in cases} \left[ (1-h)(1-p_0) \widetilde{f}_0(x_i) + h(1-p_1) \widetilde{f}_1(x_i) \right] \right\}  \left[ (1-h)\,p_0+h\, p_1 \right]^{n_{\infty}} , 
+\end{align*}
+with $n_{\infty}$ the number of non-cases in the data (and $n-n_{\infty}$ the number of cases).
+
+Now, let $\beta_1=(1-h)(1-p_0)$; $\beta_2=h (1-p_1)$, and $\beta_3=(1-h)\,p_0+h\, p_1$. The likelihood function can be re-written as
+\[
+L(\underline\theta; (\underline x,\underline\delta)) = \left\{ \prod_{i \in Cases} \left[ \beta_1 \widetilde{f}_0(x_i) + \beta_2 \widetilde{f}_1(x_i) \right] \right\}   \beta_3 ^{n_{\infty}},
+\]
+where one can easily check that $\beta_1 + \beta_2 + \beta_3 = 1$, with all three terms positive.
+
+The proportion $n_{\infty}/n$ of non-cases can estimate non parametrically the parameter $\beta_3$, and from it the quantity $1-\beta_3=\beta_1+\beta_2$. As a consequence, the term $\beta_1 + \beta_2$ is identified. If one then multiplies and divides the likelihood by the term $(\beta_1+\beta_2)^{n-n_{\infty}}$, it seems clear that the quantity $\beta_1/(\beta_1+\beta_2)$ (and thus also the quantity $\beta_2/(\beta_1+\beta_2)$) is also identified from the mixture terms in the curly bracket, which is based on the cases, together with the parameters $\theta_0$ and $\theta_1$ of the two density functions  $\widetilde{f}_0$ and  $\widetilde{f}_1$.
+
+Therefore, the two parameters $\theta_0$ and $\theta_1$, as well as the two quantities $\beta_1$ and $\beta_2$, are identified. On the other hand, in general the individual parameters $h, p_0, p_1$ are not identified from the observed data.
+
+Given the constraints $p_0 \in (0,1)$ and $p_1 \in (0,1)$, and the assumption that $p_0 > p_1$ (which is without loss of generality given the freedom of deciding which group is ``0'' and which is ``1''), from knowledge of the values of $\beta_1$ and $\beta_2$ one may rule out some regions of $(0,1)$ as possible values for $h$. Indeed, since $(1-p_0)= \beta_1 / (1-h)$ and $(1-p_1)= \beta_2 / h$, and noting that $p_0>p_1 \iff 1-p_0 < 1-p_1$, simple algebra shows that $h$ must fall in the interval $[\beta_2, \beta_2/(\beta_1+\beta_2) ]$. This in turn restricts the possible values that the pair $(p_0, p_1)$ can take, since $p_0=1-\beta_1 / (1-h)$ and $p_1 = 1- \beta_2 / h$. \hspace*{\fill} $\square$
+
+As a consequence of this fact, one may try to place some constraints on the parameters to create identifiability. One example is the following restriction, associated with the hazard functions $\widetilde{\lambda}_0(t)$ and $\widetilde{\lambda}_1(t)$ for the two time-to-event distributions for the cases in the two groups:
+\begin{eqnarray}
+\frac{\widetilde{\lambda}_1(t)}{\widetilde{\lambda}_0(t)} = \frac{p_0}{p_1} = \frac{1}{\alpha},   \label{CCR}  % For Constrained Cure Rate model
+\end{eqnarray}
+thus imposing the PH structure on the distributions of the cases in the two groups, plus the assumption that the factor $\alpha \in (0,1)$ that relates $\widetilde{\lambda}_0(t) = \alpha \, \widetilde{\lambda}_1(t)$ is the same that relates $p_0$ to $p_1 = \alpha \, p_0$.
+
+We call such model the Proportional Hazards Constrained Cure Rate (PHCCR) model. Notably, in the PHCRR model the higher-risk group is associated with both a larger fraction of cases and earlier age at onset for their disease.
+
+Note that to achieve identifiability one may also try to impose prior distributions on the parameters. Or, one may perform a sensitivity analysis that replaces this restriction with a fixed value for $p_1/p_0 = \rho$. 
+
+\subsubsection*{Example 1.} 
+Let the two conditional distributions of the survival times of the cases be distributed as Exp$(\lambda_0)$ and Exp$(\lambda_1)$ respectively for the two risk groups, with $\lambda_1 > \lambda_0$, i.e. such that $\lambda_0 = \alpha \, \lambda_1$ with $\alpha \in (0,1)$. Note that we also have $p_1 = \alpha \, p_0$. 
+
+The following output illustrates the PHCCR model with two exponential CR survival sub-models. The simulations are based on 1,000 simulated dataset of size n=100,000 individuals each.
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l|cccc} \hline
+    &$p_0$ &$l_0$ &$\alpha$ &h \\
+    True value &0.8 &0.1 &0.3333 &0.8 \\
+    Mean &0.7995 &0.1001 &0.3335 &0.7994 \\
+    Se &0.0005 &0.0002 &0.0004 &0.0002 \\
+    $\sqrt{MSE}$ &0.0220 &0.0051 &0.0152 &0.0059 \\ 
+    95\% C.I. Lower &0.7981 &0.0998 &0.3326 &0.7991 \\ 
+    95\% C.I. Upper &0.8008 &0.1004 &0.3345 &0.7998 \\ \hline
+    \end{tabular}
+    \caption{results on the identifiability of a two risk groups CR model with Exponential survival functions.}
+    \label{tab:2.1}
+\end{table}
+\newpage
+
+In Table \ref{tab:2.1} is reported the parameter recovery in mean and standard error of the estimated parameter values across the 1,000 repetitions; the square root of the mean square error $\sqrt{MSE}$, that represents a measure of the absolute distance between the true value from the data generation process and the estimated value from observed data. The $MSE$ is given by \[
+MSE = \dfrac{1}{n}\sum_{i=1}^n(\widehat r_i - r_i)^2.
+\] 
+
+Also, the lower-bound and the upper-bound of the 95\% confidence interval (C.I.) are reported. 
+
+\subsubsection*{Example 2.}
+Let the two conditional distributions of the survival times of the cases be Weibull$(shape_0$, $scale_0)$ and Weibull$(shape_1, scale_1)$ respectively for the two risk groups, with $shape_0=shape_1$. To implement the conditional proportional hazards model $\widetilde{\lambda}_0(t)=\alpha \, \widetilde{\lambda}_1(t)$ one simply sets $scale_1 = scale_0 \, ( \alpha^{1/shape_0})$. Again, $p_1=\alpha \, p_0$ (easy to check).
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l|ccccc} \hline
+    &$shape_0$ &$scale_0$ &$shape_1$ &$\alpha$ &h \\
+    True value &20 &65 &20 &0.70 &0.80 \\
+    Mean &20.2413 &64.9588 &20.1350 &0.7006 &0.8000 \\
+    Se &0.0360 &0.0088 &0.0185 &0.0001 &0.0004 \\
+    $\sqrt{MSE}$ &1.1626 &0.2814 &0.6014 &0.0032 &0.0131 \\ 
+    95\% C.I. Lower &20.0184 &64.9042 &20.0201 &0.7000 &0.7974 \\ 
+    95\% C.I. Upper &20.4642 &65.0133 &20.2498 &0.7013 &0.8025 \\ \hline
+    \end{tabular}
+    \caption{results on the identifiability of a two risk groups CR model with Exponential survival functions.}
+    \label{tab:2.1}
+\end{table}
+
+These two small examples confirm that the parameter values that are used to generate the data are recovered correctly by the maximum likelihood estimators, with only small residual biases for the estimators.
+
+\subsection{A two-latent-class Lehmann Cure Rate model}
+As an alternative to the PHCCR model, we now extend the definition of the Lehmann family of distributions to the case of cure rate models, still within the latent class framework.
+
+Recall the Lehmann family of distributions is equivalent to the definition of the proportional hazards (PH) structure for proper survival distributions:
+\begin{equation*}
+\left\{  S_{\alpha}(t) = \left[ S_0(t) \right]^{\alpha}, \ \ \alpha >0  \right\},   
+\label{formula:2.PH}
+\end{equation*}
+where $S_0(t)$ is the (proper) baseline survival function and the parameter $\alpha$ modifies it to become the (also proper) survival function $S_{\alpha}(t)$. Let all random variables in the family be absolutely continuous random variables. It is then easy to check that $\lambda_{\alpha}(t) = \alpha \, \lambda_0(t)$ for any choice of (positive and finite) $\alpha$.
+Indeed, when $\alpha$ is modelled through a regression structure one has the celebrated semiparametric Cox proportional hazards (PH) survival model \cite{cox1972regression}.
+
+Here, we suggest extending the PH model to the model defined by the more general { Lehmann cure rate} family obtained by applying the Lehmann power transformation to a baseline cure rate model:
+\begin{equation*}
+    \left\{  S_{\alpha}(t) = \left[ p_0 + (1-p_0) \widetilde{S}_0(t) \right]^{\alpha}, \ \ \alpha >0  \right\}.   
+    \label{formula:2.LehmannCR}
+\end{equation*}
+For a fixed value $\alpha$, the survival function $S_{\alpha}(t)$ also defines a cure rate model. Indeed, $\lim_{t \rightarrow \infty} S_{\alpha}(t) = p_0^{\alpha}$, and $S_{\alpha}(t)$ can be written as
+\[
+S_{\alpha}(t) = p_0^{\alpha} + \left( 1-p_0^{\alpha} \right) \widetilde{S}_{\alpha}(t)
+\]
+with conditional (proper) survival function for the cases equal to
+\[
+\widetilde{S}_{\alpha}(t) = \frac{\left[ p_0 + (1-p_0) \widetilde{S}_0(t) \right] ^{\alpha} - p_0^{\alpha}}{1-p_0^{\alpha}}
+\]
+and conditional density function
+\begin{eqnarray*}
+\widetilde{f}_{\alpha} (t) = - \frac{d}{d t} \widetilde{S}_{\alpha}(t) = \frac{1-p_0}{1-p_0^{\alpha}} \alpha \left[ p_0 + (1-p_0) \widetilde{S}_0(t) \right]^{\left(\alpha -1 \right)} \widetilde{f}_0(t).   \label{conddens}
+\end{eqnarray*}
+
+We note that here, too, a regression model with $\alpha=\alpha(z)$ can also be constructed for a vector $z$ of observed covariates if they are available.
+
+A two (or indeed more) latent class parametric Lehmann Cure Rate model can now be easily
+defined. Recall the Lehmann structure on the survival function characterizing the risk group $S_r(t) = [S_0(t)]^{\alpha(r)}$, such that we have: \begin{align*}
+    &S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t), &S_1(t) = [p_0 + (1-p_0)\widetilde{S}_0(t)]^\alpha.
+\end{align*} For a fixed $\alpha$, also the high-risk survival function $S_1(t)$ defines a cure rate model. % We identify the latent risk as a parameter $\alpha$ to be estimated. The proportional hazard (PH) structure allows the hazard function in a risk group to be written in function of the baseline hazard $\lambda_0(t)$, such that $\lambda_r(t) = \alpha(r) \lambda_0(t)$ (in particular $\lambda_0(t)$, and $\lambda_1(t) = \alpha \lambda_0(t)$), where $\lambda_0(t)$ is distributed according to a parametric distribution identified by the parameter collection $\underline{\theta}$, or a semiparametric distribution. Hence, it follows that the survival function is identified by a Lehmann structure, such that $S_r(t)=[S_0(t)]^{\alpha(r)}$. We thus have $S_0(t)$, and $S_1(t) = [S_0(t)]^{\alpha}$. Recall that the baseline survival function is defined by the more general Lehmann  family obtained by applying the Lehmann power transformation to a  survival function $S_r(t) = \left[p_0 + (1-p_0) \widetilde{S}(t) \right]^{\alpha(r)}$, with $\widetilde{S}(t)$ a proper survival function, so that we have $S_0(t) = p_0 + (1-p_0) \widetilde{S}(t)$, and $S_1(t) = [p_0 + (1-p_0) \widetilde{S}(t)]^\alpha$. For a fixed value $\alpha$, the aforementioned model is such that the survival function $S_1(t)$ also defines a  model. 
+It is easy to check that $\lim_{t \rightarrow \infty} S_{1}(t) = p_0^\alpha = p_1$, and that $S_1(t)$ can be written as
+\[
+S_1(t) = p_1 + \left( 1-p_1\right) \widetilde{S}_1(t),
+\]
+with conditional (proper) survival function for the cases equal to:
+\[
+\widetilde{S}_1(t) = \dfrac{\left[p_0 + (1-p_0) \widetilde{S}_0(t) \right] ^\alpha - p_0^{\alpha}}{1-p_0^{\alpha}},
+\]
+and conditional density function: 
+\[
+\widetilde{f}_1(t) = - \dfrac{d}{d t} \widetilde{S}_1(t) = \dfrac{1-p_0}{1-p_0^{\alpha}} \alpha \left[p_0 + (1-p_0) \widetilde{S}_0(t) \right]^{\left(\alpha -1 \right)} \widetilde{f}_0(t).   
+\]
+
+Since the cure rate survival function is not proper, the density function associated with the cure rate model is also not proper. Note that, without loss of generality, for $\alpha> 1$ one has $S_1(t) < S_0(t) \ \forall t > 0$ and $p_1 < p_0$.
+Indeed, we may reparametrize $\alpha_1 = 1/\alpha\in(0, 1)$ to impose $\alpha > 1$. 
+
+For example, if one assumes a survival function distributed according to the Exponential distribution $\widetilde{S}_0(t) = {\rm e}^{- \lambda_0 t}$ for the distribution of $(T \mid R=0, case)$, then
+\[
+\widetilde{S}_1(t) = \frac{\left[ p_0 + (1-p_0) {\rm e}^{-\lambda_0 t} \right] ^{\alpha} - p_0^{\alpha}}{1-p_0^{\alpha}},
+\]
+and
+\[
+\widetilde{f}_1(t) = \frac{\alpha ( 1 - p_0) \lambda_0}{1- p_0^\alpha}  \left[ p_0 + (1-p_0 ) {\rm e}^{-\lambda_0 t} \right]^{\alpha -1}  {\rm e}^{-\lambda_0 t}. 
+\]
+
+Interesting comments about the two-latent-class Lehmann Cure Rate model are in Appendix \ref{appendix:2.l}.
+
+% For simplicity, we have not included the term related to the risk thus far. To incorporate the risk group, we can rewrite the survival function $S_r(t) = [S_0(t)]^r$ as a function that depends on the risk group. Therefore, the generalized model is expressed as:
+% \begin{align*}
+%     % S(T=t\mid R=r) = 
+%     S_r(t) = S(T=t\mid R=r) = [S_0(t)]^r, \ r \in \{r_0,r_1\}.
+% \end{align*} 
+% Note that if $T\sim S_0(t)$, then $P(T=+\infty)=p>0$, and a proper density function $f_T(t)$ does not exist. 
+
+\subsubsection*{Data generation from the two-latent-class Lehmann Cure Rate model}\label{fastdatagen}
+In simpler models (ex. the Exponential and Weibull seen above), the generation of observations from the high-risk group is easy by analytical inversion of $\widetilde{S}_1(t)$ (for cases), after having generated the case/non-case status.
+
+Splitting subjects into two risk groups, we have the closed form of the survival function on the observed time for cases into the low-risk and high-risk group. For the Exponential baseline survival function $\widetilde{S}_0(t) = \text{e}^{- \lambda t}$, and the Weibull survival function $\widetilde{S}_0(t) = \text{e}^{-(t/ \lambda)^{ k}}$, with scale $\lambda$ and shape $ k$ inverting the survival function brings to generating the time-to-events from, respectively, 
+\begin{align*}
+    &t = -\dfrac{1}{\lambda}log(u), &t = \lambda\log\left(\dfrac{1}{u}\right)^{1/ k}.
+\end{align*}
+where $u\sim\text{Unif}[0,1]$. Similarly, we obtain for an observation from $\widetilde S_1(t)$, where the time-to-event generation formula for Exponential and Weibull distribution is given by, respectively,  \begin{equation*}
+    t = -\dfrac{1}{\lambda} \log \left( \dfrac{ \left[ (1-p_0^{\alpha}) u + p_0^{\alpha} \right]^{1/{\alpha}}-p_0}{1-p_0} \right), \qquad t = -\lambda\left[\log\left(\dfrac{[(1-p_0^{\alpha})u+p_0^{\alpha}]^{1/{\alpha}}-p_0}{1-p_0}\right)\right]^{1/ k}.
+\end{equation*}
+
+While this model is clearly appealing in its interpretation, it is difficult to identify its parameters. Thus, fitting of such latent model requires that one has additional external information on the value of some of the parameters. 
+
+When the distribution $\widetilde{S}_0(t)$ is not as trivial as the -- typically not very useful -- Exponential distribution, generation of observations from the high-risk group requires inversion of the survival function $\widetilde{S}_1(t)$ through numerical integration from $\widetilde{f}_1(t)$, the conditional density function of the cases in the high-risk group. This allows to produce samples from the distribution.
+
+However, a much faster and precise algorithm exists from the form of the marginal survival function for the high-risk group. One may generate values $u$ from the $U(0,1)$ distribution and invert $S_1(t)=[S_0(t)]^{\alpha}$ directly to produce the value $t=S_1^{-1}(u)$. One should produce the value $T=\infty$ whenever $u< p_1=p_0^{\alpha}$, and solve $u=S_1(t)$ for $t$ when $u \geq p_1$. It is easy to check that this yields
+\[
+t= \widetilde{S}_0^{-1} \left( \frac{u-p_0}{1-p_0}  \right)=\widetilde{F}_0^{-1}\left( \frac{1-u}{1-p_0} \right), \ {\rm and}\ t= \widetilde{S}_0^{-1} \left( \frac{u^{1/\alpha}-p_0}{1-p_0}  \right) =\widetilde{F}_0^{-1}\left( \frac{1-u^{1/\alpha}}{1-p_0} \right) ,
+\]
+respectively for the low and high-risk groups. These can be easily computed from the quantile function available in most software packages for a large number of distributions (one just needs to make sure that the quantile function is never invoked for $u<p_0^{\alpha}$).
+\newline
+% As an example, the data generation from the high-risk group of a Lehmann CR model based on the Weibull distribution for the times to onset for the cases in the low-risk group may be implemented as
+% %\begin{footnotesize}
+% \begin{verbatim}
+% genf1tildeFAST <- function(u, p0f, shapef, scalef, alphaf)
+% return(ifelse(u<=p0f^alphaf,Inf,qweibull(pmin((1-u^(1/alphaf))/
+%    (1-p0),0.9),shapef,scalef)))
+% \end{verbatim}
+% \ \newline
+\section{Multivariate model for age at disease onset}\label{sec:2.2}
+\subsection{Family data}
+Consider the family cluster formed by main subject, sister, mother, and grandmother. 
+
+Figure \ref{fig:2.3} shows a depiction of the calendar times of birth (b) and of the times to onset (t) for a group of four family members. Notice that in the figure all family members experience the onset event, so that the cure rate structure is not considered here. However, recall that the cure rate model also allows for one or more of the times $t$, $ts$, $tm$, or $tg$ to be equal to $+\infty$. 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{plots/Rplot101.png}
+    \caption{birth calendar times and times to disease onset for a family.}
+    \label{fig:2.3}
+\end{figure} 
+\newline
+The data generating process produces the family time-to-event data
+        \begin{align*}
+        (B,Bg,Bm,Bs,T,Tg,Tm,Ts)^T,
+    \end{align*}
+for families indexed by $i=1,\dots,n$. We observe a realization of the multivariate random variable $(B,Bg,Bm,Bs,X,Xg,Xm,Xs)^T$, where $\underline{X} = (min(T,C),\Delta)^T$, i.e. we observe the value $\underline{X}=\underline{x}=(x,\delta)^T$. Recall that $T$ indicate the survival time random variable, where in our case is the age in years at breast cancer onset, and $C$ indicate the independent censoring time random variable, both measured from the same origin, that in our case is birth. The notation for the other family members is obtained by having $x, \ t, \ c, \ b$ be followed by $g$, $m$, and $s$ (meaning respectively, ``granmother'', ``mother'', and ``sister''). The distinction between grandmother, mother and sister is not strictly needed here, it will make the extension to a more complex model easier. One may, for example, specify a relative-specific survival function to capture the generational differences among family members. 
+
+\subsection{Multivariate Shared Frailty Cure Rate model}
+Let us now finally extend the Lehmann Cure Rate model to a Multivariate Shared Frailty Lehmann Cure Rate model with two-latent-classes. The assumption we rely on to deal with the multivariate aspect of this model are the conditional independence among survival times within the same family and the assumption of shared frailty, or common risk class membership within families that allows the time-to-events to be i.i.d.. 
+
+In this model, the observed data likelihood function incorporates common family memberships by grouping their contributions to the likelihood within each risk group. A deepening about the observed data likelihood is in Appendix \ref{appendix:2.e}. Indeed, let $\underline\theta = \{p_0, \underline\lambda^T, \alpha, h_0\}^T$ be the whole parameter vector of the model. The observed data likelihood is given by \begin{align*}
+    L(\underline\theta;{\rm all \ data}) &=  \prod_{i=1}^n \left[ f_{\underline{\mathbf{X}}}(\underline{\textbf{x}}_i|R_i=0;\theta)(1-h)+f_{\underline{\mathbf{X}}}(\underline{\textbf{x}}_i|R_i=1;\theta) \,h \right],
+\end{align*}
+where ``all data'' is composed by the observed time and the indicator of having observed the event, respectively $\underline{\textbf{x}}=(\underline{x}=(x,\delta)^T, \underline{x}s=(xs,\delta s)^T, \underline{x}m = (xm, \delta m)^T, \underline{x}g=(xg, \delta g)^T)^T$, the proportion of cured fraction of individuals in the population $p_0$, the proportion of high-risk families in the population $P(R=1) = h$, and $\underline\lambda$ that represents the collection of baseline survival parameters (whose dimension changes according to the assumed distribution). Here, $\alpha$ is the target parameter for inference because of its crucial meaning. Indeed, it is the risk difference between the low-risk and the high-risk group of developing breast cancer in this special case of two risk groups, involved in the PH structure: $\lambda_1(t) = \alpha\lambda_0(t)$. 
+
+Notice that if one know $R_i$ for each family, the integration over the distribution of $R$ is not necessary, clearly. This is in contrast to models that use an observable indicator replacing of the true risk indicator.
+
+Let us compute the closed form of the likelihood. For ease of notation we drop writing the baseline survival parameter collection $\underline\lambda$ below. The first component is obtained, under the assumption of conditional independence of the survival times within each family, as
+\begin{align*}
+    &f_{\underline{X}}(\underline{x}_i\mid R_i=0) =  \left[f_T(x_i\mid R_i=0)S_C(x_i)\right]^{\delta_i} \left[S_T(x_i\mid R_i=0)f_C(x_i)\right]^{1-\delta_i} \\
+    &\propto f_T(x_i\mid R_i=0)^{\delta_i}S_T(x_i\mid R_i=0)^{1-\delta_i}=\left[((1-p_0)\widetilde{f}_0(x_{i}))^{\delta_{i}}(p_0+(1-p_0)\widetilde{S}_0(x_i))^{(1-\delta_{i})}\right] \\
+    &f_{\underline{X}}(\underline{xs}_i\mid R_i=0) = f_T(xs_i\mid R_i=0)^{\delta s_i}S_T(xs_i\mid R_i=0)^{1-\delta s_i} = \\
+    &=\left[((1-p_0)\widetilde{f}_0(xs_i))^{\delta s_i}(p_0+(1-p_0)\widetilde{S}_0(xs_i))^{(1-\delta s_i)}\right] \\
+    &f_{\underline{X}}(\underline{xm}_i\mid R_i=0) = f_T(xm_i\mid R_i=0)^{\delta m_i}S_T(xm_i\mid R_i=0)^{1-\delta m_i} = \\
+    &=\left[((1-p_0)\widetilde{f}_0(xm_i))^{\delta m_i}(p_0+(1-p_0)\widetilde{S}_0(xm_i))^{(1-\delta m_i)}\right] \\
+    &f_{\underline{X}}(\underline{xg}_i\mid R_i=0) = f_T(xg_i\mid R_i=0)^{\delta g_i}S_T(xg_i\mid R_i=0)^{1-\delta g_i} = \\
+    &=\left[((1-p_0)\widetilde{f}_0(xg_i))^{\delta g_i}(p_0+(1-p_0)\widetilde{S}_0(xg_i))^{(1-\delta g_i)}\right] \\
+    &f_{\underline{\textbf{X}}}(\underline{\textbf{x}}_i\mid R_i=0;\theta)\overset{\perp\mid R}{=} f_{\underline{X}}(\underline{x}_i\mid R_i=0)f_{\underline{X}}(\underline{xs}_i\mid R_i=0)f_{\underline{X}}(\underline{xm}_i\mid R_i=0)f_{\underline{X}}(\underline{xg}_i\mid R_i=0) \\ 
+    &\qquad\qquad\qquad= \left[((1-p_0)\widetilde{f}_0(x_{i}))^{\delta_{i}}(p_0+(1-p_0)\widetilde{S}_0(x_i))^{(1-\delta_{i})}\right]\cdot \\
+    &\qquad\qquad\qquad\cdot\left[((1-p_0)\widetilde{f}_0(xs_i))^{\delta s_i}(p_0+(1-p_0)\widetilde{S}_0(xs_i))^{(1-\delta s_i)}\right]\cdot \\
+    &\qquad\qquad\qquad\cdot\left[((1-p_0)\widetilde{f}_0(xm_i))^{\delta m_i}(p_0+(1-p_0)\widetilde{S}_0(xm_i))^{(1-\delta m_i)}\right]\cdot \\
+    &\qquad\qquad\qquad\cdot\left[((1-p_0)\widetilde{f}_0(xg_i))^{\delta g_i}(p_0+(1-p_0)\widetilde{S}_0(xg_i))^{(1-\delta g_i)}\right].
+\end{align*}
+Similarly for the second component, given the Lehmann survival function and density function for the high-risk group
+\begin{align*}
+    &S_1(t) = \left[ p_0 + (1-p_0) \widetilde{S}_0(t) \right]^{\alpha} = p_0^\alpha + (1-p_0^\alpha) \widetilde{S}_1(t), \\
+    &\widetilde{S}_1(t) = \dfrac{\left[ p_0 + (1-p_0) \widetilde{S}_0(t) \right] ^{\alpha} - p_0^{\alpha}}{1-p_0^{\alpha}}, \\
+    &f_1(t) = (1-p_0^\alpha)\widetilde{f}_1(t), \\
+    &\widetilde{f}_1(t) = \dfrac{\alpha ( 1 - p_0)}{1- p_0^\alpha}  \left[ p_0 + (1-p_0 ) \widetilde{S}_0(t) \right]^{\alpha -1}  \widetilde{f}_0 (t),
+\end{align*} we have
+\begin{align*}
+    % &S_1(z_i) = S_T(z_i\mid R_i=1) = [S_T(z_i\mid R_i=0)]^{r} = [S_0(z_i)]^{r} \\
+    % &\qquad\=[p_0+(1-p_0)\widetilde{S}_0(z_i)]^{r} = p_1 + (1-p_1)\widetilde{S}_1(z_i) \\ 
+    % &p_1 = p^{r}\text{ and, } \widetilde{S}_1(z_i)=\dfrac{(p_0+(1-p_0)\widetilde{S}_0(z_i))^{r}-p_1}{1-p_1} \\
+    % &f_1(z_i) = (1-p_1)\left(\dfrac{1-p_0}{1-p_1}\right)r\widetilde{f}_0(t)\left(p_0+(1-p_0)\widetilde{S}_0(z_i)\right)^{r-1} \\
+    &f_{\underline{X}}(\underline{x}_i\mid R_i=1) = \left[f_T(x_i\mid R_i=1)S_C(x_i)\right]^{\delta_i} \left[S_T(x_i\mid R_i=1)f_C(x_i)\right]^{1-\delta_i} \\
+    &\propto f_T(x_i\mid R_i=1)^{\delta_i}S_T(x_i\mid R_i=1)^{1-\delta_i}=f_1(x_i)^{\delta_i}S_1(x_i)^{1-\delta_i} \\
+    &=\left[\dfrac{r\widetilde{f}_0(x_i)}{(1-p_0)^{-1}}\left(p_0+(1-p_0)\widetilde{S}_0(x_i)\right)^{r-1} \right]^{\delta_i}\cdot\left[p_1 + (1-p_1)\widetilde{S}_1(x_i)\right]^{1-\delta_i} \\
+    &f_{\underline{X}}(\underline{xs}_i\mid R_i=1) = f_1(xs_i)^{\delta s_i}S_1(xs_i)^{1-\delta s_i} = \\ &=\left[\dfrac{r\widetilde{f}_0(xs_i)}{(1-p_0)^{-1}}\left(p_0+(1-p_0)\widetilde{S}_0(xs_i)\right)^{r-1} \right]^{\delta s_i}
+    \left[p_1 + (1-p_1)\widetilde{S}_1(xs_i)\right]^{1-\delta s_i} \\
+    &f_{\underline{X}}(\underline{xm}_i\mid R_i=1) = f_1(xm_i)^{\delta m_i}S_1(xm_i)^{1-\delta m_i} = \\
+    &=\left[\dfrac{r\widetilde{f}_0(xm_i)}{(1-p_0)^{-1}}\left(p_0+(1-p_0)\widetilde{S}_0(xm_i)\right)^{r-1} \right]^{\delta m_i}\left[p_1 + (1-p_1)\widetilde{S}_1(xm_i)\right]^{1-\delta m_i} \\
+    &f_{\underline{X}}(\underline{xg}_i\mid R_i=1) = f_1(xg_i)^{\delta g_i}S_1(xg_i)^{1-\delta g_i} = \\
+    &=\left[\dfrac{r\widetilde{f}_0(xg_i)}{(1-p_0)^{-1}}\left(p_0+(1-p_0)\widetilde{S}_0(xg_i)\right)^{r-1} \right]^{\delta g_i}\left[p_1 + (1-p_1)\widetilde{S}_1(xg_i)\right]^{1-\delta g_i} \\
+    &f_{\underline{\textbf{X}}}(\underline{\textbf{x}}_i\mid R_i=1;\theta) \overset{\perp\mid R}{=} f_{\underline{X}}(\underline{x}_i\mid R_i=1)f_{\underline{X}}(\underline{xs}_i\mid R_i=1)f_{\underline{X}}(\underline{xm}_i\mid R_i=1)f_{\underline{X}}(\underline{xg}_i\mid R_i=1)
+\end{align*}
+% qui
+The specific mathematical calculations for the most common baseline survival distributions, i.e., the Exponential and the Weibull distributions, are presented in Appendix \ref{appendix:2.c} and Appendix \ref{appendix:2.d}, respectively.
+
+For simplicity we can see the expression as composed by the quantity
+\begin{align*}
+    f_{\underline{\mathbf{X}}}(\underline{\textbf{x}}|R=1) 
+    \overset{\overset{\perp | R}{\downarrow}}{=} &f(\underline{x}|R=1)f(\underline{x}s|R=1)f(\underline{x}m|R=1)f(\underline{x}g|R=1)  \\
+    =&
+    \left[ f_1(x)^\delta S_1(x)^{(1-\delta)} \right] \left[ f_1(xs)^{\delta s} S_1(xs)^{(1-\delta s)} \right]\left[ f_1(x m)^{\delta m} S_1(x m)^{(1-\delta m)} \right] \left[ f_1(x g)^{\delta g} S_1(x g)^{(1-\delta g)} \right],
+\end{align*}
+ and similarly for the other family members, and for the $R=0$ terms.
+
+\subsubsection*{Example 3.}
+An example of implementation of the Multivariate Lehmann Cure Rate model based on a Weibull baseline distribution for the cases in the low-risk group produces the output in Table \ref{tab:2.2} (recall that we reparametrize $\alpha_1=1/\alpha \in (0,1)$ to force $\alpha > 1$).
+\begin{table}
+    \centering
+    \begin{tabular}{l|ccccc} \hline
+    &$p_0$ &$shape_0$ &$scale_0$ &$\alpha_1$ &$h$ \\
+    True value &0.8 &10 &70 &0.4 &0.2 \\ 
+    Mean &0.7902 &10.1515 &69.8595  &0.3678  &0.1373 \\
+    Se &0.0002 &0.0004 &0.0004 &0.0004 &0.0006 \\ 
+    $\sqrt{MSE}$ &0.0111 &0.1521 &0.1415 &0.0370 &0.0700 \\ 
+    95\% C.I. Lower &0.7899 &10.1507 &69.8584 &0.3667 &0.1354 \\
+    95\% C.I. Upper &0.7905 &10.1523 &69.8605 &0.3689 &0.1393 \\ \hline
+    \end{tabular}
+    \caption{parameter recovery for the Multivariate Lehmann Cure Rate model.}
+    \label{tab:2.2}
+\end{table}
+
+Parameters value are perfectly recovered by the multivariate likelihood estimation process. 
+\newpage
+
+\subsection{Multivariate vs. univariate likelihood}
+Detailed multivariate family data may be hard to have. However, the latent risk class cure rate model can also be implemented on just one subject from each family. In that case the observed data likelihood to maximise reduces to \begin{align*}
+    L_u(\underline\theta;{\rm subject \ data}) &=  \prod_{i=1}^n \left[ f_X(\underline{x}_i|R_i=0)(1-h)+f_X(\underline{x}_i|R_i=1) \,h \right],
+\end{align*}
+where subscript ``u'' stays for univariate likelihood. Now, one has just $\underline{x}_i=(x_i,\delta_i)^T$ for $i=1, \ldots, n$, again with
+\begin{align*}
+    f(\underline{x}|R=1) =
+    & f_1(x)^\delta S_1(x)^{(1-\delta)} = \left[ (1-p_1)\widetilde{f}_1(x) \right]^\delta\left[ p_1+(1-p_1)\widetilde{S}_1(x) \right]^{1-\delta}
+\end{align*}
+    
+In this scenario only one subject per family contributes to the likelihood. As before, the goal of parameter estimation is to determine the risk difference $\alpha$ between the low and high-risk groups, so the parameter collection is still denoted by $\underline\theta=\{p_0, \underline\lambda^T, \alpha, h\}^T$. The extended likelihood function can be derived. Notice that the survival function and density function for the low and high-risk groups are given by
+\begin{align*}
+    &S_0(t) = p_0+(1-p_0)\widetilde{S}_0(t) \nonumber \\
+    &f_0(t) = (1-p_0)\widetilde{f}_0(t) \nonumber \\
+    &S_1(t) = [S_0(t)]^\alpha = [p_0+(1-p_0)\widetilde{S}_0(t)]^\alpha
+    = p_1 + (1-p_1)\widetilde{S}_1(t) \nonumber \\ 
+    &\widetilde{S}_1(t)=\dfrac{(p_0+(1-p_0)\widetilde{S}_0(t))^\alpha-p_1}{1-p_1} \nonumber \\ 
+    &f_1(t) = (1-p_1)\widetilde f_1(t)\\ &\widetilde f_1(t) = \left(\dfrac{1-p_0}{1-p_1}\right)\alpha\widetilde{f}_0(t)\left(p_0+(1-p_0)\widetilde{S}_0(t)\right)^{\alpha-1}\nonumber \\
+    &\text{with, }p_1 = p^\alpha.\nonumber 
+\end{align*} Thus, the likelihood is given by \begin{align}
+    L_u(\underline\theta;\text{subject data}) &=\prod_{i=1}^n f_X(\underline{x}_i;\underline\theta) = \prod_{i=1}^n[f_X(\underline{x}_i\mid R_i=0;\theta)P(R_i=0) \\
+    &+f_X(\underline{x}_i\mid R_i=1;\underline\theta)P(R_i=1)] \nonumber \\
+    &= \prod_{i=1}^n\left[f_0(x_i)^{\delta_i}S_0(x_i)^{1-\delta_i}\right](1-h)+\left[f_1(x_i)^{\delta_i}S_1(x_i)^{1-\delta_i}\right] h. \nonumber
+\end{align} 
+
+Given the latent nature of the risk quantity, it may be necessary to replace it with an observable indicator. In this setting, we replace the frailty with the indicator of an observed family history of breast cancer. Specifically, we consider one main subject $i$ per family, and define $FH(u)$ as the indicator function that takes value $1$ if one or more relatives of the subject have experienced the disease by the subject age $u$. For a family with four members (subject, sister, mother, and grandmother), we have for example $FH(u) = 1 - \mathbb{I}(bg+tg\ge b+t)\mathbb{I}(bm+tm\ge b+t)\mathbb{I}(bs_1+ts_1\ge b+t)=1 - \mathbb{I}(tg\ge t+60)\mathbb{I}(tm\ge t+30)\mathbb{I}(ts_1\ge t)$, assuming each generation is 30 years apart one from the other (so that the grandmother is 60 years old, and the mother 30 years old when the subject and sister are born). The general form of the survival function depending on $FH(u)$ is given by: \[
+S_F(x_i) = [S_0(x_i)]^{\beta_F FH(x_i)}.
+\]
+Notice that, the same cure rate baseline survival function and conditional density function for the cases are involved for the low-risk group. Consequently, for the high-risk group we have\begin{align*}
+    &S_1(x_i) = [S_0(x_i)]^{\beta_F} =[p_0+(1-p_0)\widetilde{S}_0(x_i)]^{\beta_F} =p_1 + (1-p_1)\widetilde{S}_1(x_i) \nonumber \\ 
+    &f_1(x_i) = (1-p_1)\left(\dfrac{1-p_0}{1-p_1}\right)\beta_F\widetilde{f}_1(x_i)\left(p_0+(1-p_0)\widetilde{S}_0(x_i)\right)^{{\beta_F}-1} \nonumber \\
+    &\text{with, }p_1 = p^{{\beta_F}}\text{ and, } \widetilde{S}_1(x_i)=\dfrac{(p_0+(1-p_0)\widetilde{S}_0(x_i))^{{\beta_F}}-p_1}{1-p_1} \nonumber
+\end{align*}
+The parameter $\beta_F$ is the observed family history risk modifier, and it is typically used to account for the increased family risk for subjects that have a positive family history of breast cancer. In other words, $FH(t)$ is meant to estimate the latent risk group $R$ from the observed onset histories at time of the analysis $t$. Importantly, in the trivial case of two risk groups, while $R$ takes value zero or one from birth and does not change over time, $FH(t)$ is a counting process that takes value one as soon as the first onset occurs among any of the other family members. Replacing the true unknown risk group $R$ with the proxy $FH(t)$ leads to measurement error in the unknown value of $R$ for the family. A detailed comparison of $FH$ vs. $R$ in terms of probability of agreement is illustrated in Appendix \ref{appendix:2.g}, and an alternative building of the $FH$ indicator is developed in \ref{appendix:2.i}.
+
+We build the closed form of the family history likelihood, without frailty quantity involved. 
+The parameter collection is $\underline\theta_{FH}=\{ p_0, \underline\lambda^T, \beta_F\}^T$. The univariate likelihood involving the family history indicator is given by  \begin{align}
+    \label{model_FH}
+    &L_{FH}(\underline\theta_{FH};\text{subject data}) = \prod_{i=1}^n f_X(\underline{FH}_i, \underline{x}_i;\underline\theta_{FH}) \\
+    &\qquad\qquad=\prod_{i=1}^n f_X(\underline{x}_i\mid FH_i=0;\underline\theta_{FH})^{(1-FH_i)}f_X(\underline{x}_i\mid FH_i=1;\underline\theta_{FH})^{FH_i} \nonumber \\ 
+    &\qquad\qquad= \prod_{i=1}^n\left[f_0(x_i)^{\delta_i}S_0(x_i)^{1-\delta_i}\right]^{(1-FH_i)}\left[f_1(x_i)^{\delta_i}S_1(x_i)^{1-\delta_i}\right]^{FH_i} \nonumber
+\end{align} 
+
+For all the three models shown above, the parameter estimation is achieved by maximizing the log-likelihood. A numerical method for likelihood maximization is chosen among the available ones. We choose to run a Nelder-Mead optimization. 
+
+The estimated parameters can be used to generate posterior risk predictions, which are the focus of this project, as we see in Section \ref{sec:2.4.2}. The objective is to internally validate the model by accurately predicting the risk of breast cancer development for each woman that constitutes the available dataset. Furthermore, the goal is to predict the risk for a new woman whose family is not part of the available data.
+
+Fitting the multivariate likelihood should hopefully allow for: (i) more accurate estimation of the model parameters; (ii) exploring of the dependence structure within families (goodness of fit); and (iii) more accurate risk prediction.
+ 
+\section{Comparison of univariate vs. multivariate estimation}\label{sec:2.3}
+\subsection{Data generation}
+We examine and contrast the three models discussed earlier using generated data. Our aim is to confirm that these models are identifiable. Moreover, we want to assess which one has the best performance in terms of risk prediction, which, recall, is our ultimate goal.
+
+According to the specific structure of the model, it is necessary to generate data separately for cases and non-cases belonging to the two risk groups. Recall that cases refer to subjects who have a non-zero probability of developing disease onset, while non-cases are individuals who will never develop disease onset, regardless of their lifespan. Notice that non-cases represent the cured fraction of the population. 
+
+Families, composed by a subject, her sister, her mother, and her grandmother, are generated with uniformly distributed birth calendar times, with uniformly distributed distance between grandmothers, mother, and daughter (the sister of the main subject) between 25 and 35 years:
+\begin{align*}
+    &Bg \sim Unif(min=1880, max=1910), \\
+    &Bm =  Bg + Unif(min=25, max=35), \\
+    &Bs = Bm + Unif(min=25,max=35), \\
+    &Bval = Bm + Unif(min=25,max=35),
+\end{align*}
+so that births are as late as 2000. 
+
+We explore three different survival models for the cases: Exponential ($\lambda = 1/3$), Weibull ($shape = 10, scale = 70$), and Gamma ($shape = 10, scale = 2$), with fixed parameter for all the distributions $p_0 = 0.8$, $h = 0.2$, and $\alpha$ varying. Data are right-censored by the end of follow up or a the event of death, whose generation is given by
+\begin{align*}
+    &Deathg = Bg + Unif(min=60,max=105), \\
+    &Deathm = Bm + Unif(min=60,max=105), \\
+    &Deaths = Bs + Unif(min=60,max=105), \\ 
+    &Death = Bval + Unif(min=60,max=105).
+\end{align*}
+
+We set the end of the study at the year 2020, so that the censored observation for each subject is
+\begin{align*}
+    &Censg = pmin(Deathg,2020), \\
+    &Censm = pmin(Deathm,2020), \\
+    &Censs = pmin(Deaths,2020), \\
+    &Cens = pmin(Death,2020).
+\end{align*}
+
+Most importantly, the times-to-event is the crucial point of the data generation process. The faster algorithm steps (which in part has been described above in Paragraph \ref{fastdatagen}) are given by \begin{enumerate}
+    \item Fixing a parametric distribution of the proper survival function $\widetilde S_0(t)$, so that $S_0(t) = p_0 + (1-p_0)\widetilde S_0(t)$ and $f_0(t) = (1-p_0)\widetilde f_0(t)$;
+    \item generating the time-to-event $t\sim \widetilde f_0(t)$ for low-risk cases;
+    \item generating the time-to-event $t = \widetilde S_0^{-1}\left(\dfrac{u^\alpha - p_0}{1 - p_0}\right)$, $u\sim \text{U}[0,1]$ for high-risk cases with the approximate method.
+    % \item[4)] finally, the likelihood is evaluated using $S_0(t)$, $f_0(t)$, $S_1(t) = [S_0(t)]^{1/\alpha}$, and \[f_1(t) = \frac{1}{\alpha}[S_0(t)]^{1/\alpha - 1}(1-p_0)\widetilde S_0(t)\widetilde f_0(t)\] for the individual contribution. 
+\end{enumerate}
+
+% The code presented in Appendix \ref{AppPHCCRExp} demonstrates the retrieval of model parameters for the exponential model, with specific parameter values given in the output below.  
+%The code is available in Appendix \ref{appendix:g}.
+
+In the following scenario, we simulated $n = 100,000$ families, each consisting of 4 members, and repeated this simulation 100 times. Within the algorithm, a reparametrization process was implemented for the parameters to guarantee adherence to the non-negative constraint.
+
+We aim to obtain the parameter value used in data generation by maximizing the likelihood. 
+At each iteration, given $n_p$ number of parameters, we fix the $(n_p-1)$ parameters and vary the risk parameter $\alpha$ over a few values. The cured fraction and the proportion of high-risk families into the population are set at $p = 0.8, h = 0.3$. Results are presented in Table \ref{tab:2.3} for a baseline survival function distributed according to an Exponential($\lambda = 0.3$), Table \ref{tab:2.4} for the Weibull($shape = 10, scale = 70$) case, Tables \ref{tab:2.5} for the Gamma($shape = 10, scale = 2$) case, using the univariate vs. the multivariate likelihood from the Lehmann Cure Rate model, and the family history univariate likelihood. Specifically, in the first column in reported the true value of the risk difference $\alpha = (0.2,0.5,0.8)$, fixed at the data generation step. All the other columns report the mean, standard error (Se) and mean square error ($\sqrt{\text{MSE}}$) associated to the estimated parameter values across the repeated simulations. 
+\begin{table}
+    \centering
+    \begin{tabular}{l|ccccc} \hline
+    Multivariate &True value of $\alpha$ &$\widehat p_0$ &$\widehat\alpha$ &$\widehat\lambda_0$ &$\widehat h$ \\
+    Mean &0.5 &0.8174 &0.4918 &0.0316 &0.3651 \\
+    Se &&0.0168 &0.0223 &3e-04 &0.13 \\
+    $\sqrt{\text{MSE}}$ &&0.7842 &0.309 &0.4684 &0.2101 \\ 
+    Mean &0.25 &0.8 &0.2441 &0.0315 &0.212 \\
+    Se &&0.0016 &0.0025 &2e-04 &0.0055 \\
+    $\sqrt{\text{MSE}}$ &&0.7667 &0.5559 &0.2185 &0.0132 \\ 
+    Mean &0.2 &0.7995 &0.1947 &0.0316 &0.2078 \\
+    Se &&0.0014 &0.0016 &2e-04 &0.0039 \\
+    $\sqrt{\text{MSE}}$ &&0.0018 &0.0186 &6e-04 &7e-04 \\ \hline
+    Univariate &True value of $\alpha$ &$\widehat p_0$ &$\widehat\alpha$ &$\widehat\lambda_0$ &$\widehat h$ \\
+    Mean &0.5 &0.8432 &0.3516 &0.0336 &0.2225 \\ 
+    Se &&0.0875 &2.1274 &0.0021 &0.2227 \\  
+    $\sqrt{\text{MSE}}$ &&0.0976 &2.2886 &0.0022 &0.2542 \\ 
+    Mean &0.25 &0.8004 &0.2501 &0.0335 &0.0997 \\ 
+    Se &&0.002 &0.0214 &7e-04 &0.0016 \\
+    $\sqrt{\text{MSE}}$ &&0.002 &0.0214 &7e-04 &0.0017 \\
+    Mean &0.2 &0.8004 &0.1999 &0.0335 &0.0999 \\ 
+    Se &&0.0017 &0.0186 &6e-04 &7e-04 \\
+    $\sqrt{\text{MSE}}$ &&0.0186 &0.0018 &6e-04 &7e-04 \\ \hline
+    Univariate FH &True value of $\alpha$ &$\widehat p_0$ &$\widehat\beta_F$ &$\widehat\lambda_0$ \\
+    Mean &0.5 &0.7860 &2.1491 &0.0388  \\ 
+    Se &&0.0021 &0.0129 &5e-04 \\
+    $\sqrt{\text{MSE}}$ &&0.0142 &1.5347 &0.0055 \\ 
+    Mean &0.25 &0.828 &0.9928 &0.0655 \\ 
+    Se &&0.002 &0.0136 &7e-04 \\
+    $\sqrt{\text{MSE}}$ &&0.0281 &2.9928 &0.0321 \\ 
+    Mean &0.2 &0.8342 &0.9314 &0.0731 \\ 
+    Se &&0.0018 &0.0149 &9e-04 \\ 
+   $\sqrt{\text{MSE}}$ &&0.0342 &3.9264 &0.0397 \\ \hline
+    \end{tabular}
+    \caption{parameter identifiability for $\alpha$ varying, with \textbf{Exponential} baseline survival function.}
+    \label{tab:2.3}
+\end{table}
+\newpage
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l|cccccc} \hline
+    Multivariate &True value of $\alpha$ &$\widehat p_0$ &$\widehat\alpha$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat h$ \\
+    Mean &0.5 &0.8134 & 0.5369 & 10.1756 & 69.8799 & 0.3452 \\ 
+    Se &&0.0003 & 0.0008 & 0.0012 & 0.0011 & 0.0017 \\ 
+    $\sqrt{\text{MSE}}$ &&0.0256 & 0.1068 & 0.1907 & 0.1876 & 0.1745 \\ 
+    Mean &0.25 &0.8014 & 0.2479 & 10.0886 & 69.8911 & 0.2008 \\ 
+    Se &&0.0001 & 0.0001 & 0.0009 & 0.0011 & 0.0003 \\ 
+    $\sqrt{\text{MSE}}$ &&0.0071 & 0.0150 & 0.1275 & 0.1575 & 0.0261 \\ 
+    Mean &0.2 & 0.8015 & 0.1974 & 10.1489 & 69.9141 & 0.2031 \\ 
+    Se &&0.0001 & 0.0001 & 0.0007 & 0.0008 & 0.0002 \\ 
+    $\sqrt{\text{MSE}}$ &&0.0074 & 0.0064 & 0.1662 & 0.1177 & 0.0156 \\ \hline
+    Univariate &True value of $\alpha$ &$\widehat p_0$ &$\widehat\alpha$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat h$ \\
+    Mean &0.5 & 0.8690 & 0.2230 & 10.2890 & 70.9132 & 0.3201 \\ 
+    Se &&0.0007 & 0.0019 & 0.0021 & 0.0134 & 0.0031 \\ 
+    $\sqrt{\text{MSE}}$ &&0.1011 & 0.3334 & 0.3553 & 1.6226 & 0.3304 \\
+    Mean &0.25 & 0.7494 & 0.5183 & 9.7783 & 69.8134 & 0.1557 \\ 
+    Se &&0.0002 & 0.0025 & 0.0025 & 0.0051 & 0.0008 \\ 
+    $\sqrt{\text{MSE}}$ &&0.0541 & 0.3641 & 0.3337 & 0.5463 & 0.0884 \\
+    Mean &0.2 & 0.7662 & 0.3012 & 9.9325 & 69.9320 & 0.1903 \\ 
+    Se &&0.0003 & 0.0015 & 0.0030 & 0.0036 & 0.0007 \\ 
+    $\sqrt{\text{MSE}}$ &&0.0476 & 0.1812 & 0.3090 & 0.3655 & 0.0723 \\ \hline 
+    Univariate FH &True value of $\alpha$ &$\widehat p_0$ &$\widehat\beta_F$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ \\
+    Mean &0.5 &0.7895 &0.4855 &9.995 &69.9747 \\  
+    Se &&0.0006 &0.0028 &0.0010 &0.0023 \\
+    $\sqrt{\text{MSE}}$ &&0.0658 &0.2855 &0.1045 &0.235  \\ 
+    Mean &0.25 &0.7827 &0.4218 &9.8695 &69.5787 \\ 
+    Se &&0.0009 &0.0026 &0.0010 &0.0033 \\
+    $\sqrt{\text{MSE}}$ &&0.0963 &0.3083  &0.1664 &0.5342 \\ 
+    Mean &0.2 &0.7895  &0.3374 &9.7897 &69.3433 \\ 
+    Se &&0.0012 &0.0019 &0.0010 &0.0036 \\ 
+    $\sqrt{\text{MSE}}$ &&0.1169 &0.2419 &0.2347 &0.7512  \\ \hline
+    \end{tabular}
+    \caption{parameter identifiability for $\alpha$ varying, with \textbf{Weibull} baseline survival function.}
+    \label{tab:2.4}
+\end{table}
+\newpage
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l|ccccccc} \hline
+    Multivariate &True value of $\alpha$ &$\widehat p_0$ &$\widehat\alpha$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat h$ % &AUC 
+    \\
+    Mean &0.5 & 0.7875 & 0.5281 & 10.7928 & 1.8435 & 0.1333 % & 0.700 
+    \\ 
+    Se  && 0.0166 & 0.2010 & 0.3618 & 0.0560 & 0.0900 % & 0.0141 
+    \\ 
+    $\sqrt{\text{MSE}}$ && 0.0208 & 0.2029 & 0.8715 & 0.1662 & 0.1121 \\ 
+    Mean &0.25 & 0.8030 & 0.2400 & 10.5283 & 1.8873 & 0.1992 % & 0.8841 
+    \\ 
+    Se && 0.0131 & 0.0189 & 0.4718 & 0.0952 & 0.0464 % & 0.0174 
+    \\ 
+    $\sqrt{\text{MSE}}$ && 0.0134 & 0.0214 & 0.7083 & 0.1475 & 0.0464 \\ 
+    Mean &0.2 & 0.7977 & 0.1958 & 10.2873 & 1.9442 & 0.1967 % & 0.9302  
+    \\ 
+    Se && 0.0087 & 0.0189 & 0.4019 & 0.0913 & 0.0185 % & 0.0133 
+    \\ 
+    $\sqrt{\text{MSE}}$ && 0.0090 & 0.0194 & 0.4940 & 0.1070 & 0.0188 \\ 
+   \hline
+    Univariate &True value of $\alpha$ &$\widehat p_0$ &$\widehat\alpha$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat h$ \\
+    Mean &0.5 &0.7445 & 0.7568 & 10.3722 & 1.9144 & 0.0483 % & 0.6361 
+    \\ 
+    Se &&0.0130 & 0.2419 & 0.6032 & 0.1254 & 0.1205 % & 0.0250 
+    \\ 
+    $\sqrt{\text{MSE}}$ &&0.0570 & 0.4877 & 0.7088 & 0.1518 & 0.1938  \\  
+    Mean &0.25 &0.6973 & 0.5938 & 10.1955 & 1.8798 & 0.0739 % & 0.8173 
+    \\ 
+    Se &&0.0396 & 0.2878 & 0.6771 & 0.1198 & 0.1000 % & 0.0193 
+    \\ 
+    $\sqrt{\text{MSE}}$ &&0.1101 & 0.5349 & 0.7048 & 0.1697 & 0.1610 \\ 
+    Mean &0.2 &0.7459 & 0.1870 & 10.6457 & 1.8082 & 0.1833 % & 0.8770 
+    \\ 
+    Se &&0.1006 & 1.3575 & 0.1561 & 0.1845 & 0.2938 % & 0.0142 
+    \\ 
+    $\sqrt{\text{MSE}}$ &&0.1142 & 0.1787 & 1.5033 & 0.2662 & 0.2942 \\ \hline
+    Univariate FH &True value of $\alpha$ &$\widehat p_0$ &$\widehat\beta_{FH}$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ \\
+    Mean &0.5 &0.9908 & 0.1124 & 52.5408 & 20.6369 \\ 
+    Se &&$<$0.0001 & 0.0031 & 0.1846 & 0.0725 \\ 
+    $\sqrt{\text{MSE}}$ &&0.1908 & 0.4975 & 46.3738 & 19.9978 \\
+    Mean &0.25 &0.9949 & 0.5069 & 29.1894 & 11.4650 \\ 
+    Se &&0.0001 & 0.0052 & 0.3077 & 0.1209 \\ 
+    $\sqrt{\text{MSE}}$ &&0.1950 & 0.5798 & 36.2618 & 15.3504 \\ 
+    Mean &0.2 &0.9939 & 0.4083 & 35.0272 & 13.7579 \\ 
+    Se &&0.0001 & 0.0051 & 0.3015 & 0.1184 \\ 
+    $\sqrt{\text{MSE}}$ &&0.1939 & 0.5502 & 39.1814 & 16.6870 \\ \hline
+    \end{tabular}
+    \caption{parameter identifiability for $\alpha$ varying, with \textbf{Gamma} baseline survival function.}
+    \label{tab:2.5}
+\end{table}
+
+The slight discrepancies observed between the estimated and true values can be attributed to the approximation algorithm used for generating data. One way to overcome this issue is by increasing the sample size, particularly the average family size into the sample, as it would result in a more accurate estimate of the true value. Additionally, this would help in reducing the variance around the mean for sure. Nevertheless, contrary to the univariate models, the multivariate model is capable of accurately recovering the parameter values. 
+
+We notice also that the estimators of the model parameters for the univariate likelihood have standard errors that are much larger than those of the estimators based on the multivariate likelihood. We take as example the first scenario with the Weibull baseline survival function from Table \ref{tab:2.4}. Specifically, their standard errors are between 1.75 and 12.18 times larger than their multivariate counterparts, as we can assess from Table \ref{tab:2.10}
+\begin{table}
+    \centering
+    \begin{tabular}{l|ccccc}
+    \hline
+        &$\widehat p_0$ &$\widehat\alpha$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat h$ \\
+         Multivariate Se &0.0003 &0.0008 &0.0012 &0.0011 &0.0017 \\
+         Univariate Se &0.0007 &0.0019 &0.0021 &0.0134 &0.0031 \\
+         Univariate / Multivariate Se &2.3333 &2.3750 &1.7500 &12.1818 &1.8235 \\
+         \hline
+    \end{tabular}
+    \caption{comparison between the SE from the Multivariate model vs. Univariate model.}
+    \label{tab:2.10}
+\end{table}
+
+Such increase is noteworthy in particular because one may expect the effective sample size of the multivariate estimator to represent a four-fold increase from the univariate estimator, given the use of information from not one but four relatives for each family). Indeed, in Appendix \ref{appendix:2.a} we illustrate such aspect for the univariate model.
+
+The comparison of the root MSE (RMSE) for the estimated parameters from the univariate vs. the multivariate likelihood yields, as we can assess from Table \ref{tab:2.11} showing that, except for the baseline shape parameter, the RMSEs of the univariate estimators are larger than those of the multivariate estimators.
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l|ccccc}
+        \hline
+        &$\widehat p_0$ &$\widehat\alpha$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat h$ \\
+        Multivariate RMSE &0.1011 &0.3334 &0.3553 &1.6226 &0.3304 \\
+        Univariate RMSE &0.0256 &0.1068 &0.1907 &0.1876 &0.1745 \\
+        Univariate / Multivariate RMSE &3.9492 &3.1217 &1.8631 &8.6492 &1.8934 \\
+        \hline
+    \end{tabular}
+    \caption{comparison between the RMSE from the Multivariate model vs. Univariate model.}
+    \label{tab:2.11}
+\end{table}
+
+On the other hand, given the presence of bias in the estimators, such bias becomes more visible in the multivariate case, so that if one compares the standardized RMSE (SRMSE) obtained by dividing it by each estimator's estimated standard deviation, obtains the results in Table \ref{tab:2.12} which shows that, but the scale baseline parameter, the relative RMSE is larger for the univariate estimators.
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l|ccccc}
+        \hline
+        &$\widehat p_0$ &$\widehat\alpha$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat h$ \\
+        Multivariate SRMSE &85.3333 &133.5000 &158.9167 &170.5454 &102.6471 \\
+        Univariate SRMSE &144.4286 &175.4737 &169.1905 &121.0896 &106.5806 \\ 
+        Univariate / Multivariate SRMSE &1.6925 &1.3144 &1.0646 &0.7100 &1.0383 \\
+        \hline
+    \end{tabular}
+    \caption{comparison between the standardized RMSE from the Multivariate model vs. Univariate model.}
+    \label{tab:2.12}
+\end{table}
+
+The increase in precision achieved by the estimators obtained from the multivariate likelihood is possibly due in part to the fact that the added relatives (grandmother and mother in particular), having been born earlier than the main subjects that appear in the univariate likelihood, are less likely to have their survival times be (administratively) censored.
+
+However, the effect of the shared frailty component of the model is also possibly contributing to the increase in precision. Such effect is however not easy to quantify, as estimating the parameters of a model that does not include the shared frailty component would be such that either a different data generating model should be used, or a misspecified model is being used.
+
+\subsection{Risk group prediction for univariate vs. multivariate models}\label{sec:2.4.2}
+Our primary goal is to predict the risk for an woman whose family is not part of the data used to fit the model. Subsequently, risk prediction and related metrics are calculated and presented, followed by a final evaluation to determine the most informative and effective approach among the three studied.
+
+We compute the posterior family-specific quantities in the parametric case of two-latent risk groups. We can obtain the complete shape of the low-risk and high-risk survival functions, which are: 
+\begin{align*}
+    &S_0(t)=\widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}(t) \\
+    &S_1(t)= \widehat{p}_0^{\widehat\alpha}+(1-\widehat{p}_0^{\widehat\alpha} )\widetilde{S}_1(t) \\
+    &\widetilde{S}_1(t) =\dfrac{(\widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}_0(t))^{\widehat\alpha}-\widehat{p}_0^{\widehat\alpha}}{1-\widehat{p}_0^{\widehat\alpha}}
+\end{align*} where $\widetilde{S}_0(t)$ has a defined distribution, previously fixed. 
+
+Risk prediction is achieved through calculation of the conditional probability for each family:
+\begin{align*}
+        P(R=1\mid \underline x;\widehat\theta) &= \dfrac{f(\underline x\mid R=1;\widehat\theta)P(R=1)}{f(\underline x)} = \dfrac{f(\underline x \mid R=1;\widehat\theta)P(R=1)}{f(\underline x \mid R=1;\widehat\theta)P(R=1)+f(\underline x \mid R=0;\widehat\theta)P(R=0)}.
+    \end{align*} 
+Recall from above that $\underline x= (x, \delta)$ indicate the univariate survival data couple. The vector collection $\underline{\textbf{x}}=((x,\delta)^T,(xs,\delta s_1)^T,(xm, \delta m)^T,(xg, \delta g)^T)^T$ represents the whole family data, always for a four members family. The purpose to define the family with at least three members, i.e. the grandmother, the mother, and the first sister is to cover at least the second-degree-generational heritability of the disease (see e.g. heritability of breast cancer). Notice again that this is easily extendable to a higher number of sisters, or other degree members of the family (see e.g. father's mother, aunts, female cousins). Hence, the full multivariate model is a generalization of the formula above, involving here all survival information from all family members and accounting for the conditional independence assumption. The multivariate posterior probability of belonging to the high-risk group is given by: \begin{align}
+    \label{formula:2.3}
+        % P(R=1\mid \text{family};\underline{\widehat{\zeta}}) &= \dfrac{f(\text{family}\mid R=1;\underline{\widehat{\zeta}})P(R=1)}{f(\text{family};\underline{\widehat{\zeta}})} 
+        &P(R=1\mid \underline{\textbf{x}};\widehat{\theta}) % = \dfrac{f(\underline{\textbf{x}}\mid R=1;\widehat{\theta})P(R=1)}{f(\underline{\textbf{x}})} 
+        = \dfrac{f(\underline{\textbf{x}}\mid R=1;\widehat{\theta})P(R=1)}{f(\underline{\textbf{x}}\mid R=1;\widehat{\theta})P(R=1)+f(\underline{\textbf{x}}\mid R=0;\widehat{\theta})P(R=0)}.
+    \end{align} Where, recall that for the two risk groups the familial density function is given by:
+    \begin{align*}
+        &f(\underline{\textbf{x}}\mid R=1)  \overset{\overset{\perp\mid R}{\downarrow}}{=} f(\underline{x}\mid R=1)f(\underline{xg}\mid R=1)f(\underline{xm}\mid R=1)f(\underline{xs}\mid R=1), \\
+        &f(\underline{\textbf{x}}\mid R=0)  \overset{\overset{\perp\mid R}{\downarrow}}{=} f(\underline{x}\mid R=0)f(\underline{xg}\mid R=0)f(\underline{xm}\mid R=0)f(\underline{xs}\mid R=0),
+    \end{align*}
+    where the univariate density function, split for the two risk groups, for the subject is given by: 
+    \begin{align*}
+        &f(\underline{x}\mid R=1)=f_1(x)^\delta S_1(x)^{(1-\delta)}, \\
+        &f(\underline{x}\mid R=0)=f_0(x)^\delta S_0(x)^{(1-\delta)},
+    \end{align*} with the following quantities of interest: 
+    \begin{align*}
+        &S_0(x) = \widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}_0(x),  \\
+        &f_0(x) = (1-\widehat{p}_0)\widetilde{f}_0(x),\nonumber \\
+        &S_1(x) = [S_0(x)]^{\widehat\alpha} = [\widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}_0(x)]^{\widehat\alpha} = \widehat{p}_0^{\widehat\alpha} + (1-\widehat{p}_0^{\widehat\alpha})\widetilde{S}_1(x),\nonumber \\ 
+        &f_1(x) = (1-\widehat{p}_0^{\widehat\alpha})\left(\dfrac{1-\widehat{p}_0}{1-\widehat{p}_0^{\widehat\alpha}}\right)\widehat{\alpha}\widetilde{f}_0(x)\left(\widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}_0(x)\right)^{\widehat\alpha-1}, \\
+        &\text{with } \widetilde{S}_1(x)=\dfrac{(\widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}_0(x))^{\widehat\alpha}-\widehat{p}_0^{\widehat\alpha}}{1-\widehat{p}_0^{\widehat\alpha}}.
+    \end{align*}
+
+Very useful is the probability of surviving within the next $k$ years, for those women who have not already experienced the onset. The probability is estimated as:
+\begin{align*}
+% \label{formula:4_2}
+        % &S(z+k\mid \text{family};\underline{\widehat{\zeta}}) = S(z+k\mid R=1,\text{family};\underline{\widehat{\zeta}})P(R=1\mid \text{family};\underline{\widehat{\zeta}}) \\ 
+        % &\qquad\qquad\qquad+S(z+k\mid R=0,\text{family};\underline{\widehat{\zeta}})P(R=0\mid \text{family};\underline{\widehat{\zeta}}). \nonumber \\ 
+        &S(x+k\mid \underline{\textbf{x}};\widehat\theta) = S(x+k\mid R=1;\widehat\theta)P(R=1\mid \underline{\textbf{x}};\widehat\theta)+S(x+k\mid R=0;\widehat\theta)P(R=0\mid \underline{\textbf{x}};\widehat\theta), \nonumber \\
+\end{align*}
+with 
+\begin{align}
+    &S(x+k\mid R=1;\widehat\theta) = S_1(x+k;\widehat\theta), \nonumber \\
+    &S(x+k\mid R=0;\widehat\theta) = S_0(x+k;\widehat\theta), \nonumber
+\end{align}
+where
+% with ``family'' referring to complete observed data of breast cancer experience of all family members, and 
+$P(R=1\mid \underline{\textbf{x}};\widehat\theta)$ is obtained in the previous step in Formula \ref{formula:2.3}. Notice that for such women, who have not experienced the disease onset yet, the observed time $x$ always corresponds to the censoring time $x = c$. Specifically, this is achieved for the univariate estimators through calculation, for each family, of the conditional probability \begin{align}
+P(R_i=1\ | (x_i, \delta_i); \widehat{\theta})= \frac{h \, \widetilde{f}_1(x_i) ^{\delta_i} \,  \widetilde{S}_1(x_i)^{1-\delta_i}}{h \, \widetilde{f}_1(x_i) ^{\delta_i} \,  \widetilde{S}_1(x_i)^{1-\delta_i} + (1-h) \, \widetilde{f}_0(x_i) ^{\delta_i} \,  \widetilde{S}_0(x_i)^{1-\delta_i}},
+\label{formula:2.4}
+\end{align}
+where $\widehat{\theta}$ is the vector of the estimated model parameters, such that in the aforementioned Formula \ref{formula:2.4} each survival and density function are of the type $f(x) = f(x;\widehat\theta)$.
+
+The formula for the full multivariate model is similar, but it involves the survival information from all family members, taking into account the conditional independence assumption within each family:
+\[
+P(R_i=1\mid (\textbf{x}_i, \text{\boldmath$\delta$}_i); \widehat\theta)= \frac{h \, \widetilde{f}_1(\textbf{x}_i) ^{\text{\boldmath$\delta$}_i} \,  \widetilde{S}_1(\textbf{x}_i)^{1-\text{\boldmath$\delta$}_i}}{h \, \widetilde{f}_1(\textbf{x}_i) ^{\text{\boldmath$\delta$}_i} \,  \widetilde{S}_1(\textbf{x}_i)^{1-\text{\boldmath$\delta$}_i} + (1-h) \, \widetilde{f}_0(\textbf{x}_i) ^{\text{\boldmath$\delta$}_i} \,  \widetilde{S}_0(\textbf{x}_i)^{1-\text{\boldmath$\delta$}_i}}.
+\]
+
+To simplify the expressions, above we have used the notation
+\[
+\widetilde{f}_r(\textbf{x}_i)^{\text{\boldmath$\delta$}_i}= \widetilde{f}_r(xg_i) ^{{\delta}g_i}  \,  \widetilde{f}_r(xm_i) ^{{\delta}m_i}  \,  \widetilde{f}_r(xs_i) ^{{\delta}s_i}  \,  \widetilde{f}_r(x_i) ^{\delta_i}  \, 
+\]
+for $r=0,1$, and where the four terms refer to the grandmother, the mother, the sister, and the subject, respectively. The notation for $\widetilde{S}_r(\textbf{x}_i)^{1-\text{\boldmath$\delta$}_i}$ is analogous.
+
+% qui 
+\subsection{ROC and AUC: univariate vs. multivariate model}
+The overall performance of the risk group classifier as a function of the cutoff for assignment to the groups can be assessed through the ROC curve \cite{pepe2003statistical}. The ROC shows the plot of the points (1-specificity, sensitivity) for all values of $p$ in $(0,1)$. Figure \ref{fig:Shinyapp} is an example of the output of a shiny-app that we developed to illustrate the functioning of the ROC curve and the AUC measure for the general setting of diagnostic tests. The shiny-app can be accessed at  (\href{https://marcobonetti.shinyapps.io/shinyapp}{https://marcobonetti.shinyapps.io/shinyapp}).
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{plots/Shinyapp.pdf}   
+    \caption{sample output from shiny-app illustrating ROC curves.}
+\label{fig:Shinyapp}
+\end{figure}
+
+% Figure \ref{fig:ROCUniv+MV} shows an example of ROC curves for risk class classification produced from fitting the univariate vs. the multivariate model.
+From the ROC curve an overall measure of the performance of the classifier, the Area Under the Curve (AUC), can be computed \cite{pepe2003statistical}. The AUC estimates are constructed from 100 simulated multivariate samples by comparing the known true value $R$, which we generate at the data generation step,to its posterior family-specific expected value obtained through likelihood estimation, with either one subject in the univariate case or all family members in the multivariate case. We consider the baseline survival distribution and the family sample size, which is one in the univariate case and four in the multivariate case. The posterior expected value of the latent risk is given by \begin{align*}
+    \mathbb E(R\mid \text{family data};\widehat\theta) = \frac{ P(R_i=1)f_\textbf{X}(\underline{\textbf{x}}_i\mid R_i=1;\widehat\theta)}{P(R_i=0)f_\textbf{X}(\underline{\textbf{x}}_i\mid R_i=0;\widehat\theta)+P(R_i=1)f_\textbf{X}(\underline{\textbf{x}}_i\mid R_i=1;\widehat\theta)}.
+\end{align*} 
+
+This quantity is thus compare to the real risk group. Straightforwardly, one can obtain the univariate counterpart of the posterior expected value of the latent risk. 
+
+To obtain the AUC from the ROC curve and compare the univariate vs. the multivariate models, we run some simulation studies on three different baseline survival function distributed according to an Exponential, a Weibull, or a Gamma distribution. We fix the parameter values at $(p, r, h, \lambda_0) \ = \ (0.8, 0.5, 1/30, 0.2)$ for the Exponential distribution, while at $(p, r, shape_0, scale_0, h) = (0.8, 0.5, 10, 70, 0.2)$ for the Weibull distribution and $(p, r, shape_0, scale_0, h) = (0.8, 10, 2, 0.5, 0.2)$ for the Gamma distribution. Notice that these cases coincide with the first scenario of each simulation above.  
+% For the Lognormal case we fix parameters at $(r, \ p, \ h, \mu_0, \ \sigma_0^2) \ = \ (0.8, \ 1 / 2, \ 0.1, \ 5, \ 1.5)$. When there are three parameters, the threshold $\gamma_0$ is set at $\gamma_0 = 40$. 
+
+The results showing the average AUC over 100 simulated samples are in Table \ref{tab:2.6}. In this analysis, the sample size is allowed to vary over three values: $n = 10^2, \ 10^3, \ 10^4$ to appreciate possible change in increasing the sample size. It is noteworthy that, for each model, the variance of the AUC values decreases as the sample size increases, as expected. The models that perform the best are highlighted in bold. Notably, the multivariate model outperforms the other models for each sample size and distribution. Moving from the univariate to the multivariate likelihood shows an increase of 10\% and more in the AUC, and considering that 0.5 coincides with a classification procedure by following the flipping of a coin, such improvement in classification performance is indeed significant. Computing the AUC with $R$ vs. its expected value $\mathbb E(R)$ has no meaning with the observed family history model because the information of the frailty is not involved in this model. Due to this fact, a comparison between $FH$ and $R$ both obtained in the data simulation process is applied to replace $\mathbb E(R)$ (results always in Table \ref{tab:2.6}). Results are quite poor for the univariate $FH$ model because the AUC, in some cases ($\approx 0.4$), has a lower value than having accuracy in classification with the flipping of a coin.
+\begin{table}[ht]
+\centering
+\begin{tabular}{l|ccc} \hline
+&\multicolumn{3}{c}{Number of families} \\ 
+Multivariate &$10^2$ &$10^3$ &$10^4$ \\ 
+Exponential & {0.6917} (0.0062) & {0.6902} (0.0019) & {0.6907} (0.0006) \\
+Weibull & {0.6564} (0.0070) & {0.6559} (0.0023) & {0.6558} (0.0007)      \\
+Gamma &\textbf{0.6923(0.0046)} &\textbf{0.6988(0.0008)} &\textbf{0.6957($<$0.0001)} \\ 
+% Lognormal \\
+% 3-parameters Gamma \\
+% 3-parameters Lognormal \\ 
+\hline Univariate \\
+Exponential & 0.5393 (0.0139) & 0.5379 (0.0101)  & 0.5409 (0.0008) \\
+Weibull & 0.5492 (0.0068) & 0.5498 (0.0030) & 0.5503 (0.0007) \\
+Gamma & \textbf{0.5927 (0.0079)} & \textbf{0.5798 (0.0010)} &\textbf{0.5816 (0.0001)} \\ 
+% Lognormal \\
+% 3-parameters Gamma \\
+% 3-parameters Lognormal \\ 
+\hline Univariate FH \\
+Exponential &0.4492 (0.0905) &0.4137 (0.0231) &0.4137 (0.0079) \\ 
+Weibull &\textbf{0.5183 (0.0143)} &\textbf{0.5213 (0.0026)} &\textbf{0.5211 (0.0007)} \\
+Gamma &0.5140 (0.0892) &0.4969 (0.0892) &0.4698 (0.0008) \\ 
+% Lognormal \\
+% 3-parameters Gamma \\
+% 3-parameters Lognormal \\
+\hline  
+\end{tabular}
+\caption{AUC results for the multivariate and the univariate models.}
+\label{tab:2.6}
+\end{table}
+% MVV-AUC-SAMEGENDATA-univariate-fh-exponential-RIGHT.R 
+
+Notice that by increasing the sample size there is no significant change in the value of the AUC. ROC curves from one of the 100 dataset are reported in Figures \ref{fig:ROC2.1}, \ref{fig:ROC2.2}, \ref{fig:ROC2.3}, \ref{fig:ROC2.4}, and \ref{fig:ROC2.5} as a graphical example. We report the number of the families into the sample, but no the number of subjects involved. Consider that this last is greater or equal to the number of families.
+\begin{figure}
+    \centering
+\begin{minipage}{0.5\linewidth}
+    \includegraphics[width = \linewidth]{plots/roc-curve-uni-expo_100.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-uni-expo_1000.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-uni-expo_10000.pdf}
+    \end{minipage}%
+\begin{minipage}{0.5\linewidth}
+    \includegraphics[width = \linewidth]{plots/roc-curve-uni-wei_100.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-uni-wei_1000.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-uni-wei_10000.pdf}
+\end{minipage}
+\caption{univariate -- Exponential (left), and Weibull (right) -- model ROC curves with number of families (sample size) varying among $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom).}
+\label{fig:ROC2.1}
+\end{figure}
+\newpage
+\begin{figure}
+    \centering
+\begin{minipage}{0.5\linewidth}
+    \includegraphics[width = \linewidth]{plots/roc-curve-multi-expo_100.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-multi-expo_1000.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-multi-expo_10000.pdf}
+    \end{minipage}%
+\begin{minipage}{0.5\linewidth}
+    \includegraphics[width = \linewidth]{plots/roc-curve-multi-wei_100.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-multi-wei_1000.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-multi-wei_10000.pdf}
+\end{minipage}
+\caption{multivariate -- Exponential (left), and Weibull (right) -- model ROC curves with number of families (sample size) varying among $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom).}
+\label{fig:ROC2.2}
+\end{figure}
+\newpage
+\begin{figure}
+    \centering
+\begin{minipage}{0.5\linewidth}
+    \includegraphics[width = \linewidth]{plots/roc-curve-fh-expo_100.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-fh-expo_1000.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-fh-expo_10000.pdf}
+    \end{minipage}%
+\begin{minipage}{0.5\linewidth}
+    \includegraphics[width = \linewidth]{plots/roc-curve-fh-wei_100.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-fh-wei_1000.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-fh-wei_10000.pdf}
+\end{minipage}
+\caption{observed FH -- Exponential (left), and Weibull (right) -- model ROC curves with number of families (sample size) varying among $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom).}
+\label{fig:ROC2.3}
+\end{figure}
+% Code always in stuff like MB-AUC-univariate-weibull.R from local computer. 
+\newpage
+\begin{figure}
+    \centering
+\begin{minipage}{0.5\linewidth}
+    \includegraphics[width = \linewidth]{plots/roc-curve-fh-gamma_100.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-fh-gamma_1000.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-fh-gamma_10000.pdf}
+    \end{minipage}%
+\begin{minipage}{0.5\linewidth}
+    \includegraphics[width = \linewidth]{plots/roc-curve-uni-gamma_100.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-uni-gamma_1000.pdf}
+    \includegraphics[width = \linewidth]{plots/roc-curve-uni-gamma_10000.pdf}
+\end{minipage}
+\caption{observed FH for Gamma distribution (left) and Univariate model (right) ROC curves with number of families (sample size) varying among $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom). Consider that the subjects sample size coincides to the number of families.}
+\label{fig:ROC2.4}
+\end{figure}
+\newpage
+\begin{figure}
+    \centering
+    \includegraphics[width = .5\linewidth]{plots/roc-curve-multi-gamma_100.pdf}
+    \includegraphics[width = .5\linewidth]{plots/roc-curve-multi-gamma_1000.pdf}
+    \includegraphics[width = .5\linewidth]{plots/roc-curve-multi-gamma_10000.pdf}
+    \caption{multivariate Gamma model ROC curves with number of families (sample size) varying among $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom). Consider that the subjects sample size coincides to the number of families.}
+    \label{fig:ROC2.5}
+\end{figure}
+\clearpage
+
+We report some illustrative results based on one sample of varying number of families into the sample: n = 100, 1,000, 10,000, exploring the three baseline survival distributions, Exponential, Weibull and Gamma. Figures \ref{fig:ER1}, \ref{fig:ER2}, \ref{fig:ER3}, \ref{fig:ER4}, \ref{fig:ER5}, \ref{fig:ER6}, \ref{fig:ER7}, \ref{fig:ER8}, \ref{fig:ER9} show the histograms of the family-specific estimated $P(R_i \mid \underline{x}_i, \underline\delta_i; \widehat\theta)$ as estimated from the simulated dataset using the univariate likelihood and the multivariate likelihood with overlapping densities, for the two risk groups and divided by distributions. Consider that the lighter area with dashed borders is the results of the distribution from the multivariate case, while the darker area without borders is from the univariate case. We can generally notice from these figures that the multivariate distribution of the probability of belonging to the high-risk group is more distributed on all window [0,1], contrarily to the univariate distribution. This allows to better identify the highest-risk families in order to be more accurate in addressing families to more intensive prevention strategies or not.
+\begin{figure}[ht]
+    \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_exp_100.pdf}
+    \caption{family-specific estimated probability of belonging to the high-risk group through maximization of the Exponential univariate likelihood (in grey) vs. the Exponential multivariate likelihood (lighter with dashed borders) grouped by true risk $R=0/1$ for $n=100$.}
+    \label{fig:ER1}
+\end{figure}
+\begin{figure}
+    \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_exp_1000.pdf}
+    \caption{same as Figure \ref{fig:ER1} but with $n=1000$.}
+    \label{fig:ER2}
+\end{figure}
+\begin{figure}
+    \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_exp_10000.pdf}
+    \caption{same as Figure \ref{fig:ER1} but with $n=10000$.}
+    \label{fig:ER3}
+\end{figure}
+\begin{figure}
+    \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_wei_100.pdf}
+    \caption{family-specific estimated probability of belonging to the high-risk group through maximization of the Weibull  univariate likelihood (in grey) vs. the Weibull multivariate likelihood (lighter with dashed borders) grouped by true risk $R=0/1$ for $n=100$.}
+    \label{fig:ER4}
+\end{figure}
+\begin{figure}
+    \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_wei_1000.pdf}
+    \caption{same as Figure \ref{fig:ER4} but with $n=1000$.}
+    \label{fig:ER5}
+\end{figure}
+\begin{figure}
+    \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_wei_10000.pdf}
+    \caption{same as Figure \ref{fig:ER4} but with $n=10000$.}
+    \label{fig:ER6}
+\end{figure}
+\begin{figure}
+    \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_gamma_100.pdf}
+    \caption{family-specific estimated probability of belonging to the high-risk group through maximization of the Gamma univariate likelihood (in grey) vs. the Gamma multivariate likelihood (in grey with dashed borders) grouped by true risk $R=0/1$ for $n=100$.}
+    \label{fig:ER7}
+\end{figure}
+\newpage
+\begin{figure}
+    \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_gamma_1000.pdf}
+    \caption{same as Figure \ref{fig:ER7} but with $n=1000$.}
+    \label{fig:ER8}
+\end{figure}
+\newpage
+\begin{figure}
+    \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_gamma_10000.pdf}
+    \caption{same as Figure \ref{fig:ER7} but with $n=10000$.}
+    \label{fig:ER9}
+\end{figure}
+% code in LOCAL post_prob_high-risk_group.R
+\clearpage
+% The estimated probabilities, computed on the same subjects, show a Spearman's rank correlation index of 0.3978 (0.4093 for the $R=0$ group and 0.3334 for the R=1 group).
+
+% These estimated probabilities can be used to classify the families to the high-risk or the low-risk group. Marginally for the two estimation procedures, for one large sample, we can compare the classification errors as one chooses different percentiles $q_p$ ($p=0.75, 0.80, 0.85, 0.90, 0.90$) of the predicted probabilities $P(R_i=1\ | (x_i, \delta_i); \widehat{\theta})$ or $P(R_i=1\ | (\text{\boldmath$x$}_i, \text{\boldmath$\delta$}_i); \widehat{\theta})$ to classify subjects (i.e., families) to the high-risk (when $>q_p$) vs. the low-risk group (when $\leq q_p$).
+
+% Indeed, for each estimation procedure the probabilities of the two classification errors are $P({\rm low} | R=1)$ (the { false negative rate}, or 1-sensitivity) and $P({\rm high} | R=0)$ (the { false positive rate}, or 1-specificity), and they can be estimated by the corresponding relative frequencies, for different choices of $p$.
+% \begin{figure}[t!]
+% 	\centering
+% 	\includegraphics[width=6in]{plots/ER-Univ-vs-MV.pdf}
+% 	\caption{Estimated probabilities of $R=1$ for individual families, from univariate (top) and multivariate (bottom) likelihood estimation. For each case, the two histograms refer to the two (known) groups of low-risk $(R=0, left)$ and high-risk $(R=1, right)$ families. Parameters were $(p_0, shape_0, scale_0, \alpha, h)=(0.8, 10.0, 70.0,  0.4,  0.2)$, for n=1E06 families.}
+% \label{fig:ERUniv+MV}
+% \end{figure}
+%\begin{footnotesize}
+% The following table shows the estimated probabilities of false negative (i.e. fraction classified as low-risk among the $R=1$ families) and of false positive (i.e. fraction classified as high-risk among the $R=0$ families) for a selection of values of the threshold $p$, separately for the two estimation procedures:
+% \begin{verbatim}
+% [1] "p0 = 0.8; shape0 = 10; scale0 = 70; alpha1 = 0.4; h = 0.2"
+
+% [1] "Comparing classification errors for univariate vs. MV:"
+
+% > print(errorsuni)
+%                    0.8      0.85        0.9       0.95
+%          FNR 0.7184863 0.7680744 0.81955663 0.90574953
+%          FPR 0.1796771 0.1295744 0.07913437 0.03896751
+
+% > print(errorsmv)
+%                    0.8      0.85        0.9       0.95
+%          FNR 0.5808513 0.6531839 0.73914133 0.85268886
+%          FPR 0.1453620 0.1009300 0.05989486 0.02573847
+% \end{verbatim}
+%\end{footnotesize}
+%\end{frame}
+
+%\subsection{Cross-classification (wrong and correct) for univariate vs. MV estimation}
+%%\begin{frame}[fragile]{Cross-Classification}
+%XXX Code is (Family-History-Optim-SimpleGen-Uni-vs-MVar-AUC.r)
+%\begin{footnotesize}
+%\begin{verbatim}
+%# Univariate estimation
+%> # COMPUTE ROC and AUC
+%> roc_objuni <- roc(R,ERuni)
+%> auc(roc_objuni)
+%Area under the curve: 0.5722
+%> print(c(parsimsuni,AUCuni))
+%[1]  0.75708587  9.93066615 69.93920043  0.22458970  0.01386504  0.57221375
+%> # Now we compute the classification error rates for different percentiles
+%> # used as cutoffs
+%> pvals <- c(0.8, 0.85, 0.9, 0.95)
+%> print(errorsuni)
+%          0.8      0.85        0.9       0.95
+%FNR 0.7184863 0.7680744 0.81955663 0.90574953
+%FPR 0.1796771 0.1295744 0.07913437 0.03896751
+%> # Extract values from ROC above to compare!
+%> print(errorsrocuni)
+%          0.8      0.85        0.9       0.95
+%FNR 0.7184863 0.7680694 0.81620934 0.90574452
+%FPR 0.1796783 0.1295744 0.07913437 0.03896751
+%\end{verbatim}
+%\end{footnotesize}
+%%\end{frame}
+
+
+%%\begin{frame}[fragile]
+%\begin{footnotesize}
+%\begin{verbatim}
+%> # MV estimation    
+%> roc_objmv <- roc(R,ERmv)
+%> auc(roc_objmv)
+%Area under the curve: 0.7142
+%> print(c(parsimsmv,AUCmv))
+%[1]  0.7987713 10.1607647 69.8634798  0.3902196  0.1860385  0.7141751
+%> # Now we compute the classification error rates for different percentiles
+%> # used as cutoffs
+%> pvals <- c(0.8, 0.85, 0.9, 0.95)
+%> print(errorsmv)
+%          0.8      0.85        0.9       0.95
+%FNR 0.5808513 0.6531839 0.73914133 0.85268886
+%FPR 0.1453620 0.1009300 0.05989486 0.02573847
+%> # Extract values from ROC above to compare!
+%> print(errorsrocmv)
+%          0.8      0.85        0.9       0.95
+%FNR 0.5808513 0.6531839 0.73913632 0.85268385
+%FPR 0.1453633 0.1009312 0.05989486 0.02573847
+%> ####################################
+%> print(paste("n =",n))
+%[1] "n = 1e+06"
+%> summary(ERuni)
+%    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+%0.005351 0.008468 0.011213 0.013863 0.013009 0.058915 
+%> print(paste("AUC(uni) =",AUCuni))
+%[1] "AUC(uni) = 0.572213750197479"
+%> summary(ERmv)
+%   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+%0.05313 0.09346 0.12661 0.18604 0.23882 0.90432 
+%> print(paste("AUC(MV) =",AUCmv))
+%[1] "AUC(MV) = 0.714175116170144"
+%\end{verbatim}
+%\end{footnotesize}
+%%\end{frame}
+
+%%\begin{frame}[fragile]
+%\begin{footnotesize}
+%\begin{verbatim}
+%[1] "true parameter values:"
+%[1] "p0 = 0.8 shape0 = 10 ; scale0 = 70 ; alpha = 0.4 ; h =  0.2"
+%[1] "Comparing parameter estimation for univariate vs. MV:"
+%> print(rbind(truepars,parsimsuni,parsimsmv))
+%                [,1]      [,2]     [,3]      [,4]       [,5]
+%truepars   0.8000000 10.000000 70.00000 0.4000000 0.20000000
+%parsimsuni 0.7570859  9.930666 69.93920 0.2245897 0.01386504
+%parsimsmv  0.7987713 10.160765 69.86348 0.3902196 0.18603847
+%[1] "Comparing classification errors for univariate vs. MV:"
+%> print(errorsuni)
+%          0.8      0.85        0.9       0.95
+%FNR 0.7184863 0.7680744 0.81955663 0.90574953
+%FPR 0.1796771 0.1295744 0.07913437 0.03896751
+%> print(errorsmv)
+%          0.8      0.85        0.9       0.95
+%FNR 0.5808513 0.6531839 0.73914133 0.85268886
+%FPR 0.1453620 0.1009300 0.05989486 0.02573847
+%\end{verbatim}
+%\end{footnotesize}
+%%\end{frame}
+
+
+%%\begin{frame}[fragile]
+%\begin{footnotesize}
+%\begin{verbatim}
+%> print("Comparing predicted probabilities for univariate vs. MV:")
+%[1] "Comparing predicted probabilities for univariate vs. MV:"
+%> print(cor(ERuni,ERmv))
+%[1] 0.4175759
+%> print(cor(ERuni,ERmv,method="spearman"))
+%[1] 0.3977754
+%> print(cor(ERuni[R==0],ERmv[R==0],method="spearman"))
+%[1] 0.409285
+%> print(cor(ERuni[R==1],ERmv[R==1],method="spearman"))
+%[1] 0.333372
+%\end{verbatim}
+%\end{footnotesize}
+%%\end{frame}
+
+% \subsection{Cross-classification for univariate vs. MV model}
+% The cross-classification rates are estimated as follows:
+% %\begin{footnotesize}
+% \begin{verbatim}
+% [1] "Cross-classification rates for R=0:"
+
+%                  0.8       0.85        0.9        0.95
+% lowlow0   0.72993593 0.80707389 0.88406943 0.940642350
+% lowhigh0  0.09038699 0.06335172 0.03679620 0.020390137
+% highlow0  0.12470204 0.09199611 0.05603571 0.033619178
+% highhigh0 0.05497504 0.03757827 0.02309866 0.005348335
+
+% [1] "Cross-classification rates for R=1:"
+
+%                 0.8       0.85        0.9       0.95
+% lowlow1   0.4782626 0.56632960 0.66682869 0.79399090
+% lowhigh1  0.2402237 0.20174480 0.15272795 0.11175863
+% highlow1  0.1025886 0.08685434 0.07231264 0.05869796
+% highhigh1 0.1789251 0.14507126 0.10813072 0.03555250
+
+% [1] "Wrong-Correct classification rates:"
+
+%                    0.8     0.85      0.9     0.95
+% wrongwrongall 0.139448 0.143098 0.151564 0.162733
+% wrongcorrall  0.147756 0.113898 0.075332 0.049213
+% corrwrongall  0.092822 0.068042 0.043884 0.028035
+% corrcorrall   0.619974 0.674962 0.729220 0.760019
+% \end{verbatim}
+
+% \section{{$R$} vs. {$FH(t)$}}
+% %\begin{frame}{R vs $FH(t)$ (very ongoing)}
+% Recall Figure \ref{fig:Family_times}. One often uses the covariate
+% $$FH(x)=1({\sc one \  or \ more \ cases \ among \ relatives \ by \ calendar \ time \ } b+x)$$
+% (with $b$=calendar birth time of the main subject) to summarize the main subject's family history of the disease. Such variable is then used as a covariate in a univariate model for the age at onset of a subject observed at calender time $b+x$. Such a procedure, however, appears to suffer from several drawbacks:
+% \begin{itemize}
+% \item The potential for misclassification $FH(x)$ when it is used as a proxy for $R$. For example, the comparison with $FH(x)$, defined as above as having at least one observed case in the family at the time of the event of the subject or at the time of right censoring of the subject yields the following (XX NOTE: DETAILS MISSING HERE):
+% \begin{verbatim}
+% > # Comparison with misclassification rates of FH(x):
+
+%                                     R
+%                  FHx        0              1
+%                    0    0.519689 0.069090
+%                    1    0.280747 0.130474
+
+% \end{verbatim}
+% %> print(sum(FHt[R==0] == 0)/sum(R==0))
+% %[1] 0.6492574
+% %> print(sum(FHt[R==0] == 1)/sum(R==0))
+% %[1] 0.3507426
+% %> print(sum(FHt[R==1] == 0)/sum(R==1))
+% %[1] 0.3462047
+% %> print(sum(FHt[R==1] == 1)/sum(R==1))
+% %[1] 0.6537953
+% \item Indeed, $FH(x)$ is time-varying (and it can only increase), while $R$ is clearly not.
+% \item $FH(x)$ depends on family size.
+% \end{itemize}
+% The question then is: what is $FH(x)$ truly estimating when used as a covariate in a univariate model?
+%   (VERONICA: COMPLETE THIS SECTION AND ADD MORE FROM YOUR TEXT TO THIS PART)
+\section{Discussion}\label{sec:2.4}
+Breast cancer is a significant global health concern, and despite some progress in recent years, there is still wide room for improvement. Prior studies have explored conventional survival models and the use of family history indicator. However, we firmly believe in adopting a cure rate structure when analysing the breast cancer development, being aware that a portion of subjects may never experience the disease onset, no matter how long will be their lifespan. In the hypothetical scenario where every person develops breast cancer, the cure rate model relies on the usual survival model. Our research proves the efficacy of the cure rate structure in modeling breast cancer time-to-onset, specifically when considering a latent binary risk factor.
+
+Additionally, family-related data plays a critical role in elucidating the clustering of breast cancer cases. Merely relying on a raw summary of familial information, such as a family history indicator, may prove inadequate in capturing the full complexity of the phenomenon.
+
+A potential extension of our work is to increase the number of risk groups beyond two. We propose building models with k-class risk groups. Another interesting direction is to explore higher levels of heritability than the first-degree-generational level. This could involve the grandmother from both the maternal and paternal sides. Additionally, covariates may be incorporated to tailor the risk, including the family history indicator as a simple covariate. We talk about our preliminary analysis on the extension to covariates in Appendix \ref{appendix:2.b}. Moreover, moving to the analysis on available data would be a crucial point to validate our work in a real-world setting.
+\clearpage
+\renewcommand{\bibname}{References}
+\bibliographystyle{apalike}
+\bibliography{biblio}

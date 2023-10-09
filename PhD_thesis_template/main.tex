@@ -1,0 +1,142 @@
+\documentclass[a4paper, 12pt, english]{book} %, openright
+% \usepackage[doublespacing]{setspace}
+%mettere oneside dopo la lingua per stampare solo fronte
+% \usepackage[toc,page]{appendix}
+% \usepackage{array, afterpage, 
+\usepackage{amsfonts, amsmath, amsthm, amssymb, accents}
+% \usepackage{babel}
+% \usepackage{bbm, bm, booktabs}
+% \usepackage{caption}
+% \usepackage{capt-of}
+% \usepackage{chngcntr}
+% \usepackage{commath}
+\usepackage{booktabs}
+\usepackage[sectionbib]{chapterbib}
+\usepackage{cancel}
+% \usepackage{datetime}
+% \usepackage{epstopdf, enumitem}
+% \usepackage{etoolbox}
+% \usepackage{fancyvrb, floatrow}
+\usepackage{gfsartemisia}
+\usepackage[T1]{fontenc}
+\usepackage[inner=2.5cm,outer=2.5cm,bottom=4cm,top=3cm]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+% \usepackage{lipsum}
+% \usepackage{lscape}
+% \usepackage{lmodern, longtable}
+% \usepackage{marginnote, mathrsfs}
+% \usepackage{multirow}
+\usepackage[square,numbers]{natbib}
+\bibliographystyle{apalike}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+% \usepackage{rotating}
+\usepackage{soul}
+% \usepackage{subfigure}
+% \usepackage{stmaryrd}
+% \usepackage{titlesec}
+\usepackage{tikz}
+\tikzset{
+	position label/.style={
+		below = 3pt,
+		text height = 1.5ex,
+		text depth = 1ex
+	},
+	brace/.style={
+		decoration={brace, mirror},
+		decorate
+	}
+}
+\usetikzlibrary{arrows,positioning,patterns,decorations.pathreplacing} 
+\usepackage{url}
+\usepackage{wrapfig}
+
+\newcounter{appendix}[chapter]
+% \linespread{1.5} %interlinea 
+
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lem}{Lemma}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+\newtheorem{defi}{Definition}[section]
+\newtheorem{prop}{Proposition}[section]
+
+% \author{}
+
+%\input{Preamble}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\dbtilde}[1]{\accentset{\approx}{#1}}
+
+\newenvironment{abstract}{%
+\clearpage\thispagestyle{empty}\vspace*{3\baselineskip}
+\begin{center}\textbf\abstractname\end{center}
+\begin{quotation}
+}{\end{quotation}\clearpage}
+
+\begin{document}
+%	\hypersetup{pageanchor=false}
+%	\thispagestyle{empty}
+%	\fontsize{3.76mm}{5mm}\selectfont
+%	\input{Declaration}
+%	\hypersetup{pageanchor=true}
+\begin{titlepage}
+	\Large
+	\begin{center}
+		{\LARGE \textsc{Università Commerciale ``Luigi Bocconi''} } \\
+		{\LARGE \textsc{PhD School} }
+		\vspace{1.5cm} \\
+		\begin{raggedright}
+			PhD program in: Statistics \\
+			Cycle: XXXV \\
+			Disciplinary Field (code): SECS-S/01\\
+		\end{raggedright}
+		\vfill
+		
+		{\Huge \bfseries Risk prediction and family history effect in survival models for disease onset, with a specific focus on breast cancer}
+		\vfill
+		
+		\begin{raggedright}
+			Advisor: Marco Bonetti \\
+			%Co-Advisor (if any): \texttt{[coa\_name] [coa\_surname]} \\
+		\end{raggedright}
+		
+		\vspace{1.5cm}
+		
+		\begin{raggedleft}
+			PhD Thesis by \\
+			Maria Veronica Vinattieri \\
+			ID number: 3111885 \\
+		\end{raggedleft}
+		
+		\vfill
+		
+		\textbf{Year: 2024}
+	\end{center}
+\end{titlepage}
+
+\thispagestyle{empty}
+%\fontsize{3.76mm}{5mm}\selectfont
+\include{Acknowledgement}
+\include{PhD_thesis_template/Abstract/true-abstract}
+\include{Intro/IntroductionPhD}
+% \include{Abstract/Abstract}
+% \clearpage\setcounter{page}{1}
+\tableofcontents %indice
+\markboth{\textsc{Contents}}{\textsc{Contents}}
+
+\include{Chapter1/Chapter1}
+\include{Chapter2/Chapter2new}
+% \include{Chapter2/Chapter2}
+\include{Chapter3/Chapter3}
+\include{Chapter4/Chapter4}
+% \bibliographystyle{apalike}
+% \bibliography{biblio}
+\include{Appendix}
+\end{document}	

@@ -1,0 +1,812 @@
+\chapter{Family mortality: genetic risk estimation}{Joint work with Marco Bonetti\footnote{Carlo F. Dondena Research Center, Bocconi Institute of Data Science and Analytics, Department of Social and Political Sciences, Bocconi University, Milan, 20136, Italy, email: marco.bonetti@unibocconi.it}}
+\markboth{\textsc{Family mortality: genetic risk estimation}}{\textsc{Family mortality: genetic risk estimation}}\label{chapter:3}
+
+\begin{abstract}
+We study the heritability of longevity, as we assume that families can be categorized in different groups of ``risk'' of life expectancy. We may divide families into different clusters, within which they share the same risk of mortality. This risk is latent and unchanged from birth. 
+To achieve this, we develop a classification algorithm that operates by computing the family-specific risk posterior quantile. This algorithm is applied to scenarios involving both discrete k-level risk and continuous risk. Additionally, we explore the binary splitting as an alternative approach to find a low-risk group and a high-risk group of life expectancy. By conducting this new analysis, we aim to contribute to the fundamental task of assessing risk, which is crucial in enhancing the survival prospects of individuals.
+%First of all, we can tailor the intensity of the screening schedule according to the risk of each individual. Moreover, the high-risk subject becomes more aware of the risk it is facing and can adapt their life to a healthier lifestyle. 
+
+\textbf{keywords}: risk prediction, heritability of longevity, shared frailty, survival analysis 
+\end{abstract}
+\section{Introduction and literature}
+We need to highlight several characteristics that influence the nature of our investigation, by focusing on the event of ``death''. Firstly, it is important to notice that every individual will eventually experience this event, leading to a probability of $P(T<\infty)=1$. Secondly, there exists a well-defined density associated with this event, enabling rigorous statistical analysis. Lastly, the application of the Cox model, which is a widely used survival analysis tool, does not pose any complications in this context. These aforementioned features greatly facilitate the formulation and examination of the problem.
+
+We want to study the risk of death conditionally to the genetic make-up of the family and estimate it. Longevity is known to be in part hereditary, so the risk of dying has a familial component. The survival family history is crucial to involve in the analysis, to assess the subject's (being part of a family) risk of survival. The definition of a positive family history refers to the collection of the survival experiences of the other family members. The significance of a family history increases with the number of deaths, their ages of death, and the closeness of the genetic relationship with the subject \citep{colorectalcancer}. The significance of family history varies according to other aspects also (see e.g. \cite{colorectalcancer, famhistory_improvehealth}). We may divide families into different clusters, within which they share the same risk of dying. The interest is the classification of families into one of the risk groups so that the subject's risk can be better estimated. 
+
+Initially, we investigate the influence of familial risk on longevity by examining a recently developed model on the heritability of longevity \cite{kaplanis2018quantitative}. The key components of this model are outlined as follows. For the $j$th individual, we let $t_j$ be the longevity, and $s_j \in$ $\{$male, female$\}$ the sex. Longevity is defined as the difference between the age at death of the subject and the expected age of death based on temporal and environmental factors. Below we use the subscripts $m$ (mother), $f$ (father) and $p$ (generic parent) to identify the corresponding family members of subject $j$. The simplest model is linearly based on the mid-parent heritability: \begin{align*}
+    t_j = \gamma_0\frac{(t_{m_j}+t_{f_j})}{2} + \delta.
+\end{align*} A second model comes from considering the heritability to be different based on whether the parent has concordant sex with the individual $j$ or not. Accordingly, the models become two, one for concordant-sex and one for discordant-sex, i.e.:\begin{align*}
+    t_j = \delta_0+\gamma_0 t_{p_j} + \gamma_1 \mathbb{I}(s_j,s_{p_j}) + \gamma_2(t_{p_j} \times \mathbb{I}(s_j,s_{p_j})),
+\end{align*} where the indicator of concordant sex is $\mathbb{I}(s_j,s_{p_j}) = 1 \iff s_j = s_{p_j}$, $p \in \{m, \ f\}$. Estimation of such models can be performed by the least square method \cite{kaplanis2018quantitative} from data consisting of individual medical and biological information in population-scale family trees. 
+
+We investigate an alternative model that can be used to address the effect of family history on survival from a fully multivariate perspective. Different from what we have seen so far, the quantity of interest $t_i$ is the time-to-event, where the event is death. We therefore develop survival analysis models and methods (see, e.g. \cite{lawless2011statistical}). We assume that families are split into groups with different hazard functions and characterized by different survival curves. 
+
+This structure recalls a mixture for survival models, where the family risk is the mixing quantity. Family risk is therefore treated as a latent family feature on survival, at the family level (where the family is seen as the cluster). So this means that all the family members have the same risk of death from birth and that is not directly observable. 
+
+Frailty models offer a viable approach for constructing a mixture in the context of survival models. The frailty quantity is a random effect that captures the unobserved heterogeneity among groups, given different distributions to subjects who belong to different groups. We refer our proposal to the general conditional model (see \cite{hougaard2012analysis}) called the univariate frailty model. To fix the idea, conditionally to the frailty quantity of interest, i.e. the unobserved family risk, the hazard function has a multiplicative form involving the baseline hazard and the risk. Notice that the distribution of the risk can be seen as the mixture distribution. The very first set to develop the univariate frailty model is based on splitting families into two groups: a low-risk and a high-risk group. The latent family risk, which is called ``$R$'', assumes the value ``$R=low/high$''. The model for the risk of death is represented as follows. The hazard function for the survival times of all family members in the two groups can be defined as $\lambda_0(t)$ and $\lambda_1$(t) = $\alpha \lambda_0$(t) for $R=0$ and $1$, respectively. Notice that the hazard function in the low-risk group $\lambda_0(t)$ is taken as the baseline hazard. While the hazard of the high-risk group $\lambda_1(t)$ is proportional to the baseline hazard up to some constant $\alpha$. The corresponding survival functions are the baseline survival function and the high-risk group survival: \begin{align*}
+    S_0(t) &= e^{-\int_0^t\lambda_0(u)\text{d}u} \\ 
+    S_1(t) &= e^{-\int_0^t\lambda_1(u)\text{d}u} = e^{-\int_0^t\alpha\lambda_0(u)\text{d}u} = \left[e^{-\int_0^t\lambda_0(u)\text{d}u}\right]^{\alpha}= \left[S_0(t)\right]^{\alpha},
+\end{align*}
+following the typical Lehmann survival structure \cite{lehmann2005testing}. We assume $\alpha > 0$ because, by definition, the high-risk survival function should always be lower than the low-risk survival. This assures that in the high-risk group subjects die earlier and in a higher number. 
+
+Notice that, according to the value assumed by the baseline hazard, we can observe different scenarios. When the baseline hazard is not ``too small'' then the two hazards are different and the high-risk group produces events earlier. Then, inferring the latent group for the $j$th subject should be relatively easy at the beginning of the calendar time axis because one will already observe some deaths mainly in high-risk families. On the other hand, when the baseline hazard is small, inferring the latent group for the $j$th subject should be easy later when more events occur in the high-risk families compared to a few events in the low-risk families. However, learning about $R$ will be difficult at the beginning when the risk of death is low and none or very few events occur in both groups.
+
+We begin by extending the univariate frailty model to accommodate multiple time-to-event observations. In this framework, we incorporate the birth cohort effect for each family (cluster), as described in \cite{rodriguez2005multivariate} and other relevant studies. An interesting fact about this model is that the conditional independence assumption holds. For example, consider families made of two subjects, say, mother and daughter. We thus have a bivariate frailty model, where $R$ is again the family risk parameter, so that $T_1 \bot T_2|R$. Also, the pairs ($T_1$, $T_2$) within each risk  group are independent. The frailty (random) effect $R$ has a multiplicative effect on the hazard function as described above. 
+
+In Section \ref{sec:methods pap2} we explore the methods, in Section \ref{sec: risk classification pap2} we implement the risk classification algorithm, and in Section \ref{sec: simulation pap2} we show some results from simulation studies, as long as estimation is possible only if all the family survival data are available. We conclude the analysis with some comments in Section \ref{sec: discussion pap2}. 
+
+\section{Methods} 
+\label{sec:methods pap2} 
+Recall that $R$ is the continuous frailty variable that follows a parametric distribution characterized by $\theta$. Within such a framework, we use $i$ to identify the family (out of $n$) and $j$ to identify its $n_i$ members. Following \cite{hougaard2012analysis} we develop the complete likelihood $L(\underline{R};\underline{X})$ for the problem, where $\underline{X}=\left\{\underline{x}_i,i=1,\dots,n \right\}$, and $\underline{x}_i=(x_{ij},\delta_{ij})^T$, $x_{ij}=\text{min}(t_{ij}, c_{ij})$, $\delta_{ij}=\mathbb{I}(t_{ij} \le c_{ij})$ follow the usual notation, that has $t$ indicate the survival time and $c$ indicate the (independent) censoring time. $X_{ij}$ indicates the baseline covariate vector for subject $j$ in family $i$. The complete likelihood $L(\underline{R};\underline{X})$ can be written in terms of the frailty parameter $\theta$ and the survival parameters, i.e. the vector coefficient $\beta$ for the covariate effects and the baseline hazard function $\lambda_0$. So, following the shared frailty hazards structure, we have $\lambda_{ij}(t|z_{ij},R_i)=R_i\cdot\lambda_{0ij}(t|z_{ij})$, and $\lambda_{0ij}(t|z_{ij})=\lambda_0(t)\text{exp}(z_{ij}'\beta)$ for family $i$. The full likelihood is composed by two quantities: $\mathcal{L}(\beta,\lambda_0,\theta)=\mathcal{L}_1(\theta)\mathcal{L}_2(\beta,\lambda_0)$.
+The estimation procedure follows the approach from \cite{hougaard2012analysis} with the notation from \cite{yu2006estimation}. The frailty $R$ can be taken to be distributed as a Gamma with shape $\theta$ and rate $1/\theta$: \begin{align*}
+    &\mathcal{L}_1(\theta) = \underset{i}{\prod}\frac{1}{\Gamma(1/\theta)\theta^\theta}R_i^{\theta-1}e^{-R_i/\theta}, \\
+    &L_1=\text{log}\mathcal{L}_1(\theta) = \underset{i}{\sum}\left[-\text{log}(\Gamma(\theta))-\theta\text{log}(\theta)+(\theta-1)\text{log}(R_i)-\frac{R_i}{\theta}\right].
+\end{align*} We compute also the survival component of the likelihood: \begin{align*}
+    &\mathcal{L}_2(\beta,\lambda_0)=\prod_{i=1}^n\prod_{j=1}^{n_i}\lambda_{ij}(x_{ij})^{\delta_{ij}}S_{ij}(x_{ij}) =\prod_{i=1}^n\prod_{j=1}^{n_i}\left(R_i\cdot\lambda_{0ij}(x_{ij}|z_{ij})\right)^{\delta_{ij}}\text{exp}(-R_i\cdot\Lambda_{0ij}(x_{ij}|z_{ij})), \\
+    &L_2=\text{log}\mathcal{L}_2(\beta,\lambda_0)= \sum_{i=1}^n\sum_{j=1}^{n_i}\delta_{ij}\text{log}(R_i\cdot\lambda_{0ij}(x_{ij}|z_{ij}))-R_i\cdot\Lambda_{0ij}(x_{ij}|z_{ij}),
+\end{align*} where $\Lambda(t)$ indicates the cumulative hazard function. The full log-likelihood is then $L(\theta,\beta,\lambda_0)=L_1(\theta) + L_2(\beta,\lambda_0)$.
+
+To estimate the model parameters, we may specify the form of the baseline hazard function. Indeed, the baseline hazard can assume a parametric form or it can be left unspecified (this corresponds to the semiparametric case) \cite{duchateau2007frailty}.
+
+For example, for the parametric specification a common model for the time-to-event variable is the Weibull distribution $T \sim\text{Weibull}(\text{shape=}\gamma, \text{scale=}\mu)$ with the corresponding hazard functions. Given the multiplicative frailty structure, one can reparametrize the conditional (on $R$) survival distribution as $T\sim\text{Weibull}(\text{shape}=\delta,\text{scale}=\mu / R^{1/\delta})$. Parameter estimation is then achieved by maximizing the log-likelihood function \cite{munda2012parfm} through the Expectation Maximization (EM) algorithm \cite{duchateau2007frailty}, \cite{balan2019frailtyem}. In both parametric and semiparametric cases, all parameters can be estimated and used to perform classification. We may compute some summary measures for the estimated parameter. The variance of $\widehat{\theta}$ is computed following the procedure: \begin{align*}
+    &\widehat{\theta} \pm 1.96\widehat{\sigma}_{\widehat{\theta}} \\
+    &U-L=4\widehat{\sigma}_{\widehat{\theta}} \\
+    &\widehat{\sigma}_{\widehat{\theta}}=\frac{U-L}{4}.
+\end{align*}
+We can assess the identifiability of the parameter estimation through a comparison between the empirical variance and the one computed here above. 
+
+Notice that this survival method can be extended to the framework of disease development. This extension coincides with the previous Chapter \ref{chapter:2}.
+\section{Risk classification}
+\label{sec: risk classification pap2}
+We implement a risk classification algorithm for k-latent discrete risk classes, that can be also used in the continuous frailty risk setting. To fix ideas, we discretize the continuous frailty assuming infinitely many classes of risk. In this way, the risk can be considered discrete. Further, we will extend to a proper classification algorithm for the continuous framework. Some more details are collected in Appendix \ref{appendix:3.d}. 
+
+In the parametric approach, the prediction follows a method based on the expectation step of the expectation-maximization (EM) algorithm \cite{munda2012parfm}. Our contribution refers to the semiparametric approach instead. We suggest performing risk prediction by fixing a grid of values $\{r_1,\dots,r_K\}$ for the frailty quantity and implementing the following steps: \begin{itemize}
+    \label{item:1}
+    \item[(i)] obtain $\widehat{S}_0(x_{ij})$ and $\widehat{\lambda}_0(x_{ij})$ from the Breslow estimator. Details are collected in Appendix \ref{appendix:3.e}; \item[(ii)] compute $\widehat{f}(\underline{x}_i|r_k)=\prod_{j=1}^{n_i}\left[(\widehat{\lambda}_0(x_{ij})r_k)^{\delta_{ij}}[\widehat{S}_0(x_{ij})]^{r_k}\right]$;
+    \item[(iii)] compute $\widehat{f}(\underline{x}_i,r_k;\widehat{\theta})=\prod_{j=1}^{n_i}\left[(\widehat{\lambda}_0(x_{ij})r_k)^{\delta_{ij}}[\widehat{S}_0(x_{ij})]^{r_k}\right]f(r_k|\widehat{\theta})$, $\forall r_k$ in the grid;
+    \item[(iv)] compute the integral  $\widehat{f}(\underline{x}_i;\widehat{\theta}) = \underset{\mathbb{R}^+}{\int}f(\underline{x}_i|r_i)f(r_i;\widehat{\theta})\text{d}r_i =  \underset{k}{\sum} \Delta(r_k)\widehat{f}(\underline{x}_i,r_k;\widehat{\theta})$, where $\Delta(r_k) = r_{k+1}-r_{k}$;
+    \item[(v)] compute $\widehat{f}(r_k|\underline{x}_i;\widehat{\theta})=\widehat{f}(\underline{x}_i,r_k;\widehat{\theta})/\underset{k}{\sum} \Delta(r_k)\widehat{f}(\underline{x}_i,r_k;\widehat{\theta})$.
+\end{itemize} The predicted continuous shared frailty value $\widehat{R}_i$ for each family $i$ is computed with the rule below, i.e. it takes the value corresponding to summing up the estimated (as above) density function on the grid values until the desired threshold quantile $q\in[0,1]$: \begin{align}
+    \label{cont_frailty}
+    \widehat{R_i} = r_k:\underset{j:r_j\le r_k}{\sum}\widehat{f}(r_j|\underline{x}_i;\widehat{\theta})\Delta(r_j) \le q.
+\end{align} Indeed we choose the posterior percentile so that it minimizes the misclassification rate.
+
+To explore the discrete splitting of families into, say, two risk groups, we may transform the continuous frailty into a binary two-group variable. We can then carry out the (actionable) classification according to the rule: \begin{align}
+    \label{2_frailty}
+    \widehat{RB}_i = \begin{cases}\text{low} &P(r_i<\widehat{\eta}_r|\underline{x}_i;\widehat{\theta})\ge q\\ 
+    \text{high} &P(r_i<\widehat{\eta}_r|\underline{x}_i;\widehat{\theta})<q
+    \end{cases} 
+    \Leftrightarrow
+    \begin{cases}\text{low} &\text{Quantile}(r_i|\underline{x}_i;\widehat{\theta})\le\widehat{\eta}_r \\
+    \text{high} &\text{Quantile}(r_i|\underline{x}_i;\widehat{\theta})>\widehat{\eta}_r
+    \end{cases}
+\end{align} where $\widehat{\eta}_r = \text{Quantile}\left(\text{Gamma}(\widehat{\theta},1/ \widehat{\theta})\right)\in[0,1]$, $\text{Quantile}(r_k|\underline{x}_i;\widehat{\theta})=r_k:P(r_k|\underline{x}_i;\widehat{\theta})\le q$ with $q\in[0,1]$ as above. And, $P(r_k|\underline{x}_i;\widehat{\theta}) = \underset{j:r_j\le r_k}{\sum}\widehat{f}(r_j|\underline{x}_i;\widehat{\theta})\Delta(r_j)$. 
+
+The idea is represented in Figure \ref{classify EM}. For simplicity of interpretation and convenience, we first fix $q=0.5$ to obtain the median as the threshold. So $\widehat{\eta}_z$ is the estimated frailty median as well. \begin{figure}
+    \centering
+    % \includegraphics[width=0.6\linewidth]{plots/classification EM.PNG}
+    \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+    \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1] %uncomment if require: \path (0,286); %set diagram left start at 0, and has height of 286
+    %Shape: Axis 2D [id:dp7037175293153354] 
+    \draw  (83,255.2) -- (575.33,255.2)(132.23,5) -- (132.23,283) (568.33,250.2) -- (575.33,255.2) -- (568.33,260.2) (127.23,12) -- (132.23,5) -- (137.23,12)  ;
+%Curve Lines [id:da13540802166749344] 
+\draw    (135.33,249) .. controls (211.33,-205.67) and (224.33,247.33) .. (312.33,248.33) ;
+%Shape: Free Drawing [id:dp8168954160330038] 
+\draw  [color={rgb, 255:red, 255; green, 255; blue, 255 }  ,draw opacity=1 ][line width=0.75] [line join = round][line cap = round] (158.33,132) .. controls (163.49,132) and (167.72,134) .. (173.33,134) ;
+%Shape: Free Drawing [id:dp6945323745336177] 
+\draw  [color={rgb, 255:red, 255; green, 255; blue, 255 }  ,draw opacity=1 ][line width=0.75] [line join = round][line cap = round] (271.33,246.42) .. controls (268.67,246.42) and (266,246.42) .. (263.33,246.42) ;
+%Shape: Free Drawing [id:dp9090539890885555] 
+\draw  [color={rgb, 255:red, 255; green, 255; blue, 255 }  ,draw opacity=1 ][line width=0.75] [line join = round][line cap = round] (268.33,246.42) .. controls (267,246.42) and (265.67,246.42) .. (264.33,246.42) ;
+%Shape: Free Drawing [id:dp7679739271867023] 
+\draw  [color={rgb, 255:red, 255; green, 255; blue, 255 }  ,draw opacity=1 ][line width=0.75] [line join = round][line cap = round] (268.33,246.42) .. controls (266.33,246.42) and (264.33,246.42) .. (262.33,246.42) ;
+%Shape: Free Drawing [id:dp598427040832663] 
+\draw  [color={rgb, 255:red, 255; green, 255; blue, 255 }  ,draw opacity=1 ][line width=0.75] [line join = round][line cap = round] (269.33,246.42) .. controls (267,246.42) and (264.67,246.42) .. (262.33,246.42) ;
+%Shape: Free Drawing [id:dp7760139735474009] 
+\draw  [color={rgb, 255:red, 255; green, 255; blue, 255 }  ,draw opacity=1 ][line width=0.75] [line join = round][line cap = round] (265.33,245.42) .. controls (270.87,245.42) and (273.8,246.42) .. (279.33,246.42) ;
+%Curve Lines [id:da23706013978710372] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][line width=1.5]    (135.33,249) .. controls (180.37,261.88) and (179.33,96.08) .. (223.33,99.08) .. controls (267.33,102.08) and (342.33,240.08) .. (430.33,250.08) ;
+%Curve Lines [id:da6431252859783252] 
+\draw [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,draw opacity=1 ][line width=0.75]    (135.33,249) .. controls (182.33,249) and (251.33,230.08) .. (348.33,183.08) .. controls (445.33,136.08) and (469.33,246.33) .. (549.33,248.08) ;
+%Straight Lines [id:da5395580757808383] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][line width=1.5]    (210,104.08) -- (210.33,262.08) ;
+% Text Node
+\draw (202,265.95) node [anchor=north west][inner sep=0.75pt]    {$\eta _{z}$};
+% Text Node
+\draw (259,84.95) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ]  {$f( x_{i} ,\hat{\theta })$};
+\end{tikzpicture}
+    \caption{a classification method for women in binary risk groups.}
+    \label{classify EM}
+\end{figure}
+If we rely on binary splitting we can then predict the risk groups for each woman in the sample. Especially, we may compute $P(R_i=1|\underline{x}_i, \widehat{\theta})$; hence the (actionable) classification into a risk group can be carried out with a threshold, say $q$: 
+\begin{align*}
+    \widetilde{R}_i= \begin{cases} 1 & P(R_i=1|\underline{x}_i, \widehat{\mathbf{\theta}}) > q \\ 0 &P(R_i=1|\underline{x}_i, \widehat{\mathbf{\theta}}) < q\end{cases}
+    \end{align*} where $\widehat{\mathbf{\theta}} = \widehat{\mathbb{\theta}}(\underline{z}_{i})$. The true conditional probability of $R_i=0$ or $R_i=1$ is \begin{align*}
+    P(R_i=1|\underline{x}_{i},\widehat{\theta}) &= \frac{P(R_i=1 \cap \underline{x}_{i}; \widehat{\theta})}{P(\underline{x}_{i};\widehat{\theta})} = \frac{P(R_i=1)P(\underline{x}_{i}|R_i=1;\widehat{\theta})}{P(\underline{x}_{i};\widehat{\theta})}
+    \end{align*} where $P(R_i=1)=h$ is an element of $\underline{\widehat{\zeta}}$. Then 
+\begin{align*}
+    P(R_i=1|\underline{x}_{i},\widehat{\theta}) &= \frac{\widehat{P}(R_i=1)f_{X_{i}}(\underline{x}_{i}|R_i=1;\widehat{\theta})}{\widehat{P}(R_i=0)f_{X_{i}}(\underline{x}_{i}|R_i=0;\widehat{\theta})+\widehat{P}(R_i=1)f_{X_{i}}(\underline{x}_{i}|R_i=1;\widehat{\theta})}
+\end{align*} where the density function $f_{X_{i}}(\underline{x}_{i}|R_i=1;\widehat{\theta})$ is computed as described above.\footnote{If $f_R(r)$ is a continuous frailty instead of the two-group discrete mixing variable discussed so far, then we could use $f_R(r\mid\underline{x}_{i};\widehat{\theta}) \Rightarrow \mathbb{E}(R\mid\underline{x}_{i};\widehat{\theta})$ for classification. 
+%$\Tilde{R}_i$, this is called the ``$R$ classified''. 
+Some possibilities would be: (i) $\Tilde{R}_i = \mathbb{I}(\mathbb{E}(R\mid\underline{x}_{i};\widehat{\theta})\ge 1)$ assuming a log Weibull-Gamma frailty model \citep{rodriguez2005multivariate, hougaard2012analysis}; (ii) $\Tilde{R}_i =\mathbb{I}(P(R>1\mid \underline{x}_{i};\widehat{\theta})\ge 0.5)$.} Alternative procedures can be implemented but are not treated here. 
+% An example is illustrated in Appendix \ref{appendix:3.a}.
+
+One can then apply some diagnostic tools to analyse the goodness in classification, such as the scatter-plot of $R$ versus $\widehat{R}$ (see \ref{cont_frailty}) to obtain a visual analysis of the classification accuracy, and the confusion matrix (see Table \ref{table:risk comparison}) between the median-based risk group $RB=\mathbb{I}(R \le \text{Median}(R))$ and the estimated risk group $\widehat{RB}$ obtained as in \ref{2_frailty} for a fixed $q$. We can use the agreement index Cohen's kappa \cite{cohen1960coefficient} to have a summary of the binary classification results.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{llll}
+  &                        &$\widehat{R}$ &                         \\
+  & \multicolumn{1}{l|}{}  & \multicolumn{1}{l|}{0}       & \multicolumn{1}{l|}{1}  \\ \cline{2-4} 
+R & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{TN}      & \multicolumn{1}{l|}{FP} \\ \cline{2-4} 
+  & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{FN}      & \multicolumn{1}{l|}{TP} \\ \cline{2-4} 
+\end{tabular}
+\caption{confusion matrix between $R$ vs. $\widehat{R}$.}
+\label{table:risk comparison}
+\end{table} \begin{align*}
+    k = \frac{2(TP\cdot TN - FN\cdot FP)}{(TP + FP)\cdot (TN + FP) + (TP + FN)\cdot (TN + FN)}
+\end{align*} with $TP, TN, FP, FN$ indicate the true positive, true negative, false positive, and false negative proportions, where positive (negative) stands for $\widehat{RB}$=high-risk (low-risk). We can compute also the classic agreement index: \begin{align*}
+    \text{agreement index} = \frac{TP+TN}{TP+TN+FP+FN}.
+\end{align*} Both indices vary in the range $[0,1]$ where 0 means no agreement and 1 means perfect agreement. Also, sensitivity and specificity can be computed as additional classification accuracy measures. 
+
+% We may also apply other measures, properly used for our problem. The first measure is $R^2 = R_i\text{log}(p)+(R_i-1)(\text{log}(1-p))$. The second measure is the Brier score $(R_i-p)^2$, also written similar to the $R^2$: $R_i(1-p)^2+(1-R_i)p^2$. Values close to 0 mean a perfect model, while values close to 0.25 mean a non-informative model since $p=0.5$ randomly assigns to 0/1. 
+% \section{Comparison among estimators}
+% We can perform some interesting comparisons, as (i) estimate $\widehat{\beta}$ (which was called $\beta$ above) from the full likelihood of the multivariate model through the use of the EM algorithm; (ii) estimate $\beta^*$ from the individual women model when using the family history estimated risk group $\widetilde{R}_i = \mathbf{I}(P(R_i=1|y_i;\widehat{\theta}))\ge 0.5$; (iii) estimate $\widehat{\beta}$ when using the univariate covariate $\widetilde{R}_i=FH(x_i)$ in the same univariate model. Recall that ``FH'' stands for family history, the survival collection of the other members of the family. The simplest form of the family history is used, the one that gives the same weight to grandmothers, mothers and daughters; (iv) estimate parameters replacing $FH(x_i)$ with $FH^{*}(x_i)$ from Appendix \ref{appendix:3.c} in the model; (v) we can then perform the following comparisons: 1) $FH(x_i)$ vs the $\widetilde{R}_i$; 2) $FH(x_i)$ vs the true risk group indicator $R$ on simulated data; 3) $\widetilde{R}_i$ vs the true risk group $R$ on simulated data. We now move to the simulation studies. The simulated data can be used to implement the classification procedure introduced in this section. 
+\section{A simulation scenario}
+\label{sec: simulation pap2}
+One can generate some family structures and survival times, and implement the two-group risk classification. 
+%More details about data generation are in Appendix \ref{appendix:f2}. 
+The number of families in the dataset is fixed. Each woman has a mother and a grandmother. Instead, the number of sisters and aunts varies. They can be distributed as a Poisson($\lambda=\lambda_s$) and a Poisson($\lambda=\lambda_a$) respectively. We fix $\lambda_s=1, \ \lambda_a=0.5$, so that the resulting family size is \begin{equation*}
+    \text{family size} = 3 + \text{Poisson}(1) + \text{Poisson}(0.5). 
+\end{equation*} The expected value of the sample size $N$ is therefore $\mathbb{E}(N)=3+1+0.5=4.5$. We have the family structure for each family, and for each family member, we build the day of birth (DOB), the observed time (X), and the observed event indicator ($\delta$). The data is visualized as:  \begin{table}[ht]
+\centering
+\begin{tabular}{l|l|l|l}
+             & \texttt{DOB} & \texttt{X} & \texttt{$\delta$} \\ \hline
+\texttt{subject}      &     &   &                       \\
+mother       &     &   &                       \\
+grandmother  &     &   &                       \\
+sister 1?    &     &   &                       \\
+sister 2?    &     &   &                       \\
+...          &     &   &                       \\
+sister $k_1$? &     &   &                       \\
+aunt 1?      &     &   &                       \\
+...          &     &   &                       \\
+aunt $k_2$?   &     &   &                      
+\end{tabular}
+\end{table} \\
+where X=min(today-DOB, diagnosis-DOB, death-DOB), and $\delta$ takes value 0/1 according to the value of X. \begin{align*}
+    \delta = \begin{cases}
+0 &\text{X=today-DOB or X=death-DOB}; \\
+1 &\text{X=diagnosis-DOB}.
+\end{cases}
+\end{align*}
+So far, we directly generate the time-to-event $T$ from the frailty Weibull distribution $T\sim\text{Weibull}(\text{shape}=\gamma,\text{scale}=\mu / R^{1/\gamma})$, with $R\sim\text{Gamma}(1,1)$, $\mu=1, \ \gamma=5$. The censoring time are generated from a Uniform distribution $C\sim\text{U}(0,12)$, and for each subject we generate $X=\text{min}(T,C)$ and $\delta=\mathbb{I}(X=T)$.
+
+Thus, we sample three thousands families and explore the classification accuracy in three different scenarios: (1) parametric hazard and binary classification with median as threshold; (2) semiparametric case with $q = 0.5$; (3) semiparametric case with $q = 0.25$. We extend to $q=0.25$ so that we keep low and realistic the posterior high-risk families proportion (see text below). We carry out this analysis stratified by family size and overall. The results for family size are not reported because irrelevant, while the summary of the overall results is in Table \ref{tab:1 pap2}. The posterior high-risk families proportion in the semiparametric case, varying $q$, is: 0.19 ($q = 0.25$); 0.24 ($q = 0.5$) reported in Table \ref{tab:1 pap2} in the last column ``HR''. Notice that we expect that involving the true value of parameter $\theta$, the true survival function $S_0(x_{ij})$ and hazard function $\lambda_0(x_{ij})$ we reach the best performance in classification. This is the best scenario, and we intend to compare this to the already seen scenarios above. \begin{table}[ht]
+\centering
+\begin{tabular}{ccccccccc}
+ \hline
+  &Cohen's kappa \cite{cohen1960coefficient}  &Accuracy \cite{powers2012problem} &Sensitivity &Specificity & HR\\  
+ \hline
+ 1 &0.32(0.16)  &0.66(0.08) &67.19(9.35) &64.92(6.89) & \\
+ 2 &0.86(0.02)  &0.93(0.01) &\textbf{98.03(0.53)} &90.64(1.07) &0.24(0.01) \\
+ 3 &\textbf{0.90(0.01)} &\textbf{0.95(0.01)} &95.41(1.01) &\textbf{95.53(0.92)} &\textbf{0.19(0.01)} \\
+\hline
+\end{tabular}
+\caption{average point and standard deviation of some diagnostics measures for the three models under study.}
+\label{tab:1 pap2}
+\end{table}
+
+In Table \ref{tab:1 pap2} in bold, there are the best results in each category. Notice that the scenario with the first quantile as the threshold has the best performance overall, with the 90\% of concordance between the true group and the predicted group of risk of the families; a 95\% of accuracy in prediction, with 95\% of sensitivity and specificity. These results outperform all the others, but the higher sensitivity at the 98\% reached by using the median threshold.
+
+% \subsection*{Parametric scenario with default prediction}
+% Results from the classification with estimated parameters and empirical survival functions are reported in Table \ref{table:table_p1}. %Figures are in % \ref{fig:plot_para_11}, \ref{fig:plot_para_12}, \ref{fig:plot_para_13}, \ref{fig:plot_para_14}.
+% \begin{table}[ht]
+% \centering
+% \begin{tabular}{ccccccccc}
+%   \hline
+%  Family size & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\  
+%   \hline
+% Cohen's k & 0.17 & 0.22 & 0.28 & 0.20 & 0.26 & 0.33 & 0.00 & 0.00 \\ 
+% Agree index & 0.58 & 0.61 & 0.64 & 0.61 & 0.63 & 0.67 & 0.00 & 0.00 \\ 
+% Sensitivity & 62.22 & 60.53 & 66.67 & 65.52 & 64.71 & 66.67 &NaN  & 0.00 \\ 
+% Specificity & 54.84 & 61.25 & 61.45 & 55.00 & 61.54 & 66.67 & 0.00 &NaN  \\ 
+%   \hline
+% \end{tabular}
+% \caption{diagnostic summary.}
+% \label{table:table_p1}
+% \end{table}
+% The NaN values are due to the problem of the zero in the denominator (0/0) because for large family sizes there are not enough families to fill all the categories in the contingency table.
+% \subsection*{Best case scenario}
+% The best we could achieve is when we use the true value $\theta = 1$, the true $S_0(x_{ij})$ and $\lambda_0(x_{ij})$ in $f(z_i|\underline{x}_i,\widehat{\theta})$. This scenario has good results in diagnostic. First of all, we compute the classification 2x2 tables for family size. The agreement index called Cohen's k is computed for each family size and results are collected in table \ref{table:table_1}. In the parametric case, the classification is made through an available package in \texttt{R} where survival data are involved.
+% \begin{table}[ht]
+% \centering
+% \begin{tabular}{c|ccccccc}
+% \hline
+% Fam size &3 & 4 & 5 & 6 & 7 & 8 & 9 \\ 
+% \hline
+% Cohen's k &0 & 1 & 0.468 & 0.828 & 0.858 & 0.786 & 0.831 \\   
+% \hline
+% Fam size & 10        & 11        & 12        & 13 & 14  & 15 & \\
+% \hline
+% Cohen's k & 0.784 & 0.534 & 0.813 & 1  & NaN & 0.4 & 
+% \end{tabular}
+% \caption{Cohen's k for family size}
+% \label{table:table_1}
+% \end{table} 
+
+% The Cohen's k index shows a good agreement level for almost all the family sizes. The NaN is due to computational issues that we intend to solve. We will also compute the scatterplot between $R$ and $\widehat{R}$ by family size and overall. 
+% %The point cloud tends to be randomly placed around the 45 degrees diagonal line. We can only notice a few last points that have predicted frailty greater than the true one. This means that those families would be classified as high-risk families when it's not true. This could cause anxiety and waste of money and time for undertaking clinical tests for prevention. This is not desirable. 
+
+% % \subsection*{First scenario}
+% % The first scenario turns out to be similar to the best-case scenario. Indeed, the results are as desired. The classification 2x2 tables result in figure %\ref{fig:diag4}
+% %. 
+% % The Cohen's kappa index results are as follows varying the family size in table \ref{table:table_2}. 
+% % \begin{table}[ht]
+% % \centering
+% % \begin{tabular}{l|lllllllllllll}
+% % Fam size &3 & 4 & 5         & 6         & 7         & 8         & 9         & 10        & 11        & 12        & 13 & 14  & 15  \\
+% % \hline
+% % Cohen's k &NaN &0.819 &0.692 &0.821 &0.665 &0.683 &0.819 &0.734 &0.857 &0.571 &1 &1 &NaN
+% % \end{tabular}
+% % \caption{Cohen's k for family size}
+% % \label{table:table_2}
+% % \end{table}
+% % The NaN value is due to a computational issue that will be solved soon. For this seed the summary of the index is promising. Indeed the minimum agreement index is $57\%$, and the maximum is reached multiple times. These results can be appreciated in table \ref{table:table_3}.
+% % \begin{table}[ht]
+% % \centering
+% % \begin{tabular}{lllllll}
+% % Min.   & 1st Qu. & Median & Mean   & 3rd. Qu. & Max.   & NA's \\
+% % \hline
+% % 0.5714 & 0.6877  & 0.8197 & 0.7877 & 0.8393   &  0.5000 & 2   
+% % \end{tabular}
+% % \caption{Cohen's k summary.}
+% % \label{table:table_3}
+% % \end{table} 
+% % The scatterplot between $Y$ and $\widehat{Y}$ is represented in figure %\ref{fig:diag5} 
+% % for family size, and overall in figure %\ref{fig:diag6}
+% %. 
+% % \vspace{2mm} \\
+% \subsection*{Best case scenario with survival problem solved and median as threshold}
+% One thousand families have been simulated. These results come out from the setting of $\theta=1$, true survival, and hazard function. The percentile q = 0.5 and the median is set at 2.5. Results are in Table \ref{table:table_4} with agreement index (second row), sensitivity (third row), and specificity (fourth row) according to the family size in the first row. Cohen's k is not considered anymore because of some computation issues mentioned above. In addition, we had a problem with the survival function assuming a value of zero. The problem has been solved by replacing the zero with a number close to zero but not exactly null. This issue has been solved always keeping valid the monotonicity of the survival function. 
+% \begin{table}[ht]
+% \centering
+% \begin{tabular}{c|ccccccc}
+% \hline
+%  Fam size &3  &4 & 5 & 6 & 7 & 8 & 9  \\ \hline
+% Agree index &1   & 0.269  & 0.414  & 0.388  & 0.668  & 0.688 & 0.609  \\
+% Sens. &100 & 100 & 100 & 72.222 & 76.471 & 86.667 & 88.889 \\ 
+% Spec. &100 & 77.778 & 82.143 & 82.258 & 95.625 & 94.558 & 94.286 \\ \hline
+% Fam size &10 &11 &12 &13 &14 &15 &16 \\ \hline
+% Agree index & 0.325  & 0.552   & 0.284  & 0.64 & 1   & 1   & NaN \\ 
+% Sens. &40 & 100 & 33.333 & 50 & 100 & 100 & NaN \\
+% Spec. & 95.604 & 95.238 & 95.122 & 100 & 100 & 100 & 100 \\
+% \end{tabular}
+% \caption{diagnostic summary.}
+% \label{table:table_4}
+% \end{table}
+
+% We extend the simulation to three thousand families. Results are collected in the Table \ref{table:table_5}. 
+% \begin{table}[ht]
+% \centering
+% \begin{tabular}{rrrr}
+%   \hline
+% Family size & Agreement index & Sensitivity & Specificity \\ 
+%   \hline
+%   3  & 0.83  & 100.00& 78.95 \\ 
+%   4  & 0.87  & 100.00& 86.41 \\ 
+%   5  & 0.90  & 100.00& 88.79 \\ 
+%   6  & 0.90  & 87.10 & 90.20 \\ 
+%   7  & 0.89  & 91.67 & 88.45 \\ 
+%   8  & 0.91  & 76.74 & 92.14 \\ 
+%   9  & 0.91  & 83.78 & 91.69 \\ 
+%   10 & 0.90  & 89.29 & 90.43 \\ 
+%   11 & 0.94  & 90.00 & 93.96 \\ 
+%   12 & 0.95  & 92.31 & 95.92 \\ 
+%   13 & 0.98  & 100.00& 98.08 \\ 
+%   14 & 0.97  & 100.00& 97.30 \\ 
+%   15 & 0.92  &NaN   & 92.31 \\ 
+%   16 &  0.50 &NaN    & 100.00 \\ 
+%   17 &  0.50 & NaN   & 100.00 \\ 
+%   18 &  0.50 &NaN    & 100.00 \\ 
+%   \hline
+% \end{tabular}
+% \caption{diagnostic summary.}
+% \label{table:table_5}
+% \end{table}
+% We will compute the scatterplot of $\widehat{R}$ versus R by family size and overall to have a measure of the continuous frailty classification. 
+% \subsection*{Best case scenario with survival problem solved and the first quantile as threshold} 
+% The setting is equivalent to the best scenario with the survival problem solved with the median as the threshold, with the only difference that here the median is replaced by the first quantile. The diagnostic results about the classification accuracy are in Table \ref{table:table_6} for three thousand families simulated.
+% \begin{table}[ht]
+% \centering
+% \begin{tabular}{c|ccccccc}
+% \hline
+% Family size &3  &4 & 5 & 6 & 7 & 8 & 9 \\ \hline
+% Agreement index &1 &0.269 &0.414 &0.388 &0.668 &0.688 &0.609 \\ 
+% Sensitivity &100 & 100       & 100       & 72.222    & 76.471    & 86.667    & 88.889    \\ 
+% Specificity & 100 & 77.778    & 82.143    & 82.258    & 95.625    & 94.558    & 94.286 \\ \hline
+
+% Family size &10 &11 &12 &13 &14 &15 &16 \\ \hline
+% Agreement index & 0.325 & 0.552 & 0.284 & 0.64 & 1   & 1   & NaN \\ 
+% Sensitivity & 40.000    & 100       & 33.333    & 50   & 100 & 100 & NaN \\ 
+% Specificity & 95.604    & 95.238    & 95.122    & 100  & 100 & 100 & 100 \\ 
+% \end{tabular}
+% \caption{diagnostic summary.}
+% \label{table:table_6}
+% \end{table}
+% \newpage
+% \subsection*{Best case scenario with survival problem solved: the use of the expected value of log(z)} 
+% The problem of the survival function assuming value zero has been solved by replacing the zero with a number close to it but not exactly null, as mentioned in the section above. One thousand families have been simulated. The simulation run with the true value of parameter $\theta=1$, and the true survival function and hazard function. In this case, the predicted frailty quantity is the expected value of the log of the values from the chosen grid of possible risk values. The median is set at 2.5. The results of Cohen's k (it is included because the NaN are very few in this scenario), the agreement index, sensitivity, and specificity by family size are below in table \ref{table:table_1000_new1}. The results in terms of the agreement are promising. This is what concerns the part of the binary classification of families into risk groups. The results are not desirable for the comparison between the continuous true frailty value and the predicted continuous one. These results are not reported here.
+% \begin{table}[ht]
+% \centering
+% \begin{tabular}{rrrrr}
+%   \hline
+%  & Cohen's k & Agreement index & Sensitivity & Specificity \\ 
+%   \hline
+% 3 &  0.50 &  0.50 & 100.00 & 100.00 \\ 
+%   4 & 0.27 & 0.79 & 100.00 & 77.78 \\ 
+%   5 & 0.41 & 0.84 & 100.00 & 82.14 \\ 
+%   6 & 0.39 & 0.81 & 72.22 & 82.26 \\ 
+%   7 & 0.67 & 0.94 & 76.47 & 95.62 \\ 
+%   8 & 0.69 & 0.94 & 86.67 & 94.56 \\ 
+%   9 & 0.61 & 0.94 & 88.89 & 94.29 \\ 
+%   10 & 0.33 & 0.93 & 40.00 & 95.60 \\ 
+%   11 & 0.55 & 0.95 & 100.00 & 95.24 \\ 
+%   12 & 0.28 & 0.91 & 33.33 & 95.12 \\ 
+%   13 & 0.64 & 0.94 & 50.00 & 100.00 \\ 
+%   14 &  0.50 &  0.50 & 100.00 & 100.00 \\ 
+%   15 &  0.50 &  0.50 & 100.00 & 100.00 \\ 
+%   16 &NaN  &  0.50 &NaN  & 100.00 \\ 
+%   \hline
+% \end{tabular}
+% \caption{diagnostic summary.}
+% \label{table:table_1000_new1}
+% \end{table}
+
+% \clearpage
+\section{Discussion}
+\label{sec: discussion pap2}
+Preliminary results suggest the absence of important differences in classification
+accuracy across different family sizes. Important is to notice a substantial difference in classification accuracy between the parametric and the semiparametric setting, particularly when employing the median as the classification threshold. Moreover, the use of the first quantile appears to be favorable in terms of both classification accuracy and posterior proportion of high-risk families. These conclusions can be further supported by additional examinations by plotting some figures. The results are promising. As a next step, we wish to extend to other proper distribution of the survival baseline distribution. This further exploration is driven by the fact that the time-to-event variable in observational studies is unlikely to be distributed according to a simple distribution, as the Exponential or the Weibull can be. We may try to analyse a three-parameters distribution to gain higher flexibility to explain the phenomenon of heritability of longevity. 
+
+Lastly, we aim to apply the current analysis to an available dataset. 
+\clearpage
+\bibliographystyle{apalike}
+\bibliography{biblio}
+% We intend to compute first of all $E_{Z|R_{true}} (E(\widehat{R}|Z))$.
+% \section{The family history indicator vs. the true genetic risk}
+% \label{appendix:3.b}
+% We are interested in comparing what happens when one adds to the survival model the ``wrong'' indicator $FH(t)$ to replace the correct latent $R_i(t)=R_i$. In other words, how far is $FH(t)$ from $R_i$? We compute the probability that $FH(t) = 0$ for the survival model, to establish how it represents the true latent risk group membership: \begin{align*}
+%     P(FH(t) = 0) &\overset{\perp}{=} P(T_g \ge t + 60)P(T_m \ge t + 30)P(T_s \ge t) \\
+%     &= S_{T_g}(t+60)S_{T_m}(t+30)S_{T_s}(t).
+% \end{align*} where the $S_{Ti}, \ i\in\{s,m,g\}$ are the survival functions of the family women from their birth. We incorporate improved survival across generations by assuming $S_{T_s}(t) = S_T(t)$; $S_{T_m}(t) = [S_T(t)]^{\beta_m}$, relying on the proportional hazard (PH) model with $\beta_m > 1$ since we suppose that the mother's survival is less favorable than the daughter's; $S_{T_g}(t)=[S_{T_m}(t)]^{\beta_m}=[S_T(t)]^{\beta_m^2}$, based on the same generational effect hypothesis. Note that this allows for coherence across (30 years apart) generations. Then $P(FH(t)=0)=[S_T(t+60)]^{\beta_m^2}[S_T(t+30)]^{\beta_m} [S_T(t)]$. For simplicity, we assume an Exponential survival model. Then we obtain: \begin{align*}
+%     P(FH(t) = 0) =e^{-\lambda t(\beta_m^2+\beta_m+1)}e^{-\lambda 30\beta_m(1+2\beta_m)}
+% \end{align*} (recall that the Exponential survival function with parameter $\lambda$ is $S_T(t) = e^{-\lambda t}$). Note that $e^{-\lambda t(\beta_m^2+\beta_m+1)}<1$ and $e^{-\lambda 30\beta_m(1+2\beta_m)}<1$. This means that the probability $P(FH(t) = 0)$ tends toward zero but does not start from one at when the time is zero.
+
+% Next, we wonder how to quantify the difference $FH(t) - R$, where both $FH(t)$ and $R$ are binary (0,1) where zero means the low-risk group and one stands for the high-risk group. The difference can assume the values: $(FH(t) - R) \in \left\{-1, 0, 1\right\}$. We would like to have the two quantities to coincide $FH(t) = R \iff FH(t) = R=1 \text{ or } FH(t) = R=0$. One possibility is to compute the probability of agreement at the observed time-to-event, recalling that notation $\lambda(t|R=0)=\lambda_0=\lambda$ and $\lambda(t|R=1)=\lambda_1(t)=\beta\lambda_0(t)=\beta\lambda$. The probability of agreement in the low-risk group is: 
+% \begin{align*}
+%     %\label{prob_0}
+%     &P(FH(T) = R|R=0) = P(FH(T) = 0|\lambda) =\int_0^{\infty}P(FH(t)=0)f_T(t,\lambda)\text{d}t \nonumber \\
+%     &\qquad\qquad\qquad=\int_0^{\infty}\text{k}e^{-\lambda t (\beta_m^2+\beta_m+1)}\lambda e^{-\lambda t}\text{d}t \\
+%     &\qquad\qquad\qquad=\left(e^{-\lambda60\beta_m^2 - \lambda30\beta_m} \right)\lambda\int_0^{\infty}e^{-t\lambda(\beta_m^2+\beta_m+1)}\text{d}t. \nonumber \\
+%     &\qquad\qquad\qquad=\frac{e^{-\lambda60\beta_m^2 - \lambda30\beta_m}}{\beta_m^2+\beta_m+2}
+% \end{align*} since $\int_0^{\infty}e^{-t\lambda(\beta_m^2+\beta_m+1)}\text{d}t = \mathbb{E}(T^*)$, with $T^* \sim \text{exp}(\lambda(\beta_m^2+\beta_m+1))$. Similarly, we can compute the probability of agreement for the high-risk group:
+%     \begin{align*}
+%     %\label{prob_1}
+%     &P(FH(T) = R|R=1) = P(FH(T) = 1|\beta\lambda) \\ &\qquad\qquad\qquad=\int_0^{\infty}P(FH(t)=1)f_T(t,\beta\lambda)\text{d}t 
+%     P(FH(T) = R_i|\lambda_{high} = \beta\lambda) \\
+%     &\qquad\qquad\qquad=\int_0^{\infty}(1 - P(FH(t)=0))f_T(t,\beta\lambda)\text{d}t \nonumber \\
+%     &\qquad\qquad\qquad=\int_0^{\infty}f_T(t,\beta\lambda) - P(FH(t)=0)f_T(t,\beta\lambda)\text{d}t \nonumber \\
+%     &\qquad\qquad\qquad=\int_0^{\infty}f_T(t,\beta\lambda)\text{d}t - \int_0^{\infty}P(FH(t)=0)f_T(t,\beta\lambda)\text{d}t  \\
+%     &\qquad\qquad\qquad=1 - \int_0^{\infty}P(FH(t)=0)f_T(t,\beta\lambda)\text{d}t\nonumber \\
+%     &\qquad\qquad\qquad=1 - \frac{e^{-\beta\lambda60\beta_m^2 - \beta\lambda30\beta_m}}{\beta_m^2+\beta_m+2} \nonumber.
+% \end{align*} Recall that $\beta>1$ to assure that the ``high-risk'' families will have higher risk; and $\beta_m > 1$ to reflect the improvements in survival across subsequent generations.
+
+% Ideally, one would like both probabilities to be equal to one. Clearly, the first probability cannot take value one because at $t=0$ it is equal to $e^{-\lambda 30\beta_m(1+2\beta_m)} < 1$. If $\beta_m=1$, there are no generation-related changes to survival, and the probabilities become: \begin{align*}
+%     &P(FH(t)=R|\lambda) = \frac{e^{-\lambda90}}{4} \text{ and,} \\ &P(FH(t)=R|\beta\lambda) = 1-\frac{e^{-\beta\lambda90}}{4}.
+% \end{align*} These probabilities are constant over time and they are illustrate in Figure \ref{fig:results1 pap2}. 
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=\linewidth]{plots/plot_0_accounting.png}
+%     \caption{probability $P(FH(t)=R|\lambda)$ (PFHt0R0) vs. probability $P(FH(t)=R|\beta\lambda)$ (PFHt1R1)}
+%     \label{fig:results1 pap2}
+% \end{figure}
+
+% Another way to measure the error that one commits when replacing the unknown $R$ with $FH(t)$ is through the misclassification probabilities. To fix ideas, we assume that the proportion of high-risk families $P(R=1)=h$ is constant over time. To commute the probabilities of misclassification, we can compute the classification probabilities $P(R=0|FH(t) = 0)$ and $P(R=1|FH(t) = 1)$, also called the agreement probabilities: \begin{align*}
+%     \label{probs_final_agreement}
+%     &P(FH(t)=0|R=0) = P(FH(t)=0|\lambda)=e^{-\lambda t(\beta_m^2+\beta_m+1)}e^{-\lambda 30\beta_m(1+2\beta_m)} \\
+%     &P(FH(t)=1|R=1) = P(FH(t)=1|\beta\lambda)=1 - e^{-\beta\lambda t(\beta_m^2+\beta_m+1)}e^{-\beta\lambda 30\beta_m(1+2\beta_m)}. 
+% \end{align*} We examine how they vary when no birth cohort effect exists, i.e. the parameter $\beta_m = 1$. We set $\lambda = 1/\mathbb{E}(T)=1/90\approx 0.011$ and $\beta\lambda=2\cdot 1/90= 1/45\approx0.022$ for the high-risk families. The probability $P(FH(t)=0|R=0)$ at time $t=0$ takes value $0.3678$. Figure \ref{fig:results2 pap2} shows these probabilities varying over time.
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=\linewidth]{plots/plot_1_accounting.png}
+%     \caption{probability $P(FH(t)=0|R=0)$ (PFHt0R0) vs. probability $P(FH(t)=1|R=1)$ (PFHt1R1)}
+%     \label{fig:results2 pap2}
+% \end{figure}
+% Immediately: \begin{align*}
+%     &P(FH(t)=1|R=0) = P(FH(t)=1|\lambda)=1-e^{-\lambda t(\beta_m^2+\beta_m+1)}e^{-\lambda 30\beta_m(1+2\beta_m)} \\
+%     &P(FH(t)=0|R=1) = P(FH(t)=0|\beta\lambda)= e^{-\beta\lambda t(\beta_m^2+\beta_m+1)}e^{-\beta\lambda 30\beta_m(1+2\beta_m)}
+% \end{align*} 
+
+% We also compute the probabilities of correct classification: \begin{align*}
+%     P(R = 0|FH(t)=0) &= \frac{P(FH(t)=0|R=0)P(R=0)}{P(FH(t)=0)} \\
+%     &= \frac{P(FH(t)=0|R=0)(1-h)}{P(FH(t)=0|R=0)(1-h) +P(FH(t)=0|R=1)h} \\
+%     &= \frac{\overbrace{\left[e^{-\lambda t (\beta_m^2+\beta_m+1)}e^{-\lambda 30\beta_m(1+2\beta_m)} \right]}^{(*)}(1-h)}{(*)(1-h)+\left[e^{-\beta\lambda t (\beta_m^2+\beta_m+1)}e^{-\beta\lambda 30\beta_m(1+2\beta_m)} \right]h}
+% \end{align*} and, \begin{align*}
+%     P(R = 1|FH(t)=1) &= \frac{P(FH(t)=1|R=1)P(R=1)}{P(FH(t)=1)} \\
+%     &= \frac{P(FH(t)=1|R=1)h}{P(FH(t)=1|R=1)h +P(FH(t)=1|R=0)(1-h) } \\
+%     &= \frac{\overbrace{\left[1-e^{-\beta\lambda t (\beta_m^2+\beta_m+1)}e^{-\beta\lambda 30\beta_m(1+2\beta_m)} \right]}^{(*)}h}{(*)h+\left[1 - e^{-\lambda t (\beta_m^2+\beta_m+1)}e^{-\lambda 30\beta_m(1+2\beta_m)} \right](1-h)}
+% \end{align*}
+% Notice that these probabilities describe the distribution of the measurement error when using the observed $FH(t)$ instead of $R$ in a model. The trend of these probabilities for the fixed values $\beta_m=1$, $\lambda=1/90$, $\beta=2$, $h=0.7$ is illustrated in Figure \ref{fig:results3 pap2}.
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=\linewidth]{plots/plot_2_accounting.png}
+%     \caption{probability $P(R = 0|FH(t)=0)$ (PR0FHt0) vs. probability $P(R = 1|FH(t)=1)$ (PR1FHt1)}
+%     \label{fig:results3 pap2}
+% \end{figure}
+% When $\beta=1$ the low and high-risk groups have the same hazard of death, then the population is homogeneous.
+
+% Figures \ref{fig:results4 pap2} and \ref{fig:results5 pap2}
+% shows how the correct measurement probabilities change, according to different values of $\beta$ and $\beta_m$. At the right hand-side of Figure \ref{fig:results4 pap2} the row numbers 1, 2, 3, 4 refer to $\beta=1,2,3,4$. At the right hand-side of Figure \ref{fig:results5 pap2}
+% the row numbers 0.5, 1, 2, 3 refer to $\beta_m=0.5,1,2,3$. Clearly, the probability for the high-risk group tends to flatten on the value $h=0.7$. When $\beta$ or $\beta_m$ increases the probability of correct measurement in the low-risk group grows. Notice that the probabilities can be computed also in terms of non-Exponential survival models, possibly using numerical integration to compute the formulae. 
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=\linewidth]{plots/plot_3_accounting.png}
+%     \caption{probability $P(R = 0|FH(t)=0)$ (PR0FHt0) vs. probability $P(R = 1|FH(t)=1)$ (PR1FHt1) according to different values of $\beta_m$}
+%     \label{fig:results4 pap2}
+% \end{figure}
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=\linewidth]{plots/plot_4_accounting.png}
+%     \caption{probability $P(R = 0|FH(t)=0)$ (PR0FHt0) vs. probability $P(R = 1|FH(t)=1)$ (PR1FHt1) according to different values of $\beta$}
+%     \label{fig:results5 pap2}
+% \end{figure}
+% \clearpage
+% We complete the analysis through a deeper study of the direct and inverse probabilities. The derivatives formulae for the probabilities of agreement are: \begin{align*}
+%     &\frac{\partial P(FH=0|R=0)}{\partial\beta} = 0, \\
+%     &\frac{\partial P(FH=1|R=1)}{\partial \beta} = e^{-\beta\lambda t \left(\beta_m^2+\beta_m+1\right)}e^{-30\beta\lambda\beta_m(1+2\beta_m)}(-\lambda (t\left(\beta_m^2+\beta_m+1\right)+ \\
+%     &\qquad\qquad\qquad\qquad\qquad\quad-30\beta_m(1+2\beta_m))), \\
+%     &\frac{\partial P(FH=0|R=0)}{\partial\beta_m} = e^{-\lambda t \left(\beta_m^2+\beta_m+1\right)}e^{-30\lambda(1+2\beta_m)}\left(-\lambda \left(t\left(2\beta_m+1\right)-30(1+4\beta_m)\right)\right), \\
+%     &\frac{\partial P(FH=1|R=1)}{\partial \beta_m} = e^{-\beta\lambda t \left(\beta_m^2+\beta_m+1\right)}e^{-30\beta\lambda(1+2\beta_m)}\cdot\\
+%     &\qquad\qquad\qquad\qquad\qquad\quad\cdot\left(-\beta\lambda \left(t\left(2\beta_m+1\right)-30(1+4\beta_m)\right)\right).
+% \end{align*} Similarly, the derivatives for probabilities of correct classification with respect to $\beta$ are: \begin{align*}
+%     &\frac{\partial P(R=0|FH=0)}{\partial\beta} = 0 \\
+%     &\frac{\partial P(R=1|FH=1)}{\partial \beta} = \frac{\left[\left(e^{-\beta(k_1 + k_2)} \right(k_1+k_2))r\right]\cdot(\text{den+num})}{\text{num}^2} \\
+%     &\text{den} = \left(1-e^{-\beta(k_1+k_2)}r+\left(1-e^{-(k_1+k_2)}\right)(1-r)\right) \\
+%     &\text{num} = \left(1-e^{-\beta(k_1+k_2)}\right)r.
+% \end{align*} And the derivatives with respect to $\beta_m$ are: \begin{align*}
+%     &\frac{\partial P(R=0|FH=0)}{\partial\beta_m} = \\
+%     &=\frac{\left( e^{-(k_1+k_2)}k(1-r) \right)\text{den} + \left(e^{-(k_1+k_2)}k(1-r)+e^{-\beta(k_1+k_2)}\beta kr\right)\text{num}}{\text{num}^2} \\
+%     &\text{num} = e^{-(k_1+k_2)}(1-r)\\
+%     &\text{den} = e^{-(k_1+k_2)}(1-r)+e^{-\beta(k_1+k_2)}r,
+% \end{align*} and, \begin{align*}
+%     &\frac{\partial \left[P(R=1|FH=1)\right]}{\partial \beta_m} =\\
+%     &=\frac{\left(-e^{-\beta(k_1+k_2)}\beta kr \right)\text{den} + \left(-e^{-\beta(k_1+k_2)}\beta kr-e^{-(k_1+k_2)} k(1-r)\right)\text{num}}{\text{num}^2} \\ 
+%     &\text{num} = \left(1-e^{-\beta(k_1+k_2)}\right)r \\
+%     &\text{den} =  \left(1-e^{-\beta(k_1+k_2)}\right)r + \left(1-e^{-(k_1+k_2)}\right)(1-r).
+% \end{align*} Where we denote:  \begin{align*}
+%     &k = \frac{\partial(k_1+k_2)}{\partial\beta_m} = -\lambda(t(2\beta_m+1)+30(1+4\beta_m)) \\
+%     &k_1 = \lambda t \left( \beta_m^2 + \beta_m + 1 \right) \\
+%     &k_2 = \lambda 30 \beta_m(1+2\beta_m)
+% \end{align*} 
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=\linewidth]{plots/plot_5_accounting.png}
+%     \includegraphics[width=\linewidth]{plots/plot_6_accounting.png}
+%     \caption{In the former picture is $\frac{\partial P(FH(t)=0|R=0)}{\partial\beta}$ (PFHt0R0), and $\frac{\partial P(FH(t)=1|R=1)}{\partial \beta} \\
+%     $ (PFHt1R1). In the latter is $\frac{\partial P(FH(t)=0|R=0)}{\partial\beta_m}$ (PFHt0R0), and $\frac{\partial P(FH(t)=1|R=1)}{\partial \beta_m}$} (PFHt1R1).
+% \end{figure}
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=\linewidth]{plots/plot_7_accounting.png}
+%     \includegraphics[width=\linewidth]{plots/plot_8_accounting.png}
+%     \caption{In the former picture is $\frac{\partial P(R=0|FH(t)=0)}{\partial\beta}$ (PR0FHt0), and $\frac{\partial P(R=1|FH(t)=1)}{\partial \beta}$ (PR1FHt1). In the latter is $\frac{\partial P(R=0|FH(t)=0)}{\partial\beta_m}$ (PR0FHt0), and $\frac{\partial P(R=1|FH(t)=1)}{\partial \beta_m}$} (PR1FHt1).
+% \end{figure} 
+% \clearpage
+% \section{Model extension to disease development}
+% We consider a right-censored survival model. We first introduce the notation for ease of clarity in reading. We call the quantity $R$ as the continuous frailty variable that follows a parametric distribution characterized by the collection $\underline{\theta}$. Within such framework, we use $i$ to identify the family (out of $G$) and $j$ to identify its $n_i$ members. We develop the complete likelihood $L(\underline{\zeta};\underline{\mathbf{Z}})$ for the problem, where $\underline{\textbf{Z}}=\left(\underline{\textbf{Z}}_1,\dots,\underline{\textbf{Z}}_G\right)^T$, and  $\underline{\mathbf{Z}}_i=\left\{\underline{\mathbf{z}}_i, \underline{\mathbf{zg}}_i, \underline{\mathbf{zm}}_i,  \underline{\mathbf{zs}}_{ik}, \ 
+% k=1,\dots,ns_k \right\}$, with (g,m,s) indicating the grandmother, the mother and the sister(s), and $ns_k$ number of sisters in family $i$. The general notation indicates $\underline{\mathbf{z}}_i=(z_{ij},\delta_{ij})^T$, $z_{ij}=\text{min}(t_{ij}, c_{ij})$, $\delta_{ij}=\mathbb{I}(t_{ij} \le c_{ij})$ following the usual notation, that has $t$ indicate the survival time and $c$ indicate the (independent) censoring time. $X_{ij}$ indicates the baseline covariate vector for subject $j$ in family $i$. The complete likelihood $L(\underline{\zeta};\underline{\mathbf{Z}})$ can be written in terms of the frailty parameter $\theta$ and the  survival parameters, i.e. the vector coefficient $\beta$ for the covariate effects and the baseline hazard function $\lambda_0$. So, following the shared frailty hazards structure\footnote{Note that the hazard and the cumulative hazard have the following shapes: $\lambda(t_{ij}|X_{ij})=\lambda_0(t_{ij})\text{exp}(\beta'X_{ij})$, $\Lambda(t_{ij}|X_{ij})R_i = \Lambda_0(t_{ij})\text{exp}(\beta'X_{ij})$.}, we have $\lambda_{ij}(t|x_{ij},R_i)=R_i\cdot\lambda_{0ij}(t|x_{ij})$, and $\lambda_{0ij}(t|x_{ij})=\lambda_0(t)\text{exp}(x_{ij}'\beta)$ for family $i$. The full likelihood is made by: \begin{align*}
+%     L(\underline{\zeta};\underline{\textbf{Z}})=\prod_{i=1}^n f_Z(\underline{\textbf{Z}}_i;\underline{\zeta}) =  \prod_{i=1}^n \int_R f_Z(\underline{\textbf{Z}}_i;\underline{\zeta}|R_i=r)f_R(r;\underline{\theta})\text{d}r
+% \end{align*}
+% Where it can decomposed in the following way: \begin{align*}
+%     &S_T(z_i|R_i=r) = [p+(1-p)S^*(z_i)]^{e^r} = \widetilde{p} + (1-\widetilde{p})\widetilde{S}^*(z_i) \\ 
+%     &\tilde{p} = p^{\text{e}^r}\text{ and, } \widetilde{S}^*(z_i)=\frac{(p+(1-p)S^*(z_i))^{\text{e}^r}-\widetilde{p}}{1-\widetilde{p}} \\
+%     &f_T(z_i) = (1-\widetilde{p})\left(\frac{f^*(z_i)\text{e}^r}{1-\widetilde{p}}\right)\left(p+(1-p)S^*(z_i)\right)^{\text{e}^r-1} \\
+%     &f_Z(\textbf{z}_i|R_i=r) = \left[f_T(z_i|R_i=r)S_C(z_i)\right]^{\delta_i} \left[S_T(z_i|R_i=r)f_C(z_i)\right]^{1-\delta_i} \\
+%     &\qquad\propto f_T(z_i|R_i=r)^{\delta_i}S_T(z_i|R_i=r)^{1-\delta_i} \\
+%     &\qquad=\left[ (1-\widetilde{p})\left(\frac{f^*(z_i)\text{e}^r}{1-\widetilde{p}}\right)\left(p+(1-p)S^*(z_i)\right)^{\text{e}^r-1} \right]^{\delta_i}\left[\widetilde{p} + (1-\widetilde{p})\widetilde{S}^*(z_i)\right]^{1-\delta_i} \\
+%     &f_Z(\textbf{zs}_k|R_i=r) = f_1(zs_i)^{\delta s_i}S_1(zs_i)^{1-\delta s_i} = \\ 
+%     &\qquad=\left[ (1-\widetilde{p})\left(\frac{f^*(zs_i)\text{e}^\alpha}{1-\widetilde{p}}\right)\left(p+(1-p)S^*(zs_i)\right)^{\text{e}^\alpha-1} \right]^{\delta s_i}\left[\widetilde{p} + (1-\widetilde{p})\widetilde{S}^*(zs_i)\right]^{1-\delta s_i} \\
+%     &\qquad\text{for the } k\text{th sister.} \\
+%     &f_Z(\textbf{zm}_i|R_i=r) = f_1(zm_i)^{\delta m_i}S_1(zm_i)^{1-\delta m_i} = \\
+%     &=\left[ (1-\widetilde{p})\left(\frac{f^*(zm_i)\text{e}^r}{1-\widetilde{p}}\right)\left(p+(1-p)S^*(zm_i)\right)^{\text{e}^r-1} \right]^{\delta m_i}\left[\widetilde{p} + (1-\widetilde{p})\widetilde{S}^*(zm_i)\right]^{1-\delta m_i} \\
+%     &f_Z(\textbf{zg}_i|R_i=r) = f_1(zg_i)^{\delta g_i}S_1(zg_i)^{1-\delta g_i} = \\
+%     &=\left[ (1-\widetilde{p})\left(\frac{f^*(zg_i)\text{e}^r}{1-\widetilde{p}}\right)\left(p+(1-p)S^*(zg_i)\right)^{\text{e}^r-1} \right]^{\delta g_i}\left[\widetilde{p} + (1-\widetilde{p})\widetilde{S}^*(zg_i)\right]^{1-\delta g_i} \\
+%     &f_Z(\underline{\textbf{Z}}_i;\underline{\zeta}|R_i=r) \overset{\perp|R}{=} f_Z(\textbf{z}_i|R_i=r)f_Z(\textbf{zm}_i|R_i=r)f_Z(\textbf{zg}_i|R_i=r)\prod_{k=1}^{ns_i}f_Z(\textbf{zs}_k|R_i=r).
+% \end{align*}
+% %The frailty $R$ can be taken to be distributed as a Gamma with shape $\theta$ and rate $1/\theta$ (this is easily extendable to other distributions), so that the contribution of the likelihood for the $i$th family is: \begin{align*}
+% %   f_R(r;\theta) = \frac{1}{\Gamma(1/\theta)\theta^\theta}r^{\theta-1}e^{-r/\theta}.
+% %\end{align*} 
+% We compute the integral to deal the likelihood: \begin{align*}
+%     \int_R f_Z(\underline{\textbf{Z}}_i;\underline{\zeta}|R_i=r)f_R(r;\underline{\theta})\text{d}r 
+% \end{align*}
+% Since we are dealing with a Gamma frailty model we can take advantage of the already done computations from \cite{rodriguez2005multivariate}. We write the computations with the four main members within each family. The survival function is: \begin{align*}
+%     &S_T(z) = [S_0(z)]^r, \ S_0(z)=p+(1-p)S^*(z) \\
+%     &S_{fam}(z, zg, zm, zs|R=r) = S_T(z)S_T(zg)S_t(zm)S_T(zs) = \\
+%     &\qquad=S_0(z)^{e^r} S_0(zm)^{e^r} S_0(zg)^{e^r} S_0(zs)^{e^r} \\
+%     &\qquad=e^{-e^r(\Lambda_0(z)+\Lambda_0(zg)+\Lambda_0(zm)+\Lambda_0(zs))} \\
+%     &S_{fam}(z, zg, zm, zs) = \int_R S_{fam}(z, zg, zm, zs|R=r)f_R(r)\text{d}r \\
+%     &\qquad= \int_R e^{-e^r(\Lambda_0(z)+\Lambda_0(zg)+\Lambda_0(zm)+\Lambda_0(zs))}f_R(r)\text{d}r \\
+%     &\qquad\text{ that is the Laplace trasform of } f_R(r) \text{ by definition.} \\
+%     &\Rightarrow S_{fam}(z, zg, zm, zs) = L_{f_R}(s = \Lambda_0(z)+\Lambda_0(zg)+\Lambda_0(zm)+\Lambda_0(zs))
+% \end{align*} We need to specify a form of the frailty quantity to complete the computations. We chose the Gamma distribution $(\theta,\theta)$, where the Laplace trasform is $L(R) = (\theta/(\theta + s))^\theta$. In the end the survival is: \begin{align*}
+%     &S_{fam}(z,zg,zm,zs) = \left[\frac{\theta}{\theta+\Lambda_0(z)+\Lambda_0(zg)+\Lambda_0(zm)+\Lambda_0(zs)}\right]^\theta \\
+%     &\Lambda_0(z) = -\text{log}(S_0(z)) 
+% \end{align*} We may specify a form for the baseline survival function. The parameter estimation is then achieved by maximizing the likelihood through the EM algorithm. The steps are explained in \cite{rodriguez2005multivariate}. The contribution of the $i$th family to the likelihood is: \begin{align*}
+%     \text{log}L_i = \text{log}f_R(r_i) + \sum_{j = 1}^m_i(\delta_{ij}\text{log}(r_i \lambda_{ij} (z_{ij}))-r_i \Lambda_{ij}(z_{ij})).
+% \end{align*} where $j$ is the index of the position inside the family data vector: \begin{align*}
+%     \left\{z,zg,zm, zs_k , k=1,\dots, ns_i \right\}.
+% \end{align*} The expectation step of the algorithm consists of obtaining the expected value of $r_i$ or of any function of $r_i$ that results to be log($r_i$), where the expectation is computed with respect to the posterior distribution of $r_i$ given the complete data. The updated parameters of the posterior distribution are: \begin{align*}
+%     \alpha^* = \alpha + \sum_{j} \delta_{ij} \qquad \text{ and } \beta^*=\beta+\sum_{j} \Lambda_{ij}(z_{ij}) 
+% \end{align*} The updated parameters are then used to compute the expected values that are respectively: \begin{align*}
+%     &\mathbb{E}(r_i) = \frac{\alpha^*}{\beta^*} = \frac{\alpha + \sum_{j} \delta_{ij}}{\beta+\sum_{j} \Lambda_{ij}(z_{ij})}\\
+%     &\mathbb{E}(\text{log}(r_i)) = \psi(\alpha^*) - \text{log}(\beta+\sum_j\Lambda_{ij}(z_{ij})) = \psi(\alpha + \sum_{j} \delta_{ij}) - \text{log}(\beta+\sum_j\Lambda_{ij}(z_{ij}))  
+% \end{align*} The M-step consists of maximizing the quantity: \begin{align*}
+%     &Q_i = (\alpha-1)\widehat{\mathbb{E}(\text{log}(\theta))}-\alpha\widehat{\mathbb{E}(\theta)}+\alpha\text{log}\alpha-\text{log}\Gamma(\alpha)+\delta_i\widehat{\mathbb{E}(\text{log}(\theta))}+\\
+%     &\qquad+\sum_j\delta_{ij}\text{log}\lambda_{ij}(z_{ij})-\widehat{\mathbb{E}(\theta)}\sum_j\Lambda_{ij}(z_{ij}) \\
+%     &Q = \sum_i Q_i = Q_1 + Q_2; \\
+%     &Q_1 = (\alpha-1)\sum_i \widehat{\mathbb{E}(\text{log}(\theta_i))} - \alpha\sum_i\widehat{\mathbb{E}(\theta_i)}+n\alpha\text{log}\alpha-n\text{log}\Gamma(\alpha) \\
+%     &Q_2 = \sum_i\sum_j(\delta_{ij}\text{log}(r_i\lambda_{ij}(z_{ij}))-r_i\Lambda_{ij}(z_{ij}))
+% \end{align*} with $\delta_i = \sum_j \delta_{ij}$. The first component can be maximised through a numerical method as the Newton-Raphson algorithm. While, the second component has been added of the first addendum so that it can rely on the classic survival likelihood that will assume a known form in according to the distribution of the baseline hazard function and baseline survival function. To estimate the model parameters, we may specify the form of the baseline hazard function. Indeed, the baseline hazard can assume a parametric form or it can be left unspecified (this corresponds to the semiparametric case) \cite{duchateau2007frailty}. Hence, the classification procedure can be implemented as in Section \ref{sec: risk classification pap2}.
+% % % SCATTERPLOTS AND 2BY2 TABLES 
+% % % \section{Figures} 
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot.png}
+% % %     \caption{$P(FH(t)=R|R=r)$ for r = 0 (red) and r= 1 (blue)}
+% % %     \label{fig:plot_prob}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_2.png}
+% % %     \caption{Probability of agreement}
+% % %     \label{fig:plot2}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % %  \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_4.png}
+% % %     \includegraphics[width=\linewidth]{plots/plot_5.png}
+% % %     \caption{Probability of agreement of observed and true risk indicators within the two risk groups, when $\alpha=1$.}
+% % %     \label{fig:plot5}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_6.png}
+% % %     \includegraphics[width=\linewidth]{plots/plot_7.png}
+% % %     \caption{Probabilities of correct classification, for varying $\alpha$ and $\alpha_m$.}
+% % %     \label{fig:plot6}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_3.png}
+% % %     \caption{Probability of correct measurement}
+% % %     \label{fig:plot4}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/diagnostic_1.png}
+% % %     \caption{frequency classification 2x2 table for family size}
+% % %     \label{fig:diag1}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\textwidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/diagnostic_2.png}
+% % %     \caption{$\widehat{Y}$ vs Y for family size}
+% % %     \label{fig:diag2}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}
+% % % \begin{minipage}{0.5\textwidth}
+% % %   \centering
+% % %     \includegraphics[width=\linewidth]{plots/diagnostic_3.png}
+% % %     \caption{$\widehat{Y}$ vs Y}
+% % %     \label{fig:diag3}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/diag_1_first.png}
+% % %     \caption{frequency classification 2x2 table for family size}
+% % %     \label{fig:diag4}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\textwidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/diag_2_first.png}
+% % %     \caption{$\widehat{Y}$ vs Y for family size}
+% % %     \label{fig:diag5}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\textwidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/diag_3_first.png}
+% % %     \caption{$\widehat{Y}$ vs Y}
+% % %     \label{fig:diag6}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_50 (1).png}
+% % %     \caption{classification 2x2 tables with frequencies}
+% % %     \label{fig:diag_50}
+% % % \end{minipage}%
+% % % \begin{minipage}{0.5\linewidth}
+% % % \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_50 (2).png}
+% % %     \caption{classification 2x2 tables with total counting}
+% % %     \label{fig:diag_50_2}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_50 (3).png}
+% % %     \caption{$\widehat{Y}$ vs Y for family size}
+% % %     \label{fig:diag_50_3}
+% % % \end{minipage}%
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_50 (4).png}
+% % %     \caption{$\widehat{Y}$ vs Y}
+% % %     \label{fig:diag_50_4}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_25 (1).png}
+% % %     \caption{classification 2x2 tables with frequencies}
+% % %     \label{fig:diag_25}
+% % % \end{minipage}%
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_25 (2).png}
+% % %     \caption{classification 2x2 tables with total counting}
+% % %     \label{fig:diag_25_2}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_25 (3).png}
+% % %     \caption{$\widehat{Y}$ vs Y for family size}
+% % %     \label{fig:diag_25_3}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % % \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_25 (4).png}
+% % %     \caption{$\widehat{Y}$ vs Y}
+% % %     \label{fig:diag_25_4}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_3000 (1).png}
+% % %     \caption{classification 2x2 tables with frequencies}
+% % %     \label{fig:plot_3000_1}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_3000 (2).png}
+% % %     \caption{classification 2x2 tables with counting}
+% % %     \label{fig:plot_3000_2}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_3000 (3).png}
+% % %     \caption{$\widehat{Y}$ vs Y for family size}
+% % %     \label{fig:plot_3000_3}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_3000 (4).png}
+% % %     \caption{$\widehat{Y}$ vs Y}
+% % %     \label{fig:plot_3000_4}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_para_1 (1).png}
+% % %     \caption{classification 2x2 tables with frequencies}
+% % %     \label{fig:plot_para_11}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_para_1 (2).png}
+% % %     \caption{classification 2x2 tables with absolute frequencies}
+% % %     \label{fig:plot_para_12}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_para_1 (3).png}
+% % %     \caption{$\widehat{Y}$ vs Y for family size}
+% % %     \label{fig:plot_para_13}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_para_1 (4).png}
+% % %     \caption{$\widehat{Y}$ vs Y}
+% % %     \label{fig:plot_para_14}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_diag3000server (1).png}
+% % %     \caption{classification 2x2 tables with frequencies}
+% % %     \label{fig:plot_diag3000server_1}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_diag3000server (2).png}
+% % %     \caption{classification 2x2 tables with absolute frequencies}
+% % %     \label{fig:plot_diag3000server_2}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_diag3000server (3).png}
+% % %     \caption{$\widehat{Y}$ vs Y for family size}
+% % %     \label{fig:plot_diag3000server_3}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_diag3000server (4).png}
+% % %     \caption{$\widehat{Y}$ vs Y}
+% % %     \label{fig:plot_diag3000server_4}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_1_1000.png}
+% % %     \caption{$\widehat{Y}$ vs Y for family size}
+% % %     \label{fig:plot_1_1000_log}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_1_ass_1000.png}
+% % %     \caption{$\widehat{Y}$ vs Y}
+% % %     \label{fig:plot_2_1000_log}
+% % % \end{minipage}
+% % % \end{figure}
+% % % \begin{figure}[ht]
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_2_1000.png}
+% % %     \caption{$\widehat{Y}$ vs Y for family size}
+% % %     \label{fig:plot_3_1000_log}
+% % % \end{minipage}
+% % % \begin{minipage}{0.5\linewidth}
+% % %     \centering
+% % %     \includegraphics[width=\linewidth]{plots/plot_3_1000.png}
+% % %     \caption{$\widehat{Y}$ vs Y}
+% % %     \label{fig:plot_4_1000_log}
+% % % \end{minipage}
+% % % \end{figure}
+% \renewcommand{\bibname}{References}
+% %\markboth{\textsc{References}}{\textsc{References}}
+% %\nocite* %add not non cited references
+% \bibliographystyle{apalike}
+% \bibliography{biblio}
