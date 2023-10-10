@@ -91,7 +91,7 @@ Let $i=1,\dots,n$ identify the family and the main subject of a family, and $\{m
 For the generic subject $i$, $\underline x_i=(x_{i}=\text{min}(t_{i}, c_{i}),\delta_{i})^T$, $\delta_{i}=\mathbb{I}(t_{i} \le c_{i})$ following the usual notation where $t_i$ indicates the survival time, and $c_i$ indicates the administrative (independent) censoring time, both measured from the same origin, that in our case is the birth $b_i$. The notation for the other family members is obtained by having $x, \ t, \ c, \ b$, and $\delta$ be followed by $m$, and  $s_1$. If subject $i$ does not have a sister, then the sister birthday is set as $bs_{1i} = +\infty$ and consequently the time-to-event is $ts_{1i} = +\infty$. The distinction between mother and sister is not strictly needed here as we assume that their time-to-event distributions are equal but it will make the extension to more complex models easier.
 
 We extend the Lehmann structure in terms of the survival functions $S_r(t)=[S_0(t)]^r$ to the Cure-Rate model. We call this model the  Lehmann Cure-Rate (LCR) model obtained by applying the Lehmann power transformation to a Cure-Rate (CR) survival function \[CR: \ S_0(t) = p + (1-p) \widetilde{S}(t)\] 
-\[LCR: \ S_r(t) = \left[ p + (1-p) \widetilde{S}(t) \right]^r, \ \ r >0,  \] with $\widetilde{S}(t)$ a proper survival function which describes the time-to-event distribution of the cases, which are the subjects who will eventually experience the event. Thus, the time-to-event of cases do not admit the value $+\infty$, and their survival function is proper, i.e. $\lim_{t\to+\infty}\widetilde S(t) = 0$. Note that for a fixed value $r$, the survival function $S_r(t)$ also defines a Cure-Rate model. Indeed, $\lim_{t \rightarrow +\infty} S_r(t) = p^r$, and $S_r(t)$ can thus be written as
+\[LCR: \ S_r(t) = \left[ p + (1-p) \widetilde{S}(t) \right]^r, \ \ r >0,  \] with $p$ the cured fraction, and $\widetilde{S}(t)$ a proper survival function which describes the time-to-event distribution of the cases, which are the subjects who will eventually experience the event, with some parameters $\underline\gamma$. Thus, the time-to-event of cases do not admit the value $+\infty$, and their survival function is proper, i.e. $\lim_{t\to+\infty}\widetilde S(t) = 0$. Note that for a fixed value $r$, the survival function $S_r(t)$ also defines a Cure-Rate model. Indeed, $\lim_{t \rightarrow +\infty} S_r(t) = p^r$, and $S_r(t)$ can thus be written as
 \begin{eqnarray}
 S_r(t) = p^r + \left( 1-p^r \right) \widetilde{S}_r(t),
 \label{CR}
@@ -123,14 +123,58 @@ Hence $\lim_{t \to+\infty}S_0(t) = 0$, which contradicts \ref{formula:lemma_1}. 
 We now specify the models and their likelihood that we will use later for the comparative analysis. 
 
 \subsection{Models}\label{sec:1.3.1}
-The frailty risk is assumed to be continuous, and must be positive. We assume the frailty to follow a Gamma($shape = \theta$, $rate = \theta$) whose density function is given by \begin{align*}
-    g_R(r) = \dfrac{\theta^\theta}{\Gamma(\theta)}r^{\theta-1}\text{e}^{-r\theta}.
+In the literature we can find the use of the family history indicator as a strong risk factor associated to breast cancer. We use the family history as an indicator of the risk of developing breast cancer within a family. The family history indicator  $FH$ has value zero until the first case of breast cancer is observed in the family, after which it takes the value one.  We thus develop a Univariate $FH$ Cure-Rate model which includes the covariate $FH$. Notice that the survival function depends on the baseline covariate $FH$, and it is given by  \begin{align*}
+    &S_{FH}(t) = S_0(t)^{(1-fh)}S_0(t)^{fh\beta} = S_0(t)^{fh(\beta-1)+1} = [p+(1-p)\widetilde S(t)]^{fh(\beta-1)+1} \\
+    &\text{or, } S_{FH}(t) = p^{fh(\beta-1)+1} + (1-p^{fh(\beta-1)+1})\widetilde S_{FH}(t) \\ 
+    &\text{with }\widetilde S_{FH}(t) = \dfrac{[p+(1-p)\widetilde S(t)]^{fh(\beta-1)+1} - p^{fh(\beta-1)+1}}{(1-p^{fh(\beta-1)+1})}, \\
+    &\text{and } f_{FH}(t) = (1-p^{fh(\beta-1)+1})\widetilde f_{FH}(t)= (fh(\beta-1)+1)(1-p)\widetilde f(t) [p+(1-p)\widetilde S(t)]^{fh(\beta-1)}, \\
+    &\text{with } \widetilde f_{FH}(t) = -\dfrac{\partial \widetilde S_{FH}(t)}{\partial t} = \dfrac{(fh(\beta-1)+1)[p+(1-p)\widetilde S(t)]^{fh(\beta-1)} (1-p)\widetilde f(t)}{(1-p^{fh(\beta-1)+1})}, 
+\end{align*} for $FH = fh$, and with $\widetilde S_{FH}(t)$ the survival function of cases . The parameter $\beta$ identifies the average risk difference between the group of families with a negative family history ($FH = 0$), and those families with a positive family history ($FH = 1$).  Notice that when $FH = 0$ the survival function reduces to the baseline survival function $S_{FH}(t;FH=0) = [p+(1-p)\widetilde S(t)]$, otherwise $S_{FH}(t;FH=1) = [p+(1-p)\widetilde S(t)]^\beta$, which allows for a cure-rate model as the previous case. 
+
+The Univariate FH Cure-Rate model has a univariate likelihood on the parameter collection $\pi_{FH}=(\underline\gamma, p, \beta)^T$, that is given by \begin{align*}
+    &L(\pi_{FH})=\prod_{i=1}^n f_{FH}(x_i)^{\delta_i} S_{FH}(x_i)^{1-\delta_i}
+    =\prod_{i=1}^n\left[(fh_i(\beta-1)+1)(1-p)\widetilde f(x_i)\right]^{\delta_i} \left[p+(1-p)\widetilde S(x_i)\right]^{fh_i(\beta-1)}.
 \end{align*}
 
+This model motivates the use of a binary risk of developing breast cancer, but we believe that a binary risk is too simplistic. For this reason we move to the development of models with a continuous frailty risk. Moreover, the frailty risk must be positive. We assume the frailty to follow a Gamma($shape = \theta$, $rate = \theta$) whose density function is given by \begin{align*}
+    g_R(r) = \dfrac{\theta^\theta}{\Gamma(\theta)}r^{\theta-1}\text{e}^{-r\theta},
+\end{align*}
+where we $\theta$ the frailty parameter. An extension to other distributions, or with a number of parameters greater than one is straightforward.
 
+We develop two models with the continuous frailty risk: the Multivariate frailty Cure-Rate model and the Univariate frailty Cure-Rate model. 
 
+We can find the closed form of the multivariate likelihood $L(\underline\gamma, p, \theta)$ of the Multivariate frailty Cure-Rate model for $i = 1,\dots, n$ families of varying size $n_i$ by applying the following steps:
+\begin{align*}
+    &L(\underline\gamma, p, \theta) = \prod_{i=1}^n\prod_{j=1}^{n_i}\int_{\mathbb {R}^+}f_r(x_{ij})^{\delta_{ij}}S_r(x_{ij})^{1 - \delta_{ij}}g_R(r;\theta)\text{d}r \\
+    &=\prod_{i=1}^n\int_{\mathbb{R}^+}\prod_{j=1}^{n_i}\left[\dfrac{(1-p)\widetilde f(x_{ij})}{p + (1-p)\widetilde S(x_{ij})}r\cancel{(p + (1-p)\widetilde S(x_{ij}))^r}\right]^{\delta_{ij}}[p + (1-p)\widetilde S(x_{ij})]^{r(1-\cancel{\delta_{ij}})}g_R(r;\theta)\text{d}r \\
+    &=\prod_{i=1}^n\prod_{j=1}^{n_i}\left[\dfrac{(1-p)\widetilde f(x_{ij})}{p + (1-p)\widetilde S(x_{ij})}\right]^{\delta_{ij}}\int_{\mathbb R^+}\prod_{j=1}^{n_i} r^{\delta_{ij}}S_r(x_{ij})g_R(r;\theta)\text{d}r \\
+    &=\prod_{i=1}^n\prod_{j=1}^{n_i}\left[\dfrac{(1-p)\widetilde f(x_{ij})}{p + (1-p)\widetilde S(x_{ij})}\right]^{\delta_{ij}}\int_{\mathbb R^+}r^{\sum_{j=1}^{n_i}\delta_{ij}}\prod_{j=1}^{n_i}S_r(x_{ij})g_R(r;\theta)\text{d}r
+\end{align*} 
+Thus, given the general distribution $R\sim$Gamma$(shape = \alpha, rate = \beta)$, the development of the internal component is given by 
+\begin{align*}
+    &\int_{\mathbb R^+}r^{\sum_{j=1}^{n_i}\delta_{ij}}\prod_{j=1}^{n_i}S_r(x_{ij})g_R(r;\theta)\text{d}r = \int_{\mathbb R^+}\prod_{j=1}^{n_i}S_r(x_{ij})r^{\sum_{j=1}^{n_i}\delta_{ij}}\dfrac{\beta^\alpha}{\Gamma(\alpha)}r^{\alpha-1}\text{e}^{-\beta r}\text{d}r \\ 
+    &= \int_{\mathbb R^+}\prod_{j=1}^{n_i}S_r(x_{ij})\dfrac{\beta^{\alpha + \sum_{j=1}^{n_i}\delta_{ij}}}{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}}r^{(\alpha+\sum_{j=1}^{n_i}\delta_{ij})-1}\text{e}^{-\beta r}\text{d}r \\ 
+    &= \int_{\mathbb R^+}\prod_{j=1}^{n_i}S_r(x_{ij})\dfrac{\beta^{\alpha + \sum_{j=1}^{n_i}\delta_{ij}}}{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}}r^{(\alpha+\sum_{j=1}^{n_i}\delta_{ij})-1}\text{e}^{-\beta r}\text{d}r \\ 
+    &=\prod_{j=1}^{n_i}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}}\int_{\mathbb R^+}H(x_{ij};p,\underline\gamma)^rg_{R^*}(r;\alpha,\sum_{j=1}^{n_i}\delta_{ij},\beta)\text{d}r \\ 
+    &=\prod_{j=1}^{n_i}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}} \int_{\mathbb R^+}
+    \text{e}^{r\text{log}(H(x_{ij};p,\underline\gamma))}g_{R^*}(r;\alpha,\sum_{j=1}^{n_i}\delta_{ij},\beta)\text{d}r \\ 
+    &=\prod_{j=1}^{n_i}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}} \mathbb{E}_{R^*}[\text{e}^{r\text{log}(H(x_{ij};p,\underline\gamma))}] =\prod_{j=1}^{n_i}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}}\text{MGF}(R^*;\text{log}(H(x_{ij};p,\underline\gamma))) \\
+    &=\prod_{j=1}^{n_i}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}}\left(1 - \dfrac{\text{log}(H(x_{ij};p,\underline\gamma))}{\beta}\right)^{-(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}
+\end{align*}
+where we define the quantity $H(x_{ij};p,\underline\gamma) = \prod_{j = 1}^{n_i}S(x_{ij}) = \prod_{j = 1}^{n_i}\left(p + (1-p)\widetilde S(x_{ij})\right)$ for ease of writing. Later we update the parameters of the frailty distribution to obtain the updated frailty risk random variable $R^*\sim$Gamma$(shape = \alpha+\sum_{j=1}^{n_i}\delta_{ij},rate=\beta)$, so that we make use of its moment generating function (MGF) in the point $\log(H(x_{ij};p,\underline\gamma))$. Recall that the definition of the MGF implies that \[
+MGF(R;y) = \mathbb{E}_R[\text{e}^{ry}],
+\] which is exactly what we have. Specifically, for a Gamma distributed random variable $R\sim\text{Gamma}(shape = \alpha, rate = \beta)$ the MGF is given by \[
+MGF(R;y) = \left(1-\dfrac{y}{\beta}\right)^{-\alpha}.
+\]
+Thus, the multivariate likelihood with $\alpha=\beta=\theta$ is given by \begin{align*}
+    &L(\underline\gamma, p, \theta)=\prod_{i=1}^n\prod_{j=1}^{n_i}\left[\dfrac{(1-p)\widetilde f(x_{ij})}{p + (1-p)\widetilde S(x_{ij})}\right]^{\delta_{ij}}\dfrac{\Gamma(\theta + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\theta)\theta^{\sum_{j=1}^{n_i}\delta_{ij}}}\left(1 - \dfrac{\log(H(x_{ij};p,\underline\gamma))}{\theta}\right)^{-(\theta + \sum_{j=1}^{n_i}\delta_{ij})}.
+\end{align*} 
+The likelihood, always in the case $\alpha=\beta=\theta$, reduces to the univariate form when there is one subject per family, so that its form is given by \begin{align*}
+    &L(\underline\gamma, p, \theta)=\prod_{i=1}^n\left[\dfrac{(1-p)\widetilde f(x_i)}{p + (1-p)\widetilde S(x_i)}\right]^{\delta_{i}}\dfrac{\Gamma(\theta + \delta_{i})}{\Gamma(\theta)\theta^{\delta_{i}}}\left(1 - \dfrac{\text{log}(p + (1-p)\widetilde S(x_i))}{\theta}\right)^{-(\theta + \delta_i)}.
+\end{align*}
+Notice that, at this point, parameter estimation can be achieved through the maximization of the likelihood from the observed independently right-censored data. Once the estimated collection of parameters $\underline{\widehat\pi} = (\widehat p, \underline{\widehat\gamma}, \widehat\theta)^T$ is obtained, it can be consequently involved in the computation of quantities of interest.
 
-First note that one can rely on the Cox proportional hazard model if one is willing to ignore the cure-rate structure. Although the true underlying structure of this model is based on the CR Lehmann structure, one may think of a model that has a proper survival distribution, both conditionally on $R$ and marginally. In other words, we may assume that there exists some finite time $T_\text{max}$ (larger than all observed survival and censoring times) such that all conditional survival functions $S(t\mid r) = \left[S_0(t) \right]^r$ are proper, i.e. tend to zero as $t\to+\infty$. Then, semiparametric estimation of the model is possible, for example using the \texttt{emfrail} function available in the software \texttt{R} \cite{balan2019frailtyem, balan2020tutorial}, while maintaining the multiplicative frailty structure. One may therefore rely on the maximization of the partial likelihood for the estimation procedure, instead of using the complete likelihood, with no need to specify a parametric distribution of the baseline survival function. 
+If one is willing to ignore the Cure-Rate structure, one may think of a model that has a proper survival distribution, both conditionally on $R$ and marginally. In other words, we may assume that there exists some finite time $T_\text{max}$ (larger than all observed survival and censoring times) such that all conditional survival functions $S(t\mid r) = \left[S_0(t) \right]^r$ are proper, i.e. tend to zero as $t\to+\infty$. Then, semiparametric estimation of the model is possible, for example using the \texttt{emfrail} function available in the software \texttt{R} \cite{balan2019frailtyem, balan2020tutorial}, while maintaining the multiplicative frailty structure. One may therefore rely on the maximization of the partial likelihood for the estimation procedure, instead of using the complete likelihood, with no need to specify a parametric distribution of the baseline survival function. 
 
 Therefore, a multivariate semiparametric Cox shared frailty clustered model, with the families our clusters, is formulated in its conventional form based on the existing literature. 
 
@@ -180,47 +224,8 @@ The model we expect to be the best performing the precision in inference and pre
 \begin{align*}
     &S_r(t) = [S_0(t)]^r = [p+(1-p)\widetilde S(t)]^r \\
     &f_r(t) = (1-p^r)\widetilde f_r(t) = (1-p)\widetilde f(t) r[p+(1-p)\widetilde S(t)]^{r-1}
-\end{align*} we can find the closed form of the multivariate likelihood $L(\underline\gamma, p, \theta)$ for $i = 1,\dots, n$ families of varying size $n_i$, thus generalizing the case of three-member families seer earlier 
-\begin{align*}
-    &L(\underline\gamma, p, \theta) = \prod_{i=1}^n\prod_{j=1}^{n_i}\int_{\mathbb {R}^+}f_r(x_{ij})^{\delta_{ij}}S_r(x_{ij})^{1 - \delta_{ij}}g_R(r;\theta)\text{d}r \\
-    &=\prod_{i=1}^n\int_{\mathbb{R}^+}\prod_{j=1}^{n_i}\left[\dfrac{(1-p)\widetilde f(x_{ij})}{p + (1-p)\widetilde S(x_{ij})}r\cancel{(p + (1-p)\widetilde S(x_{ij}))^r}\right]^{\delta_{ij}}[p + (1-p)\widetilde S(x_{ij})]^{r(1-\cancel{\delta_{ij}})}g_R(r;\theta)\text{d}r \\
-    &=\prod_{i=1}^n\prod_{j=1}^{n_i}\left[\dfrac{(1-p)\widetilde f(x_{ij})}{p + (1-p)\widetilde S(x_{ij})}\right]^{\delta_{ij}}\int_{\mathbb R^+}\prod_{j=1}^{n_i} r^{\delta_{ij}}S_r(x_{ij})g_R(r;\theta)\text{d}r \\
-    &=\prod_{i=1}^n\prod_{j=1}^{n_i}\left[\dfrac{(1-p)\widetilde f(x_{ij})}{p + (1-p)\widetilde S(x_{ij})}\right]^{\delta_{ij}}\int_{\mathbb R^+}r^{\sum_{j=1}^{n_i}\delta_{ij}}\prod_{j=1}^{n_i}S_r(x_{ij})g_R(r;\theta)\text{d}r
 \end{align*} 
-Thus, given the general distribution $R\sim$Gamma$(shape = \alpha, rate = \beta)$, the development of the internal component is given by 
-\begin{align*}
-    &\int_{\mathbb R^+}r^{\sum_{j=1}^{n_i}\delta_{ij}}\prod_{j=1}^{n_i}S_r(x_{ij})g_R(r;\theta)\text{d}r = \int_{\mathbb R^+}\prod_{j=1}^{n_i}S_r(x_{ij})r^{\sum_{j=1}^{n_i}\delta_{ij}}\dfrac{\beta^\alpha}{\Gamma(\alpha)}r^{\alpha-1}\text{e}^{-\beta r}\text{d}r \\ 
-    &= \int_{\mathbb R^+}\prod_{j=1}^{n_i}S_r(x_{ij})\dfrac{\beta^{\alpha + \sum_{j=1}^{n_i}\delta_{ij}}}{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}}r^{(\alpha+\sum_{j=1}^{n_i}\delta_{ij})-1}\text{e}^{-\beta r}\text{d}r \\ 
-    &= \int_{\mathbb R^+}\prod_{j=1}^{n_i}S_r(x_{ij})\dfrac{\beta^{\alpha + \sum_{j=1}^{n_i}\delta_{ij}}}{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}}r^{(\alpha+\sum_{j=1}^{n_i}\delta_{ij})-1}\text{e}^{-\beta r}\text{d}r \\ 
-    &=\prod_{j=1}^{n_i}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}}\int_{\mathbb R^+}H(x_{ij};p,\underline\gamma)^rg_{R^*}(r;\alpha,\sum_{j=1}^{n_i}\delta_{ij},\beta)\text{d}r \\ 
-    &=\prod_{j=1}^{n_i}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}} \int_{\mathbb R^+}
-    \text{e}^{r\text{log}(H(x_{ij};p,\underline\gamma))}g_{R^*}(r;\alpha,\sum_{j=1}^{n_i}\delta_{ij},\beta)\text{d}r \\ 
-    &=\prod_{j=1}^{n_i}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}} \mathbb{E}_{R^*}[\text{e}^{r\text{log}(H(x_{ij};p,\underline\gamma))}] =\prod_{j=1}^{n_i}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}}\text{MGF}(R^*;\text{log}(H(x_{ij};p,\underline\gamma))) \\
-    &=\prod_{j=1}^{n_i}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_{ij}}}\left(1 - \dfrac{\text{log}(H(x_{ij};p,\underline\gamma))}{\beta}\right)^{-(\alpha + \sum_{j=1}^{n_i}\delta_{ij})}
-\end{align*}
-where we define the quantity $H(x_{ij};p,\underline\gamma) = \prod_{j = 1}^{n_i}S(x_{ij}) = \prod_{j = 1}^{n_i}\left(p + (1-p)\widetilde S(x_{ij})\right)$, for ease of writing; and later we update the parameters of the frailty distribution to obtain new risk frailty random variable $R^*\sim$Gamma$(shape = \alpha+\sum_{j=1}^{n_i}\delta_{ij},rate=\beta)$, so that we make use of its moment generating function (MGF) in the point $\log(H(x_{ij};p,\underline\gamma))$. Recall that the definition of the MGF implies that \[
-MGF(R;y) = \mathbb{E}_R[\text{e}^{ry}],
-\] which is exactly what we have. Specifically, for a Gamma distributed random variable $R\sim\text{Gamma}(shape = \alpha, rate = \beta)$ the MGF is given by \[
-MGF(R;y) = \left(1-\dfrac{y}{\beta}\right)^{-\alpha}.
-\]
-Thus, the multivariate likelihood with $\alpha=\beta=\theta$ is given by \begin{align*}
-    &L(\underline\gamma, p, \theta)=\prod_{i=1}^n\prod_{j=1}^{n_i}\left[\dfrac{(1-p)\widetilde f(x_{ij})}{p + (1-p)\widetilde S(x_{ij})}\right]^{\delta_{ij}}\dfrac{\Gamma(\theta + \sum_{j=1}^{n_i}\delta_{ij})}{\Gamma(\theta)\theta^{\sum_{j=1}^{n_i}\delta_{ij}}}\left(1 - \dfrac{\log(H(x_{ij};p,\underline\gamma))}{\theta}\right)^{-(\theta + \sum_{j=1}^{n_i}\delta_{ij})}.
-\end{align*} 
-The likelihood, always in the case $\alpha=\beta=\theta$, reduces to the univariate form when there is one subject per family, so that its form is given by \begin{align*}
-    &L(\underline\gamma, p, \theta)=\prod_{i=1}^n\left[\dfrac{(1-p)\widetilde f(x_i)}{p + (1-p)\widetilde S(x_i)}\right]^{\delta_{i}}\dfrac{\Gamma(\theta + \delta_{i})}{\Gamma(\theta)\theta^{\delta_{i}}}\left(1 - \dfrac{\text{log}(p + (1-p)\widetilde S(x_i))}{\theta}\right)^{-(\theta + \delta_i)}.
-\end{align*}
-Notice that parameter estimation is achieved through the maximization of the likelihood from the observed independently right-censored data. Thus, we obtain the estimated collection of parameters $\underline{\widehat\pi} = (\widehat p, \underline{\widehat\gamma}, \widehat\theta)^T$ that are consequently involved in the computation of quantities of interest.
 
-A non-frailty cure-rate Lehmann model can be compared to the parametric frailty models, recalling that the family history is used as a replacement for the true frailty risk. The survival functions in this model depend on the observed family history indicator $FH(t)$ that assumes the value zero until the first case of breast cancer is observed in the family, after which it takes the value one. Notice that the $FH$ enters in the model as a baseline covariate, and thus the survival function depends on this covariate. The $FH$ survival function is given by \begin{align*}
-    &S_{FH}(t) = S_0(t)^{(1-fh)}S_0(t)^{fh\beta} = S_0(t)^{fh(\beta-1)+1} = [p+(1-p)\widetilde S(t)]^{fh(\beta-1)+1} \\
-    &\text{or, } S_{FH}(t) = p^{fh(\beta-1)+1} + (1-p^{fh(\beta-1)+1})\widetilde S_{FH}(t) \\ 
-    &\text{with }\widetilde S_{FH}(t) = \dfrac{[p+(1-p)\widetilde S(t)]^{fh(\beta-1)+1} - p^{fh(\beta-1)+1}}{(1-p^{fh(\beta-1)+1})}. \\
-    &\text{Then, } \widetilde f_{FH}(t) = -\dfrac{\partial \widetilde S_{FH}(t)}{\partial t} = \dfrac{(fh(\beta-1)+1)[p+(1-p)\widetilde S(t)]^{fh(\beta-1)} (1-p)\widetilde f(t)}{(1-p^{fh(\beta-1)+1})}, \\
-    &\text{and, } f_{FH}(t) = (1-p^{fh(\beta-1)+1})\widetilde f_{FH}(t)= (fh(\beta-1)+1)(1-p)\widetilde f(t) [p+(1-p)\widetilde S(t)]^{fh(\beta-1)},
-\end{align*} for $FH = fh$. Notice that the frailty parameter $\theta$ is not involved anymore in this model, due to the fact that it is ``replaced'' by the parameter $\beta$, which identifies the average risk difference between the group of families with a negative family history ($FH = 0$), and those families with a positive family history ($FH = 1$). The family history conditional density function of the cases is $f_{FH}(t)$, because recall that also here the cure-rate structure is involved, with cases and non-cases. Notice that when $FH = 0$ the survival function reduces to the baseline survival function $S_{FH}(t;FH=0) = [p+(1-p)\widetilde S(t)]$, otherwise $S_{FH}(t;FH=1) = [p+(1-p)\widetilde S(t)]^\beta$, which allow as well for a cure-rate model as proved above. Thus, the univariate likelihood with the covariate family history indicator, on the parameter collection $\pi_{FH}=(\underline\gamma, p, \beta)^T$, is given by \begin{align*}
-    &L(\pi_{FH})=\prod_{i=1}^n f_{FH}(x_i)^{\delta_i} S_{FH}(x_i)^{1-\delta_i}
-    =\prod_{i=1}^n\left[(fh_i(\beta-1)+1)(1-p)\widetilde f(x_i)\right]^{\delta_i} \left[p+(1-p)\widetilde S(x_i)\right]^{fh_i(\beta-1)}.
-\end{align*}
 Wrapping up, we explore six different models, namely in short: the multivariate semiparametric Cox frailty model, the constant $FH$ Cox model, the time-varying $FH(t)$ Cox model, the multivariate parametric frailty model, the univariate parametric frailty model, the parametric univariate $FH$ model. Our purpose is to observe their difference in inference precision and risk prediction accuracy. We expect the family history models to be weaker in comparison to all the others. Also, we expect the semiparametric models to be poorer in the explanation of the phenomenon ``breast cancer development'' in comparison to the parametric models. We would like to assess that our parametric multivariate model is the best one performing parameters recovery and accuracy in risk prediction in contract to what has been already used in the literature so far. 
 
 \section{Posterior risk prediction}\label{sec4}
