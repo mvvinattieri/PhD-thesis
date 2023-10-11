@@ -316,30 +316,22 @@ The posterior mean and mode frailty are extracted from the formula associated to
 
 The univariate case is directly obtained by setting family size $n_i=1$. Note that when the shape parameter of the distribution is lower than one, the mode is not a reliable summary of the posterior frailty risk. Moreover, the posterior median of a Gamma distributed frailty risk requires numerical methods to be computed as there is not a formula in closed form. For these reasons the posterior mean appears to be the most reliable and easily to compute.  
 
-To validate that the mean is the best performing as posterior risk, the mean, median, and mode are compared in terms of various indices.
-
-In any case, to validate that 
-The accuracy of the risk prediction is assessed by different indices according through simulation studies or available data. In the case of simulation studies we can compare the true generated frailty values $\widehat r_i$ to the family-specific predictions, for $n$ families, through the estimated mean squared prediction error (MSPE): \begin{align*}
+To validate that the mean is the best performing as posterior risk, the mean, median, and mode are compared in terms of various indices. When the analysis in on simulated data, we can compare the true frailty risk from the data generating step $r_i$ to the predicted frailty risk $\widehat r_i$, for $n$ families. For example, we compute the estimated mean squared prediction error (MSPE), whose equation is given by \begin{align*}
     MSPE = \dfrac{1}{n}\sum_{i=1}^n(\widehat r_i - r_i)^2.
-\end{align*} 
-% In alternative we can compute the adjusted quantities: \begin{align*}
-%     MSPE_{\text{adj}} = \mathbb{E}\left[\dfrac{(\textbf{r} - \widehat{\mathbf{r}})^2}{\mathbf{r}^2}\right], 
-% \end{align*} and compute a non-parametric regression on them versus $r$. ANCORA DA FARE  
-We can also compute several indices to compare the performance of the models. Firstly, we compute the linear coefficient $\widehat{r}$ of the true frailty values $r_i$ versus the predicted frailty $\widehat r_i$ using linear regression, and report this coefficient. Additionally, we calculate the linear correlation coefficient of Pearson from the same linear regression. An alternative comparison can be performed through the rank correlation coefficient. 
+\end{align*}
+Also, from the linear regression of the true frailty risk $r_i$ on the predicted frailty risk $\widehat r_i$, we report the estimated coefficient of determination $R^2$ as a measure of how much the predicted risk can explain the variability of the true risk. The coefficient of the predicted frailty risk, the linear correlation coefficient of Pearson and the rank correlation coefficient are also extracted and reported. 
 
-For assessing prediction accuracy in simulation studies, we also report the AUC, that is the area under the receiver operating characteristic (ROC) curve. This measure assesses the predictive accuracy for a binary outcome, where the frailty is split into two groups based on a threshold.
-% Specifically, the ROC curve measures the pair-wise probability that an individual who has experienced the event has a higher predicted risk than an individual who has not yet experienced the event. 
+Once we prove that the mean is the best performing posterior risk summary, also the models under analysis need to be validated in terms of prediction accuracy, depending on whether the analysis is on simulated studies or on the real case.
 
-When moving to the available dataset, the aforementioned comparison with the true frailty is not feasible and indeed, we turn to the Harrell's concordance index as a measure of model performance for unknown outcomes \cite{rahman2017review, harrell1982evaluating, scheike2015estimating, tokatli2011developing}. This index estimates the probability that, among a randomly selected pair of subjects with different right-censored survival times and predicted frailty values, the one with a lower risk score (here, the predicted frailty) will outlive the other \cite{harrell1982evaluating}. Harrell's concordance index is based on all pairs of ``main subjects''that we identify one in each family for whom the ordering in the survival times can be established, taking into account right censoring. Notice that this is similar to what is done in the modified version of the Wilcoxon test on survival data with right censoring. 
+When the analysis is on simulated studies, we compute the AUC for the binary splitting and the Harrell's concordance index. We choose this index because it can be computed also in the real case application, as it is a measure of model performance for unknown outcomes \cite{rahman2017review, harrell1982evaluating, scheike2015estimating, tokatli2011developing}, and it makes the comparison between simulation study and real case much easier. This index estimates the probability that, among a randomly selected pair of subjects with different right-censored survival times and predicted risk values, the one with a lower risk score will outlive the other \cite{harrell1982evaluating}. This define this pair as ``concordant''. Notice that this is similar to what is done in the modified version of the Wilcoxon test on survival data with right censoring.
 
-
-The estimate is based on the proportion of concordant pairs, following the above definition, over all pairs (including discordant and tied pairs). The formula is given by \cite{schmid2016use}
+The estimate relies on the ratio of concordant pairs to all pairs, which includes discordant and tied pairs. The formula is given by \cite{schmid2016use}
 \[
 C = \dfrac{\sum_{i\ne j}\mathbb{I}(\widehat{r}_i < \widehat{r}_j)\mathbb{I}(x_i > x_j)\delta_j}{\sum_{i\ne j}\mathbb{I}(x_i > x_j)\delta_j},
-\] where $\widehat{r}_i$ and $\widehat{r}_j$ denote the predicted frailty for two subjects $i$ and $j$, respectively, who are not members of the same family. It is of interest to notice that from theoretical result the Harrell's concordance index does not depend on the baseline survival function, but only on a random variable $Y^*\sim\text{Beta}(\theta + 1,\theta)$, such that \[
-C(\theta) = S_{Y^*}\left( \frac{1}{2} \right)
+\] where $\widehat{r}_i$ and $\widehat{r}_j$ denote the predicted risk for two subjects $i$ and $j$ who are not members of the same family. It is of interest to notice that from theoretical result the Harrell's concordance index does not depend on the baseline survival function, but only on a random variable $Y^*\sim\text{Beta}(\theta + 1,\theta)$, such that \[
+C(\theta) = S_{Y^*}\left( \frac{1}{2} \right).
 \]
-You can find an extended version of this result in Appendix \ref{appendix:1.c}.
+An extended version of this result can be found in Appendix \ref{appendix:1.c}.
 
 \section{Simulation study}\label{sec5}
 In this section we present the results of comparing the Cox models and the parametric cure-rate models with several baseline survival distributions, including Weibull, Gamma, and Lognormal distributions. Based on our experience with the Swedish Multi-generational breast cancer dataset we also added a threshold parameter to the Gamma and Lognormal distributions for improved accuracy in modeling and we include these two non-cases distributions to the analysis.
