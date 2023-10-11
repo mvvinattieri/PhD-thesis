@@ -334,9 +334,27 @@ C(\theta) = S_{Y^*}\left( \frac{1}{2} \right).
 An extended version of this result can be found in Appendix \ref{appendix:1.c}.
 
 \section{Simulation study}\label{sec5}
-In this section we present the results of comparing the Cox models and the parametric cure-rate models with several baseline survival distributions, including Weibull, Gamma, and Lognormal distributions. Based on our experience with the Swedish Multi-generational breast cancer dataset we also added a threshold parameter to the Gamma and Lognormal distributions for improved accuracy in modeling and we include these two non-cases distributions to the analysis.
+We present results from the comparative analysis on the six models we developed or included from literature. In Table \ref{tab:models} we present the six models highlighting their commonalities and differences.
 
-Recall that we examine the Cox model within the context of multivariate frailty or in the univariate setting, considering the family history as either a baseline ($FH$) or time-varying covariate ($FH(t)$). The family history covariate is derived from the multivariate data generation process. While, we examine the parametric models either in the multivariate frailty setting or in the univariate frailty setting, and finally with the baseline covariate $FH$. The models are a total of six.
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
+    \toprule
+    Name of the model &Likelihood &Frailty risk &FH &Survival  \\ \midrule
+    Multivariate frailty Cure-Rate &multivariate &\cmark &\xmark &cure-rate \\
+    Univariate frailty Cure-Rate &univariate &\cmark &\xmark &cure-rate \\ 
+    Univariate $FH$ Cure-Rate &univariate &\xmark &constant &cure-rate \\
+    Multivariate frailty Cox &multivariate &\cmark &\xmark &traditional \\
+    Univariate $FH$ Cox &univariate &\xmark &constant &traditional \\
+    Univariate $FH(t)$ Cox &univariate &\xmark &time-varying &traditional
+    \\ \bottomrule
+    \end{tabular*}
+    \caption{Commonalities and differences among the six models compared.}
+    \label{tab:models}
+\end{table*}
+\end{center}
+
+Notice that the Cure-Rate models that we develop, i.e. the Multivariate frailty Cure-Rate, the Univariate frailty Cure-Rate, and the Univariate $FH$ Cure-Rate model are parametric and thus in the analysis we explore several baseline survival distributions, including Weibull, Gamma, Lognormal, three-parameter Gamma and three-parameter Lognormal. These two last distributions are included to assess whether an increased flexibility in the distribution could benefit the inference precision and prediction accuracy. 
 
 This section is organized as follows: first, we describe the key steps of the data generation process. Next, we present the results of fitting three semiparametric models, and later three parametric models using five different time-to-event distributions, and compare their goodness of fit. Finally, we evaluate the predictive accuracy of each model through several appropriate measures.
 
