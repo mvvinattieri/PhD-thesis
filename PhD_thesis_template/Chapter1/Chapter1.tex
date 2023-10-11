@@ -132,8 +132,8 @@ In the literature we can find the use of the family history indicator as a stron
 \end{align*} for $FH = fh$, and with $\widetilde S_{FH}(t)$ the survival function of cases . The parameter $\beta$ identifies the average risk difference between the group of families with a negative family history ($FH = 0$), and those families with a positive family history ($FH = 1$).  Notice that when $FH = 0$ the survival function reduces to the baseline survival function $S_{FH}(t;FH=0) = [p+(1-p)\widetilde S(t)]$, otherwise $S_{FH}(t;FH=1) = [p+(1-p)\widetilde S(t)]^\beta$, which allows for a cure-rate model as the previous case. 
 
 The Univariate FH Cure-Rate model has a univariate likelihood on the parameter collection $\pi_{FH}=(\underline\gamma, p, \beta)^T$, that is given by \begin{align*}
-    &L(\pi_{FH})=\prod_{i=1}^n f_{FH}(x_i)^{\delta_i} S_{FH}(x_i)^{1-\delta_i}
-    =\prod_{i=1}^n\left[(fh_i(\beta-1)+1)(1-p)\widetilde f(x_i)\right]^{\delta_i} \left[p+(1-p)\widetilde S(x_i)\right]^{fh_i(\beta-1)}.
+    L(\pi_{FH})&=\prod_{i=1}^n f_{FH}(x_i)^{\delta_i} S_{FH}(x_i)^{1-\delta_i} \\
+    &=\prod_{i=1}^n\left[(fh_i(\beta-1)+1)(1-p)\widetilde f(x_i)\right]^{\delta_i} \left[p+(1-p)\widetilde S(x_i)\right]^{fh_i(\beta-1)}.
 \end{align*}
 
 This model motivates the use of a binary risk of developing breast cancer, but we believe that a binary risk is too simplistic. For this reason we move to the development of models with a continuous frailty risk. Moreover, the frailty risk must be positive. We assume the frailty to follow a Gamma($shape = \theta$, $rate = \theta$) whose density function is given by \begin{align*}
@@ -174,23 +174,19 @@ The likelihood, always in the case $\alpha=\beta=\theta$, reduces to the univari
 \end{align*}
 Notice that, at this point, parameter estimation can be achieved through the maximization of the likelihood from the observed independently right-censored data. Once the estimated collection of parameters $\underline{\widehat\pi} = (\widehat p, \underline{\widehat\gamma}, \widehat\theta)^T$ is obtained, it can be consequently involved in the computation of quantities of interest.
 
-If one is willing to ignore the Cure-Rate structure, one may think of a model that has a proper survival distribution, both conditionally on $R$ and marginally. In other words, we may assume that there exists some finite time $T_\text{max}$ (larger than all observed survival and censoring times) such that all conditional survival functions $S(t\mid r) = \left[S_0(t) \right]^r$ are proper, i.e. tend to zero as $t\to+\infty$. Then, semiparametric estimation of the model is possible, for example using the \texttt{emfrail} function available in the software \texttt{R} \cite{balan2019frailtyem, balan2020tutorial}, while maintaining the multiplicative frailty structure. One may therefore rely on the maximization of the partial likelihood for the estimation procedure, instead of using the complete likelihood, with no need to specify a parametric distribution of the baseline survival function. 
+If one is willing to ignore the Cure-Rate structure, one may think of a model that has a proper survival distribution, both conditionally on $R$ and marginally. In other words, we may assume that there exists some finite time $T_\text{max}$ (larger than all observed survival and censoring times) such that all conditional survival functions $S(t\mid r) = \left[S_0(t) \right]^r$ are proper, i.e. they tend to zero as $t\to+\infty$. 
 
-Therefore, a multivariate semiparametric Cox shared frailty clustered model, with the families our clusters, is formulated in its conventional form based on the existing literature. 
-
-We would like to prove the superiority of the multivariate model to the univariate models. One of these last would be the univariate Cox frailty model. By definition the word ``univariate'' refers to the families that have only one subject in this setting. The problem of this model is its non-identifiability due to the combination of cluster absence - so that we can not have a ``shared frailty'' effect - and the unspecified hazard. We prove the non-identifiability of the univariate Cox frailty model in the following lines.
+The popular and widely developed Cox model may be suitable for our case. We include in the comparative analysis a Multivariate frailty Cox model, where the semiparametric estimation of the model is possible, for example using the \texttt{emfrail} function available in the software \texttt{R} \cite{balan2019frailtyem, balan2020tutorial}, while maintaining the multiplicative frailty structure. This Multivariate frailty Cox model is the exact counterpart of the Multivariate frailty Cure-Rate model, which we would like to prove they have an equal level of prediction accuracy. For sake of completeness of the analysis, we also develop a Univariate $FH$ Cox model, and a Univariate $FH(t)$ Cox model, with $FH(t)$ the time-varying version of the family history indicator.  The difference between these two is that the indicator $FH$ is measured at the end of the follow-up, while $FH(t)$ is measured over time and the time of the change-point from zero to one is tracked. Unfortunately it was not possible to include in the analysis the Univariate frailty Cox model because of its non-identifiability due to the combination of the absence of families and an unspecified hazard function. We prove the non-identifiability of the univariate Cox frailty model in the following lines.
 
 Let us start from the multiplicative proportional hazards frailty model that has the observed data likelihood given by
-\begin{align}
+\begin{align*}
     \label{}
     &L^*(\underline{\pi};\underline x) =\prod_{i=1}^n f_X(\underline{x}_i;\underline{\pi}) = \prod_{i=1}^n\int_{\mathbb{R}^+}f_X(\underline{x}_i\mid R;\underline{\pi})g_R(r)\text{d} r=\prod_{i=1}^n\int_{\mathbb{R}^+}f_r(x_i)^{\delta_i}S_r(x_i)^{1-\delta_i}g_R(r)\text{d} r,   
-\end{align} where $S_r(t) = S(t\mid r)$ and $f_r(t) = f(t\mid r)$ are the (proper) conditional survival function and density function conditional, respectively.
+\end{align*} where recall $\underline\pi = (p,\underline\gamma,\theta)^T$ and $S_r(t) = S(t\mid r)$ and $f_r(t) = f(t\mid r)$ are the (proper) survival function and density function conditional on the cases, respectively.
 
-We note that, however, the univariate multiplicative Gamma frailty model is not identifiable without some additional structure. We go deeper into the issue with the following lemma.
-\begin{lem} The Univariate multiplicative proportional hazards frailty model is not identifiable if one does not specify the form of the baseline survival function $S_0(t)$. 
+We note that, however, the Univariate frailty model is not identifiable without some additional structure. We dig deeper into the issue with the following lemma.
+\begin{lem} The Univariate frailty model is not identifiable if one does not specify the form of the baseline survival function $S_0(t)$. 
     \begin{proof}
-We discuss the case of multiplicative Gamma frailty, but the proof is general. 
-
 Recall the Gamma density function:
 \[
 g_R(r;\alpha,\beta) = \dfrac{1}{\Gamma(\alpha)}\beta^\alpha r^{\alpha - 1}\text{e}^{-r\beta}, \ r\ge 0, \ \alpha, \ \beta\in\mathbb{R}^+
@@ -202,7 +198,7 @@ Recall the moment generator function of the Gamma random variable: \begin{align*
     &MGF_R(y) =\mathbb{E}[\text{e}^{yR}] = \left(1 - \dfrac{y}{\beta}\right)^{-\alpha}, \ y<\beta \ \text{or} \\
     &\left(1 - \dfrac{y}{\theta}\right)^{-\theta}\text{ when } \alpha=\beta=\theta>0, \text{ for } y < \theta, \text{ and in particular, } \forall \ y \le 0.
 \end{align*} 
-The frailty model has marginal survival function \begin{align*}
+The Univariate frailty model has marginal survival function \begin{align*}
     S(t) &= \int_{\mathbb{R}^+}S(t\mid r)g_R(r;\theta)\text{d}r = \int_{\mathbb{R}^+}S(t)^rg_R(r;\theta)\text{d}r = \int_{\mathbb{R}^+}\text{e}^{\text{log}\left(S(t)^r\right)}g_R(r;\underline{\theta})\text{d}r \\
     &= \int_{\mathbb{R}^+}\text{e}^{r\text{log}\left(S(t)\right)}g_R(r;\theta)\text{d}r= \left(1 - \dfrac{\text{log}(S_0(t))}{\theta}\right)^{-\theta}. \text{ Note that, }\log(S_0(t)) < 0 \forall t\ge 0.
 \end{align*}
@@ -211,103 +207,51 @@ Now, for any observed marginal survival function $S(t)$ one has \begin{align*}
     &\iff S(t)^{-1/\theta} - 1 = -\dfrac{\log(S_0(t))}{\theta} \iff \theta\left[S(t)^{-1/\theta} - 1\right] = -\log(S_0(t)) \\
     &\iff \log(S_0(t)) = \theta\left(1 - S(t)^{-1/\theta} \right) \iff S_0(t) = \text{exp}\left(\theta\left(1 - S(t)^{-1/\theta} \right)\right),
 \end{align*} 
-for any observed $S(t)$, to each choice of $\theta$ there is a corresponding $S_0(t)$. Thus, it exists an infinite set of couple $(\theta, S_0(t))$ with $S_0(t) = \text{exp}\left(\theta\left(1 - S(t)^{-1/\theta} \right)\right)$ that yields to the same $S(t)$. This proves that the model is not identifiable from the marginal survival function $S(t)$, unless additional constraints are introduced, such as for example on the distribution of $S_0(t)$.
+for any observed $S(t)$, to each choice of $\theta$ there is a corresponding $S_0(t)$. Thus, it exists an infinite set of couple $(\theta, S_0(t))$ with $S_0(t) = \text{exp}\left(\theta\left(1 - S(t)^{-1/\theta} \right)\right)$ that yields to the same $S(t)$. This proves that the Univariate frailty model is not identifiable from the marginal survival function $S(t)$, unless additional constraints are introduced, such as for example on the distribution of $S_0(t)$.
     \end{proof}
 \end{lem}
-Thus, the semiparametric Cox univariate frailty model is not developed and no results are reported from this model. However, when we specify a parametric distribution for the univariate survival function, we can develop the model and present the results obtained from it, as we see below.
+Thus, the Univariate frailty Cox model is not developed in the end and no results are reported from this model. 
 
-However in contrast, we develop two non-frailty univariate Cox model, where we replace the true frailty risk with the family history indicator $FH$. To recap, we develop the multivariate Cox model as the first model, as second model a Cox model with a covariate that coincide to the constant $FH$ indicator. The term ``constant'' refers to measuring the indicator $FH$ at the end of the follow-up, thus we do not take into account the time of the change-point of the indicator from zero to one if it happens. The third model is a Cox model with a time-varying covariate $FH(t)$. Thus, in this model it is also recorded the time of the change-point.
-
-Our main contribution is to compare these three semiparametric models namely in short: the multivariate frailty Cox model, the constant $FH$ Cox model, and the time-varying $FH(t)$ Cox model to our proposals that consists in three parametric models. 
-
-The model we expect to be the best performing the precision in inference and prediction accuracy is the multivariate parametric Lehmann cure-rate model with shared frailty. Recall the main model components in \ref{condsurv} and \ref{formula:1.conddens}, such that
-\begin{align*}
-    &S_r(t) = [S_0(t)]^r = [p+(1-p)\widetilde S(t)]^r \\
-    &f_r(t) = (1-p^r)\widetilde f_r(t) = (1-p)\widetilde f(t) r[p+(1-p)\widetilde S(t)]^{r-1}
-\end{align*} 
-
-Wrapping up, we explore six different models, namely in short: the multivariate semiparametric Cox frailty model, the constant $FH$ Cox model, the time-varying $FH(t)$ Cox model, the multivariate parametric frailty model, the univariate parametric frailty model, the parametric univariate $FH$ model. Our purpose is to observe their difference in inference precision and risk prediction accuracy. We expect the family history models to be weaker in comparison to all the others. Also, we expect the semiparametric models to be poorer in the explanation of the phenomenon ``breast cancer development'' in comparison to the parametric models. We would like to assess that our parametric multivariate model is the best one performing parameters recovery and accuracy in risk prediction in contract to what has been already used in the literature so far. 
+Wrapping up, we explore six different models: the Multivariate frailty Cure-Rate model, the Univariate frailty Cure-Rate model, the Univariate $FH$ Cure-Rate model, the Multivariate frailty Cox model, the Univariate $FH$ Cox model, the Univariate $FH(t)$ Cox model. Our purpose is to observe their difference in inference precision and risk prediction accuracy. We expect the family history indicator to be a weaker indicator compared to the continuous frailty risk, in terms of explaining the phenomenon of breast cancer within a population. The Cox models can not infer some quantities as the cured fraction and the distribution of breast cancer cases, and this is certainly a disadvantage  for these models. Also, the univariate models do not use the complete familiar information of the subjects and for this reason we expect them to be worst than the multivariate models in terms of risk prediction accuracy. Summing up all of these thoughts, we expect the Multivariate frailty Cure-Rate model to be the best performing in inference precision to explain the phenomenon breast cancer development, and accuracy in risk prediction.
 
 \section{Posterior risk prediction}\label{sec4}
-The primary focus of this project is to develop a risk prediction model that can be used for women who are not included in the training dataset. This model should also be applicable to new family members who are admitted to a hospital at a later time. The risk prediction model is evaluated based on various measures of risk prediction accuracy and validation techniques to assess which model is the most informative and effective.
+The primary focus of this project is risk prediction. It is interesting to notice that the available data are used for fitting the models, the risk prediction can be applied also to women not included in the initial dataset. The risk prediction procedure is different according to whether the model is semiparametric or parametric. For this reason we make distinction in the following paragraphs. 
 
-% First of all we compute the posterior quantities in the parametric case of two-latent risk groups. We first explore this case, following the functions defined in Section \ref{sec2}, and later we will extend to the more difficult case of continuous frailty relying on the notation defined in Section \ref{sec3}.
+\subsection{Semiparametric scenario}
+In the parameter estimation step, by maximizing the partial likelihood we obtain the estimated value of the frailty parameter $\widehat{\theta}$. 
+% Through the already available \texttt{coxph} function in the \texttt{R} software, using an Empirical Bayes method implemented in the package to compute the posterior mean \cite{balan2020tutorial}, each family can be assigned to a risk value.
 
-% We can obtain the complete form of the survival functions, which are: \begin{align*}
-%     &S_0(t)=\widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}(t) \\
-%     &S_1(t)= \widehat{p}_0^{{\widehat{\alpha}}}+(1-\widehat{p}_0^{{\widehat{\alpha}}} )\widetilde{S}_1(t) \\
-%     &\widetilde{S}_1(t) =\dfrac{(\widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}(t))^{{\widehat{\alpha}}}-\widehat{p}_0^{{\widehat{\alpha}}}}{1-\widehat{p}_0^{{\widehat{\alpha}}}}
-% \end{align*} where $\widetilde{S}(t)$ has a defined distribution in function of $\widetilde{\lambda}(t)$, according to the baseline prior distribution, previously fixed. 
-
-% Perhaps most importantly, one should not forget the final goal of our work: provide an individual-based prediction of their family's risk group. This is achieved for the univariate estimators through calculation, for each family, of the conditional probability:
-% \begin{align*}
-%         P(R=1\mid \underline{z};\underline{\widehat{\pi}}) &= \dfrac{f(\underline{z}\mid R=1;\underline{\widehat{\pi}})P(R=1)}{f(\underline{z})} \\
-%         &= \dfrac{f(\underline{z}\mid R=1;\underline{\widehat{\pi}})P(R=1)}{f(\underline{z}\mid R=1;\underline{\widehat{\pi}})P(R=1)+f(\underline{z}\mid R=0;\underline{\widehat{\pi}})P(R=0)}.
-%     \end{align*} 
-% To simplify the expressions we use $\underline{z} = (z, \delta)$ to indicate the univariate survival couple data. The vector collection $\underline{\textbf{z}}=((z,\delta)^T,(zs_1,\delta s_1)^T,(zm, \delta m)^T)^T$ represents the whole family data. The purpose to define the family with at least two members, i.e. the mother and the first sister ($m$ and $s_1$ respectively) is to cover at least the first-degree-generational heritability of breast cancer. Notice again that this is easily extendable to a higher number of sisters, or other degree members of the family (see e.g. grandmothers, aunts, cousins). 
-
-% The formula for the full multivariate model is similar, but it involves the survival information from all family members, taking into account the conditional independence assumption within each family: \begin{align}
-%     \label{formula:4_1}
-%         P(R=1\mid \text{family};\underline{\widehat{\pi}}) &= \dfrac{f(\text{family}\mid R=1;\underline{\widehat{\pi}})P(R=1)}{f(\text{family};\underline{\widehat{\pi}})} \nonumber \\
-%         P(R=1\mid \underline{\textbf{z}};\underline{\widehat{\pi}}) &= \dfrac{f(\underline{\textbf{z}}\mid R=1;\underline{\widehat{\pi}})P(R=1)}{f(\underline{\textbf{z}})} \\
-%         &= \dfrac{f(\underline{\textbf{z}}\mid R=1;\underline{\widehat{\pi}})P(R=1)}{f(\underline{\textbf{z}}\mid R=1;\underline{\widehat{\pi}})P(R=1)+f(\underline{\textbf{z}}\mid R=0;\underline{\widehat{\pi}})P(R=0)}. \nonumber
-%     \end{align} Where, recall that:
-%     \begin{align*}
-%         &f(\underline{\textbf{z}}\mid R=1)  \overset{\overset{\perp\mid R}{\downarrow}}{=} f(\underline{z}\mid R=1)f(\underline{zm}\mid R=1)f(\underline{zs}_1\mid R=1) \\
-%         &f(\underline{\textbf{z}}\mid R=0)  \overset{\overset{\perp\mid R}{\downarrow}}{=} f(\underline{z}\mid R=0)f(\underline{zm}\mid R=1)f(\underline{zs}_1\mid R=0),
-%     \end{align*}
-%     where the univariate density function is given by: 
-%     \begin{align*}
-%         &f(\underline{z}\mid R=1)=f_1(z)^\delta S_1(z)^{(1-\delta)} \\
-%         &f(\underline{z}\mid R=0)=f_0(z)^\delta S_0(z)^{(1-\delta)},
-%     \end{align*} and:
-%     \begin{align*}
-%         &S_0(z) = \widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}(z)  \\
-%         &f_0(z) = (1-\widehat{p}_0)\widetilde{f}(z)\nonumber \\
-%         &S_1(z) = [S_0(z)]^{\widehat{\alpha}} = [\widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}(z)]^{\widehat{\alpha}} = \widehat{p}_0^{\widehat{\alpha}} + (1-\widehat{p}_0^{\widehat{\alpha}})\widetilde{S}_1(z)\nonumber \\ 
-%         &f_1(z) = (1-\widehat{p}_0^{\widehat{\alpha}})\left(\dfrac{1-\widehat{p}_0}{1-\widehat{p}_0^{\widehat{\alpha}}}\right)\widetilde{f}(z){\widehat{\alpha}}\left(\widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}(z)\right)^{\widehat{\alpha}-1} \\
-%         &\text{with } \widetilde{S}_1(z)=\dfrac{(\widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}(z))^{\widehat{\alpha}}-\widehat{p}_0^{\widehat{\alpha}}}{1-\widehat{p}_0^{\widehat{\alpha}}}
-%     \end{align*}
-
-% Very interesting and useful in targeting the patients to tailor more intensive screening schedules is the probability of surviving within the next $k$ years, for those women who have not already experienced the breast cancer onset. The probability is identified through the survival function:  
-% \begin{align}
-% \label{formula:4_2}
-%         &S(z+k\mid \text{family};\underline{\widehat{\pi}}) = S(z+k\mid R=1,\text{family};\underline{\widehat{\pi}})P(R=1\mid \text{family};\underline{\widehat{\pi}}) \\ 
-%         &\qquad\qquad\qquad+S(z+k\mid R=0,\text{family};\underline{\widehat{\pi}})P(R=0\mid \text{family};\underline{\widehat{\pi}}). \nonumber \\ 
-%         &S(z+k\mid \underline{\textbf{z}};\underline{\widehat{\pi}}) = S(z+k\mid R=1;\underline{\widehat{\pi}})P(R=1\mid \underline{\textbf{z}};\underline{\widehat{\pi}})  \nonumber \\
-%         &\qquad\qquad\qquad+S(z+k\mid R=0;\underline{\widehat{\pi}})P(R=0\mid \underline{\textbf{z}};\underline{\widehat{\pi}}) \nonumber \\
-%         &S(z+k\mid R=1;\underline{\widehat{\pi}}) = S_1(z+k;\underline{\widehat{\pi}})\nonumber \\
-%         &S(z+k\mid R=0;\underline{\widehat{\pi}}) = S_0(z+k;\underline{\widehat{\pi}})\nonumber
-% \end{align} with ``family'' referring to complete observed data of breast cancer experience of all family members, and $P(R=1\mid \underline{\textbf{z}};\underline{\widehat{\pi}})$ obtained in the previous step in \ref{formula:4_1}. Due to the target sample of this probability, i.e. non-cases women, the observed time $z$ always corresponds to the censoring time. 
-\subsection{Semiparametric model}
-In the semiparametric scenario the estimation procedure does not need to specify the baseline survival function. By maximizing the partial likelihood, we obtain the estimated value of the frailty parameter $\widehat{\theta}$. Note that we set $R\sim$ Gamma$(shape = \theta, rate = \theta)$, so that the expected value of the frailty is one. Furthermore, the frailty value for each family is obtained through the available \texttt{coxph} function in the \texttt{R} software, using an Empirical Bayes method implemented in the package to compute the posterior mean \cite{balan2020tutorial}.
-
-With the value of the frailty parameter we can obtain the estimated family-specific posterior frailty density. This step is crucial for doing fast risk prediction. We aim to infer the posterior density of the frailty based on the information available from the ``new'' family, using the estimated $\widehat\theta$. The posterior distribution is given by \[
+With the value of the frailty parameter we can obtain the estimated family-specific posterior frailty risk density. This step is important to quickly predict risk values without estimating parameters when a new family arises. The posterior distribution, for a family of three component, is given by \[
+    \label{famspec-post-risk}
     g(r \mid \text{family data}; \widehat{\theta}) = 
     \dfrac{f(\text{family data}\mid R = r)g(r; \widehat{\theta})}{\int_{\mathbb{R}^+} f(\text{family data}\mid R=r)g(r; \widehat{\theta}) \text{d} r},
     \] 
 where \[
 f(\text{family data}\mid R=r) \overset{\overset{\perp\mid R}{\downarrow}}{=} f(\underline{x}\mid r)f(\underline{xm}\mid r)f(\underline{xs_1}\mid r), 
 \] 
-And \[f(\underline{x}\mid R = r) = f_r(x)^\delta S_r(x)^{1-\delta} = \left(\dfrac{f_r(x)}{S_r(x)}\right)^\delta S_r(x) = (r\lambda_0(x))^\delta S_0(x)^r.
-\] A similar procedure is applied for the other family members, and also again, this is easily extendable to a higher number of female family members.
-We need an estimator $\widehat S_0(t)$ of the baseline survival function, and an estimator $\widehat\lambda_0(t)$ of the baseline hazard function such that one can estimate the density function
+and \[f(\underline{x}\mid R = r) = f_r(x)^\delta S_r(x)^{1-\delta} = \left(\dfrac{f_r(x)}{S_r(x)}\right)^\delta S_r(x) = (r\lambda_0(x))^\delta S_0(x)^r.
+\] 
+
+A similar procedure is applied for the other family members, and also again, this is easily extendable to a higher number of female family members. At this point, an estimator for the baseline survival function $\widehat S_0(t)$ and for the baseline hazard function $\widehat\lambda_0(t)$ is needed such that one can estimate the subject-specific density function
 \[
 \widehat{f}(\underline{x}\mid R = r) = (r\widehat{\lambda}_0(x))^\delta\widehat{S}_0(x)^r.
 \]
-The baseline cumulative hazard function, and consequently the survival function $\widehat S_0(t) = \text{e}^{-\Lambda_0(t)}$, can be estimated by the Breslow estimator $\widehat\Lambda_0(t)$. 
 
-In the following lines, we present the classical estimation of the Breslow estimator with included covariates. It is important to note that the form we report includes the covariate, as in the FH model, the FH covariate needs to be incorporated into the model. We consider the expected number of events occurring at time $[\tau_j,\tau_{j+1}]$, given the $l$th subject ``at risk'' at time $\tau^-_j$, who belongs the risk group defined as $R(\tau_j)$. Thus, we have \begin{align*}
+The baseline cumulative hazard function, and consequently the survival function $\widehat S_0(t) = \text{e}^{-\widehat\Lambda_0(t)}$, can be estimated by the Breslow estimator $\widehat\Lambda_0(t)$. 
+
+In the following lines, we present the classical estimation of the Breslow estimator with covariates. We consider the expected number of events occurring at time $[\tau_j,\tau_{j+1}]$, given the $l$th subject ``at risk'' at time $\tau^-_j$, who belongs the risk group defined as $R(\tau_j)$. Thus, we have \begin{align*}
     &\underset{l\in R(\tau_j)}{\sum}(\tau_{j+1}-\tau_j)\lambda(\tau_j\mid \underline{x}_l) = \underset{l\in R(\tau_j)}{\sum}(\tau_{j+1}-\tau_j)e^{\underline{\beta}^{'}\underline{x}_l}\lambda_0(\tau_j).
-\end{align*} When setting the aforementioned quantity equal to the observed number of events $d_j$ until time $\tau_{j+1}$, it yields \begin{align*}
+\end{align*} 
+
+When setting the aforementioned quantity equal to the observed number of events $d_j$ until time $\tau_{j+1}$, it yields \begin{align*}
     &d_j = \lambda_0(\tau_j)(\tau_{j+1}-\tau_j)\underset{l\in R(\tau_j)}{\sum}e^{\underline{\beta}^{'}\underline{x}_l} \\
     &\lambda_0(\tau_j)(\tau_{j+1}-\tau_j)\approx\int_{t_j}^{t_{j+1}}\lambda_0(u)\text{d}u = \dfrac{d_j}{\underset{l\in R(\tau_j)}{\sum}e^{\underline{\widehat{\beta}}^{'}\underline{x}_l}} \iff\widehat{\Lambda}_0(t)=\underset{\tau_j<t}{\sum}\left[\dfrac{d_j}{\underset{l\in R(\tau_j)}{\sum}e^{\underline{\widehat{\beta}}^{'}\underline{x}_l}}\right]
-\end{align*} where $\underline{x}_l$ is the covariate vector for $l$th subject, and $\widehat{\Lambda}_0(t)$ is the Breslow estimator. Notice that here the frailty quantity is not involved. The estimated frailty parameter and the Breslow estimator are combined together afterward. 
+\end{align*} where $\underline{x}_l$ is the covariate vector for subject $l$, $\underline\beta$ is the parameter collection, and $\widehat{\Lambda}_0(t)$ is the Breslow estimator. 
 
-The Breslow estimated value of the survival function is obtained through the available function \texttt{predictCox}, which takes as input a Cox model, in the package \texttt{riskRegression} \cite{ozenne2017riskregression} of the software \texttt{R}, while the estimated hazard function can be obtained in the function \texttt{coxphHaz} of package \texttt{biostat3} \cite{biostat3}.
+The estimated value of the survival function, through Breslow estimator, is obtained through the available function \texttt{predictCox} in the package \texttt{riskRegression} \cite{ozenne2017riskregression} of the software \texttt{R}, which takes as input a Cox model, while the estimated hazard function can be obtained in the function \texttt{coxphHaz} of package \texttt{biostat3} \cite{biostat3} of the software \texttt{R}.
 
-In order to compute the frailty posterior distribution, the estimated hazard is needed. However, the problem can be simplified by relying on the conjugacy property of the Gamma prior for this model. Specifically, the posterior distribution of the frailty for a particular family is easily shown to be distributed as a Gamma distribution with shape parameter equal to the sum of the indicator of observed events in the family $d_i$, in addition to the frailty parameter $\theta$, and rate parameter equal to the sum of the cumulative hazard function evaluated at the event times of the family members and the frailty-specific hazard function evaluated at time zero, i.e. $\Lambda_0(\underline x_i) = \sum_{j=1}^{n_i}\Lambda_0(x_j)$, where $\underline x_i = (x_1, \dots, x_{n_i})^T$ for the $n_i$ subjects in a family. If the covariate information is included in the model, then $\Lambda_0(x_i)$ translates to the sum of the cumulative hazard function evaluated at the event times of the family members multiplied by the exponential function of the covariate $\underline{x}_{ij}'\underline{\beta}$, such that $\Lambda_0(x_i) = \sum_{j=1}^{n_i}\Lambda_0(x_j)\text{exp}(\underline{x}_{ij}'\underline{\beta})$. Indeed, for three-member families we have \begin{align*}
-    &g_R(r\mid \underline X) =  [(r\widehat{\lambda}_0(x_i))^{\delta_i}\widehat{S}_0(x_i)^r(r\widehat{\lambda}_0(xm_i))^{\delta m_i}\widehat{S}_0(xm_i)^r(r\widehat{\lambda}_0(xs_{1i}))^{\delta s_{1i}}\widehat{S}_0(xs_{1i})^r g_R(r;\widehat{\theta})] \\
+We need also to estimate the other component of formula \ref{famspec-post-risk}: the posterior distribution of the frailty risk $g(r;\widehat\theta)$. The computation of $g(r;\widehat\theta)$ is solved by relying on the conjugacy property of the Gamma prior for this model. Specifically, the posterior frailty risk distribution for a particular family is easily shown to be distributed as a Gamma distribution with shape parameter equal to $\theta + d_i$, with $d_i$ the number of observed events in family $i$, and rate parameter equal to $\theta + \sum_{j=1}^{n_i}\Lambda_0(x_j)$, where $\Lambda_0(\underline x_i) = \sum_{j=1}^{n_i}\Lambda_0(x_j)$, with $\underline x_i = (x_1, \dots, x_{n_i})^T$ for family size $n_i$, is the cumulative hazard function at time 0 evaluated at the observed times of the family's members. For a family of three members the posterior frailty risk distribution is given by \begin{align*}
+    &g_R(r\mid \underline X) =  (r\widehat{\lambda}_0(x_i))^{\delta_i}\widehat{S}_0(x_i)^r(r\widehat{\lambda}_0(xm_i))^{\delta m_i}\widehat{S}_0(xm_i)^r(r\widehat{\lambda}_0(xs_{1i}))^{\delta s_{1i}}\widehat{S}_0(xs_{1i})^r g_R(r;\widehat{\theta}) \\
     &g_R(r\mid \underline X) = r^{\delta_i+\delta m_i+\delta s_{1i}}\left(\widehat{S}_0(x_i)\widehat{S}_0(xm_i)\widehat{S}_0(xs_{1i})\right)^r g_R(r;\widehat{\theta})\\
     &g_R(r\mid \underline X) \propto r^{\delta_i+\delta m_i+\delta s_{1i}}\text{e}^{r\left(-\widehat{\Lambda}_0(x_i)-\widehat{\Lambda}_0(xm_i)-\widehat{\Lambda}_0(xs_{1i})\right)}g_R(r;\widehat{\theta}) \iff
     % &g_R(r\mid \underline X) \propto r^{d_i}\text{e}^{r\left(-\widehat{\Lambda}_0(\underline X_i)-\widehat{\Lambda}_0(\underline Xm_i)-\widehat{\Lambda}_0(zs_{1i})\right)}r^{\theta-1}\text{e}^{-r\theta} \\
@@ -316,47 +260,39 @@ In order to compute the frailty posterior distribution, the estimated hazard is 
     &g_R(r\mid \underline X) = \dfrac{r^{h_i(\theta)-1}\text{e}^{-r l_i(\theta) }}{\left(\dfrac{1}{l_i(\theta)}\right)^{h_i(\theta)}\Gamma(h_i(\theta))\int_{\mathbb{R}^+}\dfrac{1}{\left(\dfrac{1}{l_i(\theta)}\right)^{h_i(\theta)}\Gamma(h_i(\theta))}r^{h_i(\theta)-1}\text{e}^{-r l_i(\theta)}\text{d} r} \\
     &g_R(r\mid \underline X) = \dfrac{r^{h_i(\theta)-1}\text{e}^{-r l_i(\theta)}l_i(\theta)^{h_i(\theta)}}{\Gamma(h_i(\theta))},
 \end{align*}
-where $h_i(\theta) = d_i+\theta, \ l_i(\theta) = \theta + \sum_{j=1}^{n_i}\widehat{\Lambda}_0(x_j)$. At the end of the day we will use only the estimated cumulative hazard. 
-This formula is also computed with a different parametrization of the Gamma distribution in the literature \cite{duchateau2008frailty}, where it is used in the maximization step of the EM algorithm involved in the maximization process for parameter estimation. Recall that the EM algorithm can be applied to the partial Cox likelihood to obtain the parameter estimates, due to the presence of the frailty quantity.
-% spiega meglio cos'e' la partial likelihood con frailty quantity 
-The final formula is given by \begin{align*}
+where $h_i(\theta) = d_i+\theta, \ l_i(\theta) = \theta + \sum_{j=1}^{n_i}\widehat{\Lambda}_0(x_j)$. The final formula is given by \begin{align*}
     g_R(r_i\mid \underline X) = \frac{r_i^{d_i+\theta-1}\text{exp}(-r_i(\theta+\widehat{\Lambda}_0(\underline x_i)))(\theta+\widehat{\Lambda}_0(\underline x_i))^{d_i+\theta}}{\Gamma(d_i+\theta)}.
 \end{align*} 
-Notice that to obtain the posterior frailty distribution of each family we need to compute the cumulative hazard function at the observed times for that family. If the cumulative hazard (Breslow) value is not available for that time point, we use linear interpolation on the available data points \cite{meijering2002chronology}.
 
-Typically, the posterior frailty distribution has a poor meaning to the end-user. We need to communicate to each family a meaningful summary of it. We can rely on the usual summaries such as the mode, median or mean of the posterior frailty density, whose form are give by \begin{align*}
+This formula is also computed with a different parametrization of the Gamma distribution \cite{duchateau2008frailty}, for the maximization step of the EM algorithm in order to achieve parameter estimation. 
+
+Notice that to obtain the posterior frailty distribution of each family we need to evaluate the cumulative hazard function at the observed times within each family. This means that, if the estimated cumulative hazard value is not available for that observed time, we use linear interpolation on the available data points \cite{meijering2002chronology}.
+
+Typically, the raw posterior frailty risk distribution has a poor meaning to the end-user. We need to communicate to each family a meaningful summary of it as, for example, the mode, median or mean, whose equations are given by \begin{align*}
     &\text{Mode= }  \arg \max_r g_R(r\mid \underline X), \\ 
     &\text{Median= } r_m:\int_{0}^{r_m}g_R(r\mid \underline X)\text{d} r = 0.5, \\
     &\text{Mean= } \int_0^{+\infty}r g_R(r\mid \underline X)\text{d} r.
 \end{align*}
-The mode of a Gamma distribution is null when $\widehat{\theta}$ has a value lower than one. The mode will therefore not be a good indicator of the posterior frailty density because one may observe several zero values across the families. We therefore exclude it as a valid indicator. 
-
-From above, the family-specific estimated posterior mean is immediately obtained withe the form  \begin{align*}
+The mode of a Gamma distribution is null when $\widehat{\theta}$ has a value lower than one. The mode will therefore not be a good indicator of the posterior frailty density because one may observe several zero values across the families. We therefore exclude it as a valid indicator. On the hand, from the formulas of the Gamma distribution, the mean is immediately obtained as \begin{align*}
     \widehat{r}_i = \frac{d_i + \widehat{\theta}}{\widehat{\theta} + \widehat{\Lambda}_0(\underline x_i)}
 \end{align*} which, following \cite{balan2019frailtyem}, can be rewritten as \begin{align*}
     \widehat{r}_i = w_i\frac{d_i}{\widehat{\Lambda}_0(\underline x_i)} + (1-w_i),
-\end{align*} where $w_i = \dfrac{\widehat{\Lambda}_0(\underline x_i)}{\widehat{\theta} + \widehat{\Lambda}_0(\underline x_i)}$ is the weight of the weighted average of the ratio between the observed events $d_i$ and the sum of the cumulative hazard by families $\widehat{\Lambda}_0(\underline x_i)$ 
+\end{align*} where $w_i = \dfrac{\widehat{\Lambda}_0(\underline x_i)}{\widehat{\theta} + \widehat{\Lambda}_0(\underline x_i)}$ is the weight of the weighted average between the ratio of the observed events $d_i$ on the sum of the cumulative hazard by families $\widehat{\Lambda}_0(\underline x_i)$ 
 % that can be interpreted as the expected number of events 
-and one, the prior frailty mean. 
+and one, the prior frailty mean. The median is instead computed numerically quite easily from the estimated family-specific posterior frailty risk distribution.
 
-The median is computed numerically quite easily from the estimated family-specific posterior distribution.
+% One may consider as an alternative, the lower-bound of the highest posterior density \cite{hyndman1996computing}. This quantity, given a desired confidence level $(1-\alpha)\%$, is given by:  \[
+% \widehat{r} = \underset{r}{argmin} \left(f(r)\ge f_\alpha\right).
+% \] where $f_\alpha$ is the lower-bound of the density function such that the higher posterior density is the interval with area under the curve of (1-$\alpha$). However, this indicator is again not too useful because the lower-bound of each family interval is close to zero. As a consequence, one may not easily distinguish between the low and the high-risk families, which is the ultimate goal. 
 
-One may consider as an alternative, the lower-bound of the highest posterior density \cite{hyndman1996computing}. This quantity, given a desired confidence level $(1-\alpha)\%$, is given by:  \[
-\widehat{r} = \underset{r}{argmin} \left(f(r)\ge f_\alpha\right).
-\] where $f_\alpha$ is the lower-bound of the density function such that the higher posterior density is the interval with area under the curve of (1-$\alpha$). However, this indicator is again not too useful because the lower-bound of each family interval is close to zero. As a consequence, one may not easily distinguish between the low and the high-risk families, which is the ultimate goal. 
-
-We therefore introduce another proposal. Given that the posterior mean does not really have a scale of reference, we compute the posterior probability of belonging to the high-risk group, i.e. the probability that the family-specific frailty value is greater than a quantile of the prior distribution of $R$ over the population, evaluated using $\widehat\theta$. Setting a percentile value for assessing the highest-risk family to $\alpha$, this is \begin{align*}
-    P(R \ge F^{-1}_R(\alpha; \widehat{\theta})\mid \text{family data}; \widehat{\theta}) 
+Because the posterior mean does not really have a scale of reference, we introduce also another meaningful summary of the posterior frailty risk distribution< i.e. the posterior probability of belonging to the highest-risk group by computing the probability that the family-specific risk value is greater than a fixed value from the prior distribution. By setting a percentile value $\alpha$, the posterior probability of belonging to the highest-risk group is \begin{align*}
+    P\left(R \ge F^{-1}_R\left(\alpha; \widehat{\theta}\right)\mid \text{family data}; \widehat{\theta}\right), 
     % = 1 - F_{R_\text{post}}(\widehat{r}\mid \text{family}; \widehat{\theta})
  \end{align*}
-From this probability, one may proceed to a binary classification of families into two risk group (low and highest-risk group), fixing a threshold of choice, and make a comparison with the true belonging to the high-risk group. The receiver operating characteristic (ROC) curve with the area under the curve (AUC), that  the positive predictive value (PPV) and the negative predictive value (NPV) give us a validation measure of the binary splitting made by the models. Clearly, this validation procedure can be applied only in the case of simulation studies to validate the prediction model, since the true family-specific frailty needs to be known. 
-From this probability, one may proceed to a binary classification of families into two risk group (low and highest-risk group), fixing a threshold of choice, and make a comparison with the true belonging to the high-risk group. The ROC curve with the area under the curve (AUC), that illustrates the trade-off between the true positive rate (sensitivity) and the true negative rate (specificity) at various classification thresholds is computed. Also, the positive predictive value (PPV) and the negative predictive value (NPV) give us a validation measure of the binary splitting made by the models. Clearly, this validation procedure can be applied only in the case of simulation studies to validate the prediction model, since the true family-specific frailty needs to be known. 
+where $F^{-1}_R\left(\alpha; \widehat{\theta}\right)$ is the estimated prior quantile associated to a probability equal to $\alpha$ on the left side. In the real case study in Section \ref{sec:1.6} we choose an $\alpha = 0.05$, and we compute the corresponding quantile. Once we have the binary classification of families into two risk groups (low-risk and highest-risk group) based on their probability of belonging the the highest-risk group, we can validate it through the receiver operating characteristic (ROC) curve. We can extract the area under the curve (AUC), the positive predictive value (PPV) and the negative predictive value (NPV) from the ROC curve. These measures can assess the accuracy in binary splitting applied by the models. Notice that this validation procedure can be applied only in the case of simulation studies, since the true family-specific risk needs to be known.
 
-In the application presented in Section \ref{sec:1.6}, we focus on utilizing the posterior distribution of the frailty mean. Specifically, we calculate the chosen threshold at the conventional significance level of $\alpha = 0.05$, which corresponds to the prior percentile of belonging to the highest-risk families. Using this threshold, we can determine the probability of a new family value exceeding the threshold prior percentile. 
-%Later, we compare this last value to the threshold posterior percentile of the population distribution previously estimated on the data and later saved. 
-
-\subsection{Parametric model}\label{sec:1.4.2}
-In contrast, in the parametric scenario, the baseline survival function is available directly through its estimated parameters, and that enables us to compute the posterior frailty distribution conditional on the whole family data in a parametric manner, also taking into account the explicit cure-rate structure of the model. This allows one to obtain the posterior mean, mode, and median as useful summaries of the posterior frailty distribution. By estimating a threshold quantile from the posterior population frailty distribution, we can calculate a new family's posterior probability distribution of the frailty and the indicator of belonging to the highest-risk families. The family-specific posterior frailty distribution conditional on the whole family data is given by \begin{align*}
+\subsection{Parametric scenario}\label{sec:1.4.2}
+On the contrary to the semiparametric scenario, in the parametric scenario we need to specify a distribution for the baseline survival function. The advantage is that the baseline survival function is directly available by estimating its distribution parameters. This allows one to obtain the posterior mean, mode, and median from the parametric distribution of the posterior risk frailty. Also, the extension to predict the posterior risk frailty for a new family in the dataset in straightforward. The family-specific posterior frailty risk distribution given the whole family data is given by \begin{align*}
     &g_R(r\mid \underline x) = \dfrac{f(\underline x\mid r)g_R(r)}{f(\underline x)} = \dfrac{f(x_1\mid r)\dots f(x_{n_i}\mid r)g_R(r)}{\int_{\mathbb{R}^+}f(x_1\mid r)\dots f(x_{n_i}\mid r)g_R(r)\text{d}r} \\
     &=\dfrac{\prod_{j=1}^{n_i}\left(f_r(x_j)^{\delta_j} S_r(x_j)^{1-\delta_j}\right)g_R(r)}{\int_{\mathbb{R}^+}\prod_{j=1}^{n_i}\left(f_r(x_j)^{\delta_j} S_r(x_j)^{1-\delta_j}\right)g_R(r)\text{d}r} = \\
     &=\dfrac{\prod_{j=1}^{n_i}\cancel{\left((1-p)\widetilde f(x_j)\right)^{\delta_j}}\left(p + (1-p)\widetilde S(x_j)\right)^{(\cancel{r-1)\delta_j}+r(1-\cancel{\delta_j})} r^{\sum_{j=1}^{n_i}\delta_j}g_R(r)}{\prod_{j=1}^{n_i}\cancel{\left(\dfrac{(1-p)\widetilde f(x_j)}{p + (1-p)\widetilde S(x_j)}\right)^{\delta_j}}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j)}{\Gamma(\alpha)\beta^{\sum_{j=1}^{n_i}\delta_j}}}\left(1 - \dfrac{\text{log}(H(x_j;p,\underline\gamma))}{\beta}\right)^{\alpha + \sum_{j=1}^{n_i}\delta_j} \\
@@ -365,53 +301,24 @@ In contrast, in the parametric scenario, the baseline survival function is avail
     r^{\sum_{j=1}^{n_i}\delta_j}\dfrac{\beta^\alpha}{\cancel{\Gamma(\alpha)}}r^{\alpha-1}\text{e}^{-\beta r} \\
     &=\left(1 - \dfrac{\text{log}\prod_{j=1}^{n_i}(p + (1-p)\widetilde S(x_j))}{\beta}\right)^{\alpha + \sum_{j=1}^{n_i}\delta_j}\prod_{j=1}^{n_i}\left(p + (1-p)\widetilde S(x_j)\right)^r\dfrac{\beta^{\alpha + \sum_{j=1}^{n_i}\delta_j}}{{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j)}}r^{\alpha + \sum_{j=1}^{n_i}\delta_j-1}\text{e}^{-\beta r} \\
     &= \left(\dfrac{\beta-\log\prod_{j=1}^{n_i}(p + (1-p)\widetilde S(x_j))}{\cancel{\beta}}\right)^{\alpha + \sum_{j=1}^{n_i}\delta_j}\dfrac{\cancel{\beta^{\alpha + \sum_{j=1}^{n_i}\delta_j}}}{{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j)}}r^{\alpha + \sum_{j=1}^{n_i}\delta_j-1}\text{e}^{-(\beta -\sum_{j=1}^{n_i}\log\left(p + (1-p)\widetilde S(x_j)\right))r} \\
-    &\text{which is Gamma}\left(shape = \alpha + \sum_{j=1}^{n_i}\delta_j, rate = \beta -\sum_{j=1}^{n_i}\log\left(p + (1-p)\widetilde S(x_j)\right)\right)
-\end{align*} The density function, in the univariate case, reduces immediately to \begin{align*}
+    &\text{which is distributed as a Gamma}\left(shape = \alpha + \sum_{j=1}^{n_i}\delta_j, rate = \beta -\sum_{j=1}^{n_i}\log\left(p + (1-p)\widetilde S(x_j)\right)\right).
+\end{align*} 
+
+The density function, in the univariate case, reduces immediately to \begin{align*}
     &g_R(r\mid \underline x)=\left(1 - \dfrac{\text{log}(p + (1-p)\widetilde S(x))}{\beta}\right)^{\alpha + \delta}\left(p + (1-p)\widetilde S(x)\right)^r\dfrac{\beta^{\alpha + \delta}}{{\Gamma(\alpha + \delta)}}r^{\alpha + \delta-1}\text{e}^{-\beta r},
 \end{align*} 
-which is a Gamma$\left(shape = \alpha + \delta, rate =\beta - \log(p + (1-p)\widetilde S(x))\right)$.
+which is distributed as a Gamma$\left(shape = \alpha + \delta, rate =\beta - \log(p + (1-p)\widetilde S(x))\right)$.
 
-The posterior mean and mode frailty are extracted by the formula on the Gamma distribution. They are given by \begin{align*}
-    \text{Mean} = \dfrac{\alpha + \sum_{j=1}^{n_i}\delta_j}{\beta - \sum_{j=1}^{n_i}\log\left(p + (1-p)\widetilde S(x_j)\right)}, \\
-    \text{Mode} = \dfrac{\alpha + \sum_{j=1}^{n_i}\delta_j - 1}{\beta - \sum_{j=1}^{n_i}\log\left(p + (1-p)\widetilde S(x_j)\right)},
-\end{align*} where the univariate case is obtained setting $n_i=1$. Note that the posterior median of the frailty distribution requires numerical methods to be computed as there is not a closed form formula for the Gamma distribution. 
-Instead, about the mode, it is important to notice that when the shape parameter of the distribution is less than one, the mode is not a reliable summary of the posterior frailty and is in fact the weakest indicator among all.
+The posterior mean and mode frailty are extracted from the formula associated to the Gamma distribution as \begin{align*}
+    \text{mean} = \dfrac{\alpha + \sum_{j=1}^{n_i}\delta_j}{\beta - \sum_{j=1}^{n_i}\log\left(p + (1-p)\widetilde S(x_j)\right)}, \qquad
+    \text{mode} = \dfrac{\alpha + \sum_{j=1}^{n_i}\delta_j - 1}{\beta - \sum_{j=1}^{n_i}\log\left(p + (1-p)\widetilde S(x_j)\right)}.
+\end{align*} 
 
-% the previously used method of the moment generating function. Thus we finally obtain \begin{align*}
-%     &\mathbb{E}(r\mid \text{family}) = \dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j+1)}{{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j)}\beta}\left(1-\dfrac{\text{log}\prod_{j=1}^{n_i}\left(p + (1-p)\widetilde S(z_j)\right)}{\beta}\right), \\ 
-%     &\mathbb{E}(r\mid \text{subject}) = \dfrac{\Gamma(\alpha + \delta+1)}{{\Gamma(\alpha + \delta)}\beta}\left(1-\dfrac{\text{log}\left(p + (1-p)\widetilde S(z)\right)}{\beta}\right),
-% \end{align*} respectively for the multivariate and the univariate case. The computation in the multivariate case is given by \begin{align*}
-%     &\mathbb{E}(r\mid \text{family}) = \int_{\mathbb{R}^+} r g_R(r\mid \textbf{z})\text{d}r = \\
-%     &\int_{\mathbb{R}^+} r \left(1 - \dfrac{\text{log}\prod_{j=1}^{n_i}(p + (1-p)\widetilde S(z_j))}{\beta}\right)^{-(\alpha + \sum_{j=1}^{n_i}\delta_j)}\cdot \\
-%     &\cdot\prod_{j=1}^{n_i}\left(p + (1-p)\widetilde S(z_j)\right)^r\dfrac{\beta^{\alpha + \sum_{j=1}^{n_i}\delta_j}}{{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j)}}r^{\alpha + \sum_{j=1}^{n_i}\delta_j-1}\text{e}^{-\beta r} = \\
-%     &= \left(1 - \dfrac{\text{log}\prod_{j=1}^{n_i}(p + (1-p)\widetilde S(z_j))}{\beta}\right)^{-(\alpha + \sum_{j=1}^{n_i}\delta_j)}\cdot\\ 
-%     &\cdot\int_{\mathbb{R}^+}\prod_{j=1}^{n_i}\left(p + (1-p)\widetilde S(z_j)\right)^r \dfrac{\beta^{\alpha + \sum_{j=1}^{n_i}\delta_j}}{{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j)}}r^{\alpha + \sum_{j=1}^{n_i}\delta_j+1-1}\text{e}^{-\beta r}\text{d}r
-% \end{align*} where only the integral part can be solved by \begin{align*}
-%     &\int_{\mathbb{R}^+}\prod_{j=1}^{n_i}\left(p + (1-p)\widetilde S(z_j)\right)^r \dfrac{\beta^{\alpha + \sum_{j=1}^{n_i}\delta_j}}{{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j)}}r^{\alpha + \sum_{j=1}^{n_i}\delta_j+1-1}\text{e}^{-\beta r}\text{d}r = \\
-%     &=\int_{\mathbb{R}^+}\text{e}^{r\text{log}\prod_{j=1}^{n_i}(\left(p + (1-p)\widetilde S(z_j)\right))}\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j+1)}{{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j)}\beta}\cdot \\
-%     &\cdot\dfrac{\beta^{\alpha + \sum_{j=1}^{n_i}\delta_j+1}}{{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j+1)}}r^{\alpha + \sum_{j=1}^{n_i}\delta_j+1-1}\text{e}^{-\beta r}\text{d}r \\
-%     &=\dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j+1)}{{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j)}\beta}\text{MGF}\left(\text{log}\prod_{j=1}^{n_i}\left(p + (1-p)\widetilde S(z_j)\right);R^*\right) \\
-%     &= \dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j+1)}{{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j)}\beta}\left(1 - \dfrac{\text{log}\prod_{j=1}^{n_i}(p + (1-p)\widetilde S(z_j))}{\beta}\right)^{\alpha + \sum_{j=1}^{n_i}\delta_j + 1}, 
-% \end{align*} with $R^*\sim\text{Ga}(shape=\alpha+\sum_{j=1}^{n_i}\delta_j+1,rate=\beta)$. Thus, \begin{align*}
-%     \mathbb{E}(r\mid \text{family}) = \dfrac{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j+1)}{{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j)}\beta}\left(1 - \dfrac{\text{log}\prod_{j=1}^{n_i}(p + (1-p)\widetilde S(z_j))}{\beta}\right).
-% \end{align*} 
+The univariate case is directly obtained by setting family size $n_i=1$. Note that when the shape parameter of the distribution is lower than one, the mode is not a reliable summary of the posterior frailty risk. Moreover, the posterior median of a Gamma distributed frailty risk requires numerical methods to be computed as there is not a formula in closed form. For these reasons the posterior mean appears to be the most reliable and easily to compute.  
 
-% The median instead might be computed empirically. The form involving the entire family would it be given by solving \begin{align*}
-%     &\int_0^r g_R(r\mid \textbf{z}) = 0.5 \\
-%     &\int_0^r \dfrac{\prod_{j=1}^{n_i}\left(p + (1-p)\widetilde S(z_j)\right)^r\dfrac{\beta^{\alpha + \sum_{j=1}^{n_i}\delta_j}}{{\Gamma(\alpha + \sum_{j=1}^{n_i}\delta_j)}}r^{\alpha + \sum_{j=1}^{n_i}\delta_j-1}\text{e}^{-\beta r}}{\left(1 - \dfrac{\text{log}\prod_{j=1}^{n_i}(p + (1-p)\widetilde S(z_j))}{\beta}\right)^{\alpha + \sum_{j=1}^{n_i}\delta_j}} = 0.5. \\
-%     &\int_0^r \dfrac{\prod_{j=1}^{n_i}\left(p + (1-p)\widetilde S(z_j)\right)^r
-%     g_R(r\mid\sum_{j = 1}^{n_i}\delta_j;\alpha,\beta)}{\left(1 - \dfrac{\text{log}\prod_{j=1}^{n_i}(p + (1-p)\widetilde S(z_j))}{\beta}\right)^{\alpha + \sum_{j=1}^{n_i}\delta_j}} = 0.5. 
-% \end{align*} with $R\sim$Gamma$(shape = \alpha + \sum_{j = 1}^{n_i}\delta_j, rate = \beta)$. We build the following algorithm for one family: \begin{itemize}
-%     \item[1)] sample $r_k$; 
-%     \item[2)] compute and store $g_R(r_k \mid\textbf{z};\text{estimated parameters})$ for each $r_k$ at step 1); 
-%     \item[3)] the median is estimated by 
-%     \[
-%     r_k:\arg\min_{\mathbb{R}^+}\left(\sum_{k}g_R(r_k \mid\textbf{z};\text{estimated parameters}) - 0.5\right)^2.
-%     \]
-% \end{itemize} More easily, the posterior frailty mode is computed through the available software by solving \begin{align*}
-%     \text{Mode} = r:\arg\max_{\mathbb{R}^+}g_R(r \mid\textbf{z};\text{estimated parameters}).
-% \end{align*} 
+To validate that the mean is the best performing as posterior risk, the mean, median, and mode are compared in terms of various indices.
 
+In any case, to validate that 
 The accuracy of the risk prediction is assessed by different indices according through simulation studies or available data. In the case of simulation studies we can compare the true generated frailty values $\widehat r_i$ to the family-specific predictions, for $n$ families, through the estimated mean squared prediction error (MSPE): \begin{align*}
     MSPE = \dfrac{1}{n}\sum_{i=1}^n(\widehat r_i - r_i)^2.
 \end{align*} 
@@ -434,7 +341,7 @@ C(\theta) = S_{Y^*}\left( \frac{1}{2} \right)
 \]
 You can find an extended version of this result in Appendix \ref{appendix:1.c}.
 
-\section{Simulation study}\label{sec5}'
+\section{Simulation study}\label{sec5}
 In this section we present the results of comparing the Cox models and the parametric cure-rate models with several baseline survival distributions, including Weibull, Gamma, and Lognormal distributions. Based on our experience with the Swedish Multi-generational breast cancer dataset we also added a threshold parameter to the Gamma and Lognormal distributions for improved accuracy in modeling and we include these two non-cases distributions to the analysis.
 
 Recall that we examine the Cox model within the context of multivariate frailty or in the univariate setting, considering the family history as either a baseline ($FH$) or time-varying covariate ($FH(t)$). The family history covariate is derived from the multivariate data generation process. While, we examine the parametric models either in the multivariate frailty setting or in the univariate frailty setting, and finally with the baseline covariate $FH$. The models are a total of six.
@@ -650,7 +557,6 @@ However notice that, as the family size decreases, the mean is known to exhibit 
     \label{tab:1.2}
 \end{table*}
 \end{center}
-\newpage
 % Code from postPrediction3.R on SWEDISH COMPUTER. 
 % \begin{table}[ht]
 %     \centering
@@ -695,7 +601,6 @@ However notice that, as the family size decreases, the mean is known to exhibit 
 %     \label{tab:3}
 % \end{table}
 % Code from postPrediction3.R on SWEDISH COMPUTER. 
-\newpage
 \begin{figure}
 % \begin{minipage}{0.50\linewidth}
     \centering
