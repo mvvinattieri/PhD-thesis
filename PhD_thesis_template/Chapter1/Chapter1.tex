@@ -355,7 +355,7 @@ We present results from the comparative analysis on the six models we developed 
 \end{center}
 
 Notice that the Cure-Rate models that we develop, i.e. the Multivariate frailty Cure-Rate, the Univariate frailty Cure-Rate, and the Univariate $FH$ Cure-Rate model are parametric and thus in the analysis we explore several baseline survival distributions, including Weibull, Gamma, Lognormal, three-parameter Gamma and three-parameter Lognormal. These two last distributions are included to assess whether an increased flexibility in the distribution could benefit the inference precision and prediction accuracy. 
-
+% qui 
 This section is organized as follows: first, we describe the key steps of the data generation process. Next, we present the results of fitting three semiparametric models, and later three parametric models using five different time-to-event distributions, and compare their goodness of fit. Finally, we evaluate the predictive accuracy of each model through several appropriate measures.
 
 A critical aspect to consider is our use of a cure-rate survival model \cite{mota2022new}. Recall that such a model accounts for the presence of a ``cured'' population (or ``non-cases'') which comprises individuals who will never experience the event of interest, regardless of how long they live. In contrast, the remaining population, referred to as ``cases'', has a non-zero probability of eventually experiencing breast cancer onset. Given this duality in survival, distinct methods for generating survival times are required for cases and non-cases.
