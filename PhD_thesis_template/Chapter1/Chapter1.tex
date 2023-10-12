@@ -377,43 +377,43 @@ To generate survival times from this model (with a set of parameter values with 
  with $\widetilde{F}^{-1}( \cdot)$ the quantile function of the time-to-event distribution. Since we explore several distributions, we can easily find the two-parameter distributions in the basic \texttt{R} software, while the package \texttt{FAdist}, still from the \texttt{R} software, contains functions for the cumulative distribution function (CDF), density function, quantile function, and random sample function from the three-parameter Gamma and three-parameter Lognormal. 
 \end{itemize}
 \end{enumerate}
-Generation for the multivariate version of this model, i.e. from the shared multiplicative frailty cure-rate model, follows easily from the conditional independence assumption within each family, using for all family members the same frailty value $r$. Lastly, independent (typically, administrative) right censoring of all observations can be applied to obtain the observed data. If one takes into account the fact that family members from different generations have different birth dates (hence in calendar time), follow-up is clearly longer for members born earlier. 
-\newline \\ \newline
+Independent (typically, administrative) right censoring of all observations can be applied to obtain the observed data. If one takes into account the fact that family members from different generations have different birth dates (hence in calendar time), follow-up is clearly longer for members born earlier.
+
+Notice that in the multivariate scenario, the data generating follows easily from the conditional independence assumption within each family, assuming for all family members the same frailty risk $r$. 
+
 {\bf Note:} as we have mentioned the true, underlying structure of this model is based on the CR Lehmann structure, the fact that one does not ever observe any survival times beyond some limited time $T^*$ (when follow-up stops) is such that semiparametric estimation of the model is also possible, for example with the \texttt{R} function \texttt{emfrail}. Indeed, beyond time $T^*$ the baseline survival distribution $S_0(t)=\left[ p_0+(1-p_0) \widetilde{S}(t) \right]$ (and therefore all the frailty-specific survival distributions $S(t; r) = \left[ S_0(t) \right]^r$ might tend to zero instead to $p_0^r$ as $t \rightarrow \infty$, while still maintaining the multiplicative frailty structure. In other words, given the necessarily finite follow-up, one may assume (perhaps not realistically) that $p_0=0$ and perform semiparametric inference. This same argument allows the estimation of models within the Lehmann CR structure semiparametrically through a traditional Cox PH model for the estimation of the effect of the frailty risk and the observed covariates.
 
 Lastly, note that for non-cure-rate models the data generation would typically be simpler. For example, if $S_r(t)=[S_0(t)]^r$ with $S_0(t)$ the survival function of the Weibull($k,\lambda$) random variable, it is immediate to check that $T\mid R = r\sim$Weibull$\left( k, \lambda\sqrt[k]{r}\right)$. Usually, a reparametrization dependent on the frailty risk is sufficient to obtain the updated distribution. 
 \newline \\ \newline
 
-Recall from above the general Lehmann family of distributions that defines a proportional hazards (PH) structure:
-\begin{equation}
-\left\{  S_{\alpha}(t) = \left[ \widetilde{S}_0(t) \right]^{\alpha}, \ \ \alpha >0  \right\},   
-\label{formula:1.PH}
-\end{equation}
-where $\widetilde{S}(t)$ is the traditional baseline survival function and the term $\alpha$ modifies it to become the (also traditional) survival function $S_\alpha(t)$. It is then easy to check that, with obvious notation, $\lambda_{\alpha}(t) = \alpha \lambda_0(t)$ for any choice of positive and finite $\alpha$. When $\alpha$ is modelled through a regression structure one has the celebrated Cox proportional hazards survival model \cite{cox1972regression}.
+% Recall from above the general Lehmann family of distributions that defines a proportional hazards (PH) structure:
+% \begin{equation}
+% \left\{  S_{\alpha}(t) = \left[ \widetilde{S}_0(t) \right]^{\alpha}, \ \ \alpha >0  \right\},   
+% \label{formula:1.PH}
+% \end{equation}
+% where $\widetilde{S}(t)$ is the traditional baseline survival function and the term $\alpha$ modifies it to become the (also traditional) survival function $S_\alpha(t)$. It is then easy to check that, with obvious notation, $\lambda_{\alpha}(t) = \alpha \lambda_0(t)$ for any choice of positive and finite $\alpha$. When $\alpha$ is modelled through a regression structure one has the celebrated Cox proportional hazards survival model \cite{cox1972regression}.
 
-We extend the general Lehmann family in Equation \ref{formula:1.PH} to the model defined by the more general Lehmann Cure-Rate family obtained by applying the Lehmann power transformation to a cure-rate survival function:
-\begin{equation}
-\left\{  S_{\alpha}(t) = \left[ p + (1-p) \widetilde{S}(t) \right]^{\alpha}, \ \ \alpha >0  \right\}.
-\label{formula:1.LehmannCR}
-\end{equation}
+% We extend the general Lehmann family in Equation \ref{formula:1.PH} to the model defined by the more general Lehmann Cure-Rate family obtained by applying the Lehmann power transformation to a cure-rate survival function:
+% \begin{equation}
+% \left\{  S_{\alpha}(t) = \left[ p + (1-p) \widetilde{S}(t) \right]^{\alpha}, \ \ \alpha >0  \right\}.
+% \label{formula:1.LehmannCR}
+% \end{equation}
 
-For a fixed value $\alpha$, the model in \ref{formula:1.LehmannCR} is such that the survival function $S_{\alpha}(t)$ also defines a cure-rate model. It is easy to check that $\lim_{t \rightarrow \infty} S_{\alpha}(t) = p^{\alpha}$, and that $S_{\alpha}(t)$ can be written as
-\[
-S_{\alpha}(t) = p^{\alpha} + \left( 1-p^{\alpha} \right) \widetilde{S}_{\alpha}(t)
-\]
-with proper conditional survival function for the cases equal to
-\[
-\widetilde{S}_{\alpha}(t) = \frac{\left[ p + (1-p) \widetilde{S}(t) \right] ^{\alpha} - p^{\alpha}}{1-p^{\alpha}}
-\]
-and proper conditional density function for the cases equal to
-\begin{eqnarray}
-\widetilde{f}_{\alpha} (t) = - \frac{d}{d t} \widetilde{S}_{\alpha}(t) = \frac{1-p}{1-p^{\alpha}} \alpha \left[ p + (1-p) \widetilde{S}(t) \right]^{\left(\alpha -1 \right)} \widetilde{f}(t).  
-\label{formula:1.conddens2}
-\end{eqnarray}
+% For a fixed value $\alpha$, the model in \ref{formula:1.LehmannCR} is such that the survival function $S_{\alpha}(t)$ also defines a cure-rate model. It is easy to check that $\lim_{t \rightarrow \infty} S_{\alpha}(t) = p^{\alpha}$, and that $S_{\alpha}(t)$ can be written as
+% \[
+% S_{\alpha}(t) = p^{\alpha} + \left( 1-p^{\alpha} \right) \widetilde{S}_{\alpha}(t)
+% \]
+% with proper conditional survival function for the cases equal to
+% \[
+% \widetilde{S}_{\alpha}(t) = \frac{\left[ p + (1-p) \widetilde{S}(t) \right] ^{\alpha} - p^{\alpha}}{1-p^{\alpha}}
+% \]
+% and proper conditional density function for the cases equal to
+% \begin{eqnarray}
+% \widetilde{f}_{\alpha} (t) = - \frac{d}{d t} \widetilde{S}_{\alpha}(t) = \frac{1-p}{1-p^{\alpha}} \alpha \left[ p + (1-p) \widetilde{S}(t) \right]^{\left(\alpha -1 \right)} \widetilde{f}(t).  
+% \label{formula:1.conddens2}
+% \end{eqnarray}
 
-The term $\alpha$ may depend on a latent or observed covariate $R$, so that $\alpha = \alpha(R)$, that in our case it can be seen as the family-specific frailty risk.
-
-
+% The term $\alpha$ may depend on a latent or observed covariate $R$, so that $\alpha = \alpha(R)$, that in our case it can be seen as the family-specific frailty risk.
 
 \subsection{}
 The results from the previous subsection can be easily extended to the generation of samples from the CR model with, say, three-parameter Gamma distribution $\widetilde{S}(t)$ for the cases, when the model is enlarged to allow for a continuous multiplicative Gamma$(\theta, \theta)$ frailty $R$. Recall that the three-parameter Gamma distribution$(shape, scale, threshold)$ is also known as the Pearson type III distribution (see, e.g., \cite{bobee1991risk}). We report this example to extend the data generation process to its maximum dimension of the parameter collection. 
