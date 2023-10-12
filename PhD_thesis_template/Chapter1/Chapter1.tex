@@ -388,17 +388,33 @@ On the other hand, if a traditional survival function is involved, the data gene
 \subsection{Semiparametric scenario}
 Among the six models we compare, three of them are semiparametric: the Multivariate frailty Cox models, the Univariate $FH$ Cox model and the Univariate $FH(t)$ Cox model. 
 
-In Table \ref{tab:1.1} we compare them in terms of recovering the true parameter values set in the data generating process. We generate a sample of 100,000 families, with family size varying between 1 and $n_F=5$, with a mean of $\lambda_F = 0.8$ relatives. Our experience suggests that a sample size of 100,000 families is sufficient to ensure accurate results with reasonable computational speed. The simulation is repeated for 100 times.  
+In Table \ref{tab:1.1} we compare the models in terms of recovering the true parameter values set in the data generating process. We generate a sample of 100,000 families, with family size varying between 1 and $n_F=5$, with a mean of $\lambda_F = 0.8$ relatives. Our experience suggests that a sample size of 100,000 families is sufficient to ensure accurate results with reasonable computational speed. The simulation is repeated for 100 times. 
 
-We first compare, as a check, the true parameter values set  The inference step is performed through an EM algorithm, that can be carried out using functions from the \texttt{R} package \texttt{frailtyEM} \cite{balan2019frailtyem, balan2020tutorial}. However, this package is time and memory-consuming for large dataset. In contrast to the approach commonly found in the literature, we speed up this process by utilizing the \texttt{cox} function in the \texttt{survival} package. This allows us to efficiently obtain all the necessary quantities within a reasonable time and without excessive memory usage.
+Parameter estimation is performed through an EM algorithm, that can be carried out using functions from the \texttt{R} package \texttt{frailtyEM} \cite{balan2019frailtyem, balan2020tutorial}. However, the functions of the \texttt{frailtyEM} package are time and memory-consuming for large datasets. In contrast to the approach commonly found in the literature, we speed up this process by utilizing the \texttt{cox} function in the \texttt{survival} package. This allows us to efficiently obtain all the necessary quantities within a reasonable time and without excessive memory usage. 
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
+\toprule
+    &$\theta$ &mean($\widehat{\theta}$) (se) &mean($\widehat{\beta}_{FH}$) (se) &mean(C) (se) \\ \cmidrule{2-5} 
+    Multivariate frailty Cox &0.2 &0.199 (0.004) &- &\hl{\textbf{0.966 (<0.001)}} \\
+    Univariate $FH$ Cox &&- &2.835 (0.081) &0.542 (0.002) \\ 
+    Univariate $FH(t)$ Cox &&- &5.846 (0.166) &0.556 (0.002) \\ \midrule
+    Multivariate frailty Cox &0.5 &0.499 (0.012) &- &\textbf{0.949 (0.001)} \\ 
+    Univariate $FH$ Cox &&- &1.455 (0.040) &0.514 (0.001) \\
+    Univariate $FH(t)$ Cox &&- &2.956 (0.083) &0.533 (0.001)  \\ \midrule
+    Multivariate frailty Cox &0.8 &0.802 (0.029) &- &\textbf{0.943 (0.001)} \\ 
+    Univariate $FH$ Cox &&- &1.102 (0.033) &0.503 (0.001) \\
+    Univariate $FH(t)$ Cox &&- &2.227 (0.066) &0.523 (0.001) \\ \bottomrule
+    \end{tabular*}
+    \caption{Mean and standard error of the estimated parameters and Harrell's Concordance index (C) in the last column. The first column $\theta$ stands for the true value set at the data generating step and varying among (0.2, 0.5, 0.8).}
+    \label{tab:1.1}
+\end{table*}
+\end{center}
+% codice simulation-cox-contfrailty-multiFhCostantAndTimevar-MVV.R LOCAL COMPUTER
 
+Results from Table \ref{tab:1.1} show that the Multivariate frailty Cox model can accurately estimate the value of $\theta$ from the given data, while the Univariate models only estimate the parameter $\beta_F$ and nothing can be said about parameter recovery. Even though the parameter $\beta_F$ has little meaning because is not part of the data generating process, it is interesting to notice is always estimated positive. This means that the family history is a valid and positive indicator for breast cancer development.
 
-
-The MSFCox model can accurately estimate the value of $\theta$ from the given data, while the CFHCox and TVFHCox model estimate the parameter $\beta_{FH}$, which has little meaning because is not part of the data generating process and we can not make any meaningful comparison. In the UFHCox model, the family history indicator $FH$ is utilized as a substitute for the unknown frailty factor. It is interesting to notice that the family history coefficient in the Cox PH regression is always positive as we can appreciate in Table \ref{tab:1.1}, so this means that the family history is still a valid indicator for breast cancer development, due to its association with the family-specific frailty. Therefore, recalling that the indicator $FH$ depends on the family size and on members' birth, these models solely allow estimation of the family history parameter to assess its impact on elucidating the magnitude and timing of breast cancer development but in a weaker way - given all of its dependencies.  The conclusion here is that we can only assess the good recovery of the parameters by the MSFCOx model, and nothing we can say about the other two univariate models. 
-
-The comparison among the models can be made in terms of the concordance index, which compare the estimated results to the true (known) frailties. In the case of the univariate model, the estimated value of the family history indicator is compared to the true risk frailty. Notice also, the value of the Harrell's concordance index also depends on the discrete nature of the predicted risk: for example, if a model predicts only two levels of risk, then the numerator of the index will tend to be small, as all pairs $(i,j)$ for which $\widehat r_i = \widehat r_j$ are excluded. This may happen with the models that include $FH$ and $FH(t)$. 
-
-The result from the previous analysis is that the MSFCox model is, not surprisingly, the best among the considered models, as it is used to generate the data. Given its benchmark concordance index value of about 0.95, the univariate models have a poor concordance performance around only the 50\% of pairs $(i,j)$ to be concordant in terms of time-to-event and risk values. In Table \ref{tab:1.1} the best result by box is in bold and the absolute best by category is highlighted (in this case the best concordance about all the scenarios is highlighted).  
+Also, in Table \ref{tab:1.1}, the Harrell's Concordance index is reported. Notice that the value of the Harrell's Concordance index depends on the discrete nature of the predicted risk: for example, if a model predicts only two levels of risk, then the numerator of the index will tend to be small, as all tied pairs $(i,j)$ for which $\widehat r_i = \widehat r_j$ are excluded. This may happen with the univariate models which include $FH$ and $FH(t)$. Results show that the Multivariate frailty Cox model is, not surprisingly, the best among the models, as it is used to generate the data. Given its benchmark Concordance index value of about 0.95, the Univariate models have a poor Concordance performance around only the 50\% of pairs $(i,j)$ to be concordant in terms of time-to-event and risk values. In Table \ref{tab:1.1} the best result by true value of $\theta$ is in bold, while the absolute best among all the scenario is highlighted). 
 
 % \begin{table}[ht] 
 %     \centering
@@ -427,26 +443,7 @@ The result from the previous analysis is that the MSFCox model is, not surprisin
 %     \caption{Estimated parameters and concordance index from the analysed models.}
 %     \label{tab:1}
 % \end{table}
-\begin{center}
-\begin{table*}[!h]%
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
-\toprule
-    &$\theta$ &mean($\widehat{\theta}$) (se) &mean($\widehat{\beta}_{FH}$) (se) &mean(C) (se) \\ \cmidrule{2-5} 
-    Multivariate &0.2 &0.199 (0.004) &- &\hl{\textbf{0.966 (<0.001)}} \\
-    Univariate FH &&- &2.835 (0.081) &0.542 (0.002) \\ 
-    Univariate FH(t) &&- &5.846 (0.166) &0.556 (0.002) \\ \midrule
-    Multivariate &0.5 &0.499 (0.012) &- &\textbf{0.949 (0.001)} \\ 
-    Univariate FH &&- &1.455 (0.040) &0.514 (0.001) \\
-    Univariate FH(t) &&- &2.956 (0.083) &0.533 (0.001)  \\ \midrule
-    Multivariate &0.8 &0.802 (0.029) &- &\textbf{0.943 (0.001)} \\ 
-    Univariate FH &&- &1.102 (0.033) &0.503 (0.001) \\
-    Univariate FH(t) &&- &2.227 (0.066) &0.523 (0.001) \\ \bottomrule
-    \end{tabular*}
-    \caption{mean and standard error of the estimated parameters and concordance index in the last column (C), from the analysis on the semiparametric Cox models.}
-    \label{tab:1.1}
-\end{table*}
-\end{center}
-% codice simulation-cox-contfrailty-multiFhCostantAndTimevar-MVV.R LOCAL COMPUTER
+
 Our focus now shifts towards the core of the study, which is the frailty prediction. In this regard, the algorithm developed in Section \ref{sec4} is employed to estimate the risk of developing breast cancer for the subjects in the current dataset and to predict that risk for a new subject who is not part of the initial dataset. The frailty mean and median are predicted for each family, and a comparison is made between the predicted values and the true prior family frailty generated during the initial data generation step. 
 
 The procedure for estimating the frailty parameter and related quantities, including the prediction accuracy, is carried out on the same dataset, without distinguishing between training and validation dataset. We compare the mean and median posterior frailty values in terms of mean square prediction error (MSPE), the coefficient of determination $R^2$ from the regression line of the true frailty on the predicted frailty across all families, the coefficient $\widehat{\beta}$ from the same regression model, and both the Pearson's and the rank correlation coefficient. Results are presented in Table \ref{tab:1.2} for one simulation with 100,000 families and varying family sizes among the values of the family size parameters to be $(n_{F}, \lambda_{F}) = ((2,0.8), (5,0.8), (10,5), (20,10))^T$, as differences emerge when family size increases. The analysis is repeated 100 times to collect mean and standard error of the estimated measures. The best result by row is reported in bold, while the best result by category among models is highlighted. Notice that, the best results overall is when the family parameters are at their maximum value, apart from the estimated mean frailty parameter and the mean square prediction error of the mean frailty, meaning that the family size affects in a positive way the risk prediction accuracy, as expected. Moreover, what we can report from the results of the multivariate setting is that the median posterior frailty performs poorly as a family-specific frailty predictor, especially when family size is small. The posterior mean frailty performs better than the posterior median frailty in terms of MSPE, $R^2$, $\widehat{\beta}$,  Pearson's and the rank correlation coefficient. Therefore, we adopt the mean as the best posterior frailty index and perform final computations using only the multivariate model, which is up to this point the best in performances. 
@@ -484,7 +481,7 @@ However notice that, as the family size decreases, the mean is known to exhibit 
     Univariate FH(t) \\ 
     MSPE &2.32(0.0067) &2.3(0.0065) &\textbf{2.08(0.006)} &2.22(0.0064) \\ 
     $R^2$ &0.03(0.0004) &0.04(0.0003) &\textbf{0.05(0.0002)} &0.04(0.0001) \\ 
-    $\widehat\beta_{FH}$ &\textbf{0.91(0.0062)} &0.87(0.0049) &0.62(0.0017) &0.47(0.001) \\ 
+    $\widehat\beta_F$ &\textbf{0.91(0.0062)} &0.87(0.0049) &0.62(0.0017) &0.47(0.001) \\ 
     $\rho$ &0.18(0.0011) &0.19(0.0009) &\textbf{0.23(0.0004)} &0.19(0.0004) \\ 
     Rank $\rho$ &0.18(0.0008) &0.2(0.0006) &\textbf{0.28(0.0004)} &0.25(0.0004) \\ 
   \bottomrule
@@ -710,7 +707,7 @@ Parameter estimation in the parametric case allows for a more detailed descripti
     Se &&0.0011 &0.0241 &0.0030 &0.0170 \\ 
     Mean &0.8 &0.8145 &8.3576 &6.0688 &0.6187 \\
     Se &&0.0012 &0.0247 &0.0035 &0.0568 \\ \midrule
-    &&&&&$\widehat\beta_{FH}$ \\ \midrule
+    &&&&&$\widehat\beta_F$ \\ \midrule
     Univariate FH Cure-Rate \\ 
     Mean &0.2 &0.8961 &5.0588 &6.1471 &2.8782 \\
     Se &&0.0014 &0.0653 &0.0837 &0.0587 \\ 
@@ -1297,7 +1294,7 @@ When we select only main subjects with the complete information on the mother, t
 \begin{table}[ht]
     \centering
     \begin{tabular}{l|cccc} \hline
-    &Survival information mother &$\widehat\theta$ &$\widehat\beta_{FH}$ &C \\
+    &Survival information mother &$\widehat\theta$ &$\widehat\beta_F$ &C \\
     Multivariate &yes &1.3624 &- &\hl{\textbf{0.9968}} \\
     Univariate FH &&- &1.5372 &0.5021 \\
     Univariate FH(t) &&- &1.8017 &0.5042 \\ \hline
@@ -1315,7 +1312,7 @@ In Table \ref{tab:14} we report results from including the available reproductiv
     \centering
     \begin{tabular}{l|cccc} 
     \hline
-    &Survival information mother &$\widehat\theta$ &$\widehat\beta_{FH}$ &C \\
+    &Survival information mother &$\widehat\theta$ &$\widehat\beta_F$ &C \\
     Multivariate &yes &2 &- &\textbf{0.9335} \\
     Univariate FH &&- &1.3922 &0.6209 \\
     Univariate FH(t) &&- &2.2254 &0.5350 \\ \hline
@@ -1326,7 +1323,7 @@ In Table \ref{tab:14} we report results from including the available reproductiv
     \caption{estimated parameters and Harrell's concordance index for the three semiparametric models with parity, number of children, age at first child covariates.}
     \label{tab:14}
 \end{table}
-Also, we can not conclude anything about parameter recovery but the estimate of the frailty parameter $\widehat\theta$ in the second column of Table \ref{tab:13} has a reasonable value. Additionally, the estimated of the family history coefficient $\widehat\beta_{FH}$ has a positive value (around 1.8) meaning that the family history has a positive effect on the breast cancer development, that is indeed coherent with this phenomenon.  
+Also, we can not conclude anything about parameter recovery but the estimate of the frailty parameter $\widehat\theta$ in the second column of Table \ref{tab:13} has a reasonable value. Additionally, the estimated of the family history coefficient $\widehat\beta_F$ has a positive value (around 1.8) meaning that the family history has a positive effect on the breast cancer development, that is indeed coherent with this phenomenon.  
 % Code \texttt{finalEstimationCovariates-cox-swemultireg-MVV} in the SWEDISH COMPUTER.
 \newpage
 % Code in ParContinuousFrailty-multivariate-swemultireg-MVV.R in the SWEDISH COMPUTER for the estimation of parameters and ParContinuousFrailty-multiunifh-postprediction-swemultireg-MVV.R for concordance with adjustement on the parameter values.  
@@ -1444,7 +1441,7 @@ We report the values of the estimated parameters in Table \ref{tab:1.17} and \re
 \begin{table}[ht]
     \centering
     \begin{tabular}{l|cccccc} \hline
-    &Survival info mother &$\widehat p$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat\theta$/$\widehat\beta_{FH}$ &C \\
+    &Survival info mother &$\widehat p$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat\theta$/$\widehat\beta_F$ &C \\
     Multivariate &yes &0.8710  &6.2645 &73.2018  &4.9053 &\textbf{0.9592} \\
     Univariate &&0.9594 &0.1246 &0.1900 &1.2150 &0.3952 \\
     Univariate FH &&0.9635 &0.0926 &0.0394 &1.2174 &- \\ \hline
@@ -1459,7 +1456,7 @@ We report the values of the estimated parameters in Table \ref{tab:1.17} and \re
 \begin{table}
     \centering
     \begin{tabular}{l|cccccc} \hline
-    Multivariate &$\widehat p_0$ &$\widehat\mu_0 / \widehat{shape}_0$ &$\widehat\sigma^2_0 / \widehat{scale}_0$ &$\widehat\gamma_0$ &$\widehat\theta$/$\widehat\beta_{FH}$ &C \\
+    Multivariate &$\widehat p_0$ &$\widehat\mu_0 / \widehat{shape}_0$ &$\widehat\sigma^2_0 / \widehat{scale}_0$ &$\widehat\gamma_0$ &$\widehat\theta$/$\widehat\beta_F$ &C \\
     Weibull &0.8703  &6.1822 &72.9776 &- &4.3569 &\textbf{0.9663} \\ 
     Gamma &0.8552 &18.6981  &3.8617 &- &5.4790 &\textbf{0.9663} \\ 
     Lognormal &0.8419 &4.2911 &0.2604 &- &5.5265 &\textbf{0.9392} \\ 
