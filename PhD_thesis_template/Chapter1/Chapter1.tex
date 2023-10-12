@@ -448,14 +448,10 @@ Our focus now shifts towards the core of the study, which is frailty prediction.
 
 Results show that the median performs poorly as a risk predictor, especially when family size is small. However notice that, as the family size decreases, the mean is known to exhibit a shrinkage problem due to the low number of events occurring within families. Figure \ref{fig:scatterquantile} illustrates this phenomenon, in which the predicted mean risk do not reach zero when the true risk is close to zero, and all values are shrunken towards the true (prior) mean of one. Notice that the second plot of Figure \ref{fig:scatterquantile}, resulting from the maximum family size equal to twenty, has a lower shrinkage compared to the first plot which has a maximum family size equal to five. This well-known phenomenon is due to the fact that a large family size is required to increase the sum of cumulative hazards on observed time and allow the mean to shrink towards zero \cite{balan2019frailtyem, balan2020tutorial}. One should keep in mind this limitation of the posterior frailty risk mean when running risk prediction. For large dataset, the shrinkage effect becomes smaller and smaller towards zero and thus we do not encounter this problem on the real case data because of its high dimension.
 
-Therefore, we adopt the mean as the best posterior frailty risk summary and perform final computations using only the multivariate model, which is up to this point the best in performances. 
-
 \begin{center}
 \begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
 \toprule
-    % \multicolumn{6}{l}{10000 families} \\ \hline
-    %&Univariate 
     &\multicolumn{4}{c}{($n_F, \lambda_F$)} \\\cmidrule{2-5} 
     % &(1, 0.8) 
     &(2, 0.8) &(5, 0.8) &(10, 5) &(20, 10) \\ \midrule % &(50, 10)
@@ -491,102 +487,32 @@ Therefore, we adopt the mean as the best posterior frailty risk summary and perf
 \end{table*}
 \end{center}
 % Code from postPrediction3.R on SWEDISH COMPUTER. 
-% \begin{table}[ht]
-%     \centering
-%     \begin{tabular}{lcccccc} 
-%     \multicolumn{6}{l}{1000000 families} \\ \hline
-%     %&Univariate 
-%     &\multicolumn{5}{c}{Multivariate model} \\ 
-%     %&(1, 0.8) 
-%     &(2, 0.8) &(5, 0.8) &(10, 5) &(20, 10) &(50, 10) \\ \hline
-%     MSPE(mean) %&\textbf{5.001} 
-%     &\textbf{3.788} &\textbf{3.548} &\textbf{2.887} &\textbf{3.496} &\textbf{3.505}   \\ 
-%     MSPE(adj. mean) %&5.457 
-%     &4.076 &3.749 &2.972 &3.522 &3.531 \\ 
-%     MSPE(median) %&9$\cdot 10^{28}$ 
-%     &5.809 &5.682 &4.906 &3.973 &3.938 \\ 
-%     $R^2$(mean) %&0 
-%     &0.227 &0.248 &0.51 &0.649 &0.648 \\ 
-%     $R^2$(adj. mean) %&\textbf{0.188} 
-%     &\textbf{0.254} &\textbf{0.278} &\textbf{0.514} &\textbf{0.653} &\textbf{0.651}   \\ 
-%     $R^2$(median) %&0 
-%     &0.166 &0.158 &0.25 &0.291 &0.289   \\ 
-%     $\widehat{\beta}_{\text{mean}}$ %&NA 
-%     &0.947 &\textbf{0.924} &\textbf{0.719} &\textbf{0.606} &\textbf{0.604}  \\ 
-%     $\widehat{\beta}_{\text{adj. mean}}$ %&\textbf{4.021} 
-%     &0.823 &0.809 &0.679 &0.589 &0.587 \\ 
-%     $\widehat{\beta}_{\text{median}}$ %&NA 
-%     &11.664 &9.003 &3.013 &1.445 &1.441  \\ 
-%     $\rho$(mean) %&0.401 
-%     &0.496 &0.540 &0.736 &0.817 &0.816 \\ 
-%     $\rho$(adj. mean) %&\textbf{0.434} 
-%     &\textbf{0.520} &0\textbf{.562} &\textbf{0.739} &\textbf{0.819} &\textbf{0.818}   \\ 
-%     $\rho$(median) %&0.364 
-%     &0.423 &0.423 &0.518 &0.549 &0.547 \\ 
-%     Rank $\rho$(mean) %&0.172 
-%     &0.242 &0.283 &0.476 &0.5793&0.579 \\ 
-%     Rank $\rho$(adj. mean) %&\textbf{0.336} 
-%     &\textbf{0.404} &\textbf{0.437} &\textbf{0.605} &\textbf{0.695} &\textbf{0.695}   \\
-%     Rank $\rho$(median) %&0.061 
-%     &0.113 &0.139 &0.362 &0.493 &0.497 \\ \hline 
-%     \end{tabular}
-%     \caption{Several prediction accuracy measures, for different family sizes* defined by the two parameters (x, y): x indicates the largest number of family members, and y represents the value of the Poisson distribution used to generate the additional number of family members beyond the main subject. Family size is varying among the couples of maximum and expected value of the minimum: (2, 0.8), (5, 0.8), (10, 5), (20, 10), (50, 10). Notice that ``adj. mean'' stays for adjusted mean.}
-%     \label{tab:3}
-% \end{table}
-% Code from postPrediction3.R on SWEDISH COMPUTER. 
+\newpage
 \begin{figure}
-% \begin{minipage}{0.50\linewidth}
     \centering
-    % \includegraphics[width = \linewidth]{plots/Rplot41.pdf}
     \includegraphics[width = \linewidth]{plots/Rplot43.pdf}
-    % \includegraphics[width = 0.8\linewidth]{plots/Rplot45.pdf}
     \includegraphics[width = \linewidth]{plots/Rplot47.pdf}
-    % \includegraphics[width = \linewidth]{plots/Rplot49.pdf}
-    \caption{scatter-plot on 100,000 families of true frailty value versus predicted mean frailty with the bisector of the third quadrant (in red), the smoothed regression line (in green with confidence interval) and smoothed quantile regression line on the first, second and third quantile (in orange) for a smaller and higher family size.}
+    \caption{True frailty risk versus predicted frailty risk mean with the bisector of the third quadrant (in red), the smoothed regression line (in green with confidence interval) and smoothed quantile regression line on the first, second and third quantile (in orange) for a smaller and higher family size, respectively starting from the top, equal to a maximum of 5 and 20.}
     \label{fig:scatterquantile}
-% \end{minipage}%
-% \begin{minipage}{0.50\linewidth}
-%     \centering
-%     \includegraphics[width = 0.8\linewidth]{plots/Rplot88.jpg}
-%     \includegraphics[width = 0.8\linewidth]{plots/Rplot94.jpg}
-%     \includegraphics[width = 0.8\linewidth]{}
-%     \includegraphics[width = 0.8\linewidth]{}
-%     \includegraphics[width = 0.8\linewidth]{}
-%     \caption{Scatter-plot on one million families of true frailty value versus predicted mean frailty with the positive bisector, the smoothed regression line (in green with confidence interval) and smoothed quantile regression line on the first, second and third quantile (in orange).}
-%     \label{fig:scatterquantile}
-% \end{minipage}
 \end{figure}
 % Code from postPredBackup3.R in SWEDISH COMPUTER varying the sample size (in terms of families) and the internal family size parameters.
-Notice in Figure \ref{fig:scatterquantile} that the horizontal bands that can be observed for the smaller family size are due to the form of the posterior frailty mean, which has a discrete component related to the number of events observed in the family. 
 
-The use of the mean as the family-specific predicted frailty highlights another issue, which is the variability in the prediction. The mean squared prediction error (MSPE) is quite high to provide an accurate risk of breast cancer occurrence in a family even when one considers its square root version to recover the correct unit of $\theta$. We explore the values of the root MSPE conditional on the value of the true frailty in Figure \ref{fig:cspe}, but we find no significant differences in the magnitude of the MSPE, which increases as the true frailty increases, regardless of the family size. We observe a possible flattening of the curve with larger family sizes, as shown in the last picture in Figure \ref{fig:cspe}, but the prediction error remained quite high according to the growth of the true frailty value.
+Also, another limitation of the posterior frailty risk mean is the variability in the prediction. The mean squared prediction error (MSPE) is quite high to provide an accurate estimate of the risk of breast cancer occurrence in a family. We explore the values of the root MSPE conditional on the value of the true frailty risk in Figure \ref{fig:cspe}. The MSPE increases as the true frailty risk increases too, regardless of the family size. We observe a possible flattening of the curve with a larger family size in the second plot of Figure \ref{fig:cspe}, but the prediction error remained high. This could lead to accurately identify the lower-risk families but not the higher-risk families. This means that we may encounter a large number of false negative cases. 
+
 \begin{figure}
-% \begin{minipage}{0.5\linewidth}
     \centering
-    % \includegraphics[width = \linewidth]{plots/Rplot42.pdf}
     \includegraphics[width = \linewidth]{plots/Rplot44.pdf}
-    % \includegraphics[width = 0.8\linewidth]{plots/Rplot46.pdf}
     \includegraphics[width = \linewidth]{plots/Rplot48.pdf}
-    % \includegraphics[width = \linewidth]{plots/Rplot50.pdf}
-    \caption{the conditional MSPE in squared root (y-axis) is plotted against the value of the true frailty (x-axis) for 10000 families. Family size is varying with the values $(n_F, \lambda_F)$: (5, 0.8), (20, 10), with a maximum number of family members up to 5 or 20, respectively.}
+    \caption{True frailty risk versus the conditional MSPE in squared root, for a lower and a higher family size, respectively starting from the top, equal to a maximum of 5 and 20.}
     \label{fig:cspe}
-% \end{minipage}%
-% \begin{minipage}{0.5\linewidth}
-%     \centering
-%     \includegraphics[width = 0.8\linewidth]{plots/Rplot87.pdf}
-%     \includegraphics[width = 0.8\linewidth]{plots/Rplot93.pdf}
-%     \includegraphics[width = 0.8\linewidth]{}
-%     \includegraphics[width = 0.8\linewidth]{}
-%     \includegraphics[width = 0.8\linewidth]{}
-%     \caption{The squared conditional MSPE (y-axis) is plotted against the value of the predicted mean frailty (x-axis) for one million families. Family size is varying among the couples of maximum and expected value of the minimum: (2, 0.8), (5, 0.8), (10, 5), (20, 10), (50, 10).}
-%     \label{fig:cspe}
-% \end{minipage}
 \end{figure}
 % Code from postPredBackup3.R
 
 Given the structural limitations of the posterior mean frailty that we report so far, we suggest an alternative approach. Specifically, we compute the family-specific posterior probability of belonging to the group of the highest-risk families as anticipated in Section \ref{sec4}. This is achieved by calculating the probability of the posterior frailty (mean, median, mode) exceeding the $(1-\alpha)$ percentile (say 95\% below) of the frailty population, or say prior, Gamma distribution. A plot of the the true prior versus the estimated posterior probability of belonging to the high-risk families is reported in Figure \ref{fig:1.3}, assessing that the relation between the true and the estimated probability of belonging to the highest-risk family is coherent, i.e. the posterior probability increases when the prior probability increases.
 
 Following some calculation, we can use a classifier to identify the membership in the extreme cluster of families with the same threshold, where the indicator is equal to one whenever the family-specific probability is at least equal to 15\%, that is the $95$th quantile in the posterior distribution of the population probability. Also, notice from Figure \ref{fig:1.3} that we can distinguish two clouds of points, where the highest recall the highest-risk families. 
+
+Therefore, after all the analysis run, we adopt the mean as the best posterior frailty risk summary and thus we perform final computations only with the Multivariate frailty Cox model.
 
 The accuracy of the binary classification can be analyzed using the classical area under the ROC curve (AUC), the positive predictive value (PPV), and the negative predictive value (NPV), which are all measures associated with the binary diagnostic testing. The AUC, PPV, and NPV are presented in Table \ref{tab:1.3} and indicate that all measures improve as the family size increases, as expected. This can be appreciated also from the ROC curve in Figure \ref{fig:1.4}, where the case with the higher family size with a maximum of twenty correctly classifies the 97\% of families in the right group, the 15\% above the case with maximum five family members. However, all the results are promising as shown in Table \ref{tab:1.3}, since the AUC is in the range 0.7-0.85: this indicates that around the 70\%-85\% of families are correctly classified in the right category low-risk or high-risk also with small family sizes. Now, the negative predictive value (NPV) is always significantly higher than the positive predictive value, meaning that to the higher value of the AUC the NPV contributes more. 
 
