@@ -396,13 +396,13 @@ Parameter estimation is performed through an EM algorithm, that can be carried o
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
 \toprule
     &$\theta$ &mean($\widehat{\theta}$) (se) &mean($\widehat{\beta}_{FH}$) (se) &mean(C) (se) \\ \cmidrule{2-5} 
-    Multivariate frailty Cox &0.2 &0.199 (0.004) &- &\hl{\textbf{0.966 (<0.001)}} \\
+    Multivariate frailty Cox &0.2 &0.199 (0.004) &- &0.966 (<0.001) \\
     Univariate $FH$ Cox &&- &2.835 (0.081) &0.542 (0.002) \\ 
     Univariate $FH(t)$ Cox &&- &5.846 (0.166) &0.556 (0.002) \\ \midrule
-    Multivariate frailty Cox &0.5 &0.499 (0.012) &- &\textbf{0.949 (0.001)} \\ 
+    Multivariate frailty Cox &0.5 &0.499 (0.012) &- &0.949 (0.001) \\ 
     Univariate $FH$ Cox &&- &1.455 (0.040) &0.514 (0.001) \\
     Univariate $FH(t)$ Cox &&- &2.956 (0.083) &0.533 (0.001)  \\ \midrule
-    Multivariate frailty Cox &0.8 &0.802 (0.029) &- &\textbf{0.943 (0.001)} \\ 
+    Multivariate frailty Cox &0.8 &0.802 (0.029) &- &0.943 (0.001) \\ 
     Univariate $FH$ Cox &&- &1.102 (0.033) &0.503 (0.001) \\
     Univariate $FH(t)$ Cox &&- &2.227 (0.066) &0.523 (0.001) \\ \bottomrule
     \end{tabular*}
@@ -444,11 +444,11 @@ Also, in Table \ref{tab:1.1}, the Harrell's Concordance index is reported. Notic
 %     \label{tab:1}
 % \end{table}
 
-Our focus now shifts towards the core of the study, which is the frailty prediction. In this regard, the algorithm developed in Section \ref{sec4} is employed to estimate the risk of developing breast cancer for the subjects in the current dataset and to predict that risk for a new subject who is not part of the initial dataset. The frailty mean and median are predicted for each family, and a comparison is made between the predicted values and the true prior family frailty generated during the initial data generation step. 
+Our focus now shifts towards the core of the study, which is frailty prediction. In this regard, the algorithm developed in Section \ref{sec4} is employed to estimate the risk of developing breast cancer with the current dataset and to predict the risk for a new subject. The mean risk and median risk are predicted for each family. In terms of the Multivariate frailty Cox model, these two summary measures are compared in terms of MSPE, $R^2$ from the linear regression of the true risk on the predicted risk, the coefficient $\widehat{\beta}$ of the predicted risk, and both the Pearson's and the rank correlation coefficient. Clearly, this is not possible for the Univariate models since they compare the estimated family history to the true risk. The comparison is on a sample of 100,000 families and varying family size among $(n_{F}, \lambda_{F}) = ((2,0.8), (5,0.8), (10,5), (20,10))^T$, since differences emerge when family size increases. Average and standard error of the estimated measures are reported. Results in Table \ref{tab:1.2} show that higher is the average family size then higher are the performances of both mean and median risk, meaning that the family size affects in a positive way the risk prediction accuracy, as expected. 
 
-The procedure for estimating the frailty parameter and related quantities, including the prediction accuracy, is carried out on the same dataset, without distinguishing between training and validation dataset. We compare the mean and median posterior frailty values in terms of mean square prediction error (MSPE), the coefficient of determination $R^2$ from the regression line of the true frailty on the predicted frailty across all families, the coefficient $\widehat{\beta}$ from the same regression model, and both the Pearson's and the rank correlation coefficient. Results are presented in Table \ref{tab:1.2} for one simulation with 100,000 families and varying family sizes among the values of the family size parameters to be $(n_{F}, \lambda_{F}) = ((2,0.8), (5,0.8), (10,5), (20,10))^T$, as differences emerge when family size increases. The analysis is repeated 100 times to collect mean and standard error of the estimated measures. The best result by row is reported in bold, while the best result by category among models is highlighted. Notice that, the best results overall is when the family parameters are at their maximum value, apart from the estimated mean frailty parameter and the mean square prediction error of the mean frailty, meaning that the family size affects in a positive way the risk prediction accuracy, as expected. Moreover, what we can report from the results of the multivariate setting is that the median posterior frailty performs poorly as a family-specific frailty predictor, especially when family size is small. The posterior mean frailty performs better than the posterior median frailty in terms of MSPE, $R^2$, $\widehat{\beta}$,  Pearson's and the rank correlation coefficient. Therefore, we adopt the mean as the best posterior frailty index and perform final computations using only the multivariate model, which is up to this point the best in performances. 
+Results show that the median performs poorly as a risk predictor, especially when family size is small. However notice that, as the family size decreases, the mean is known to exhibit a shrinkage problem due to the low number of events occurring within families. Figure \ref{fig:scatterquantile} illustrates this phenomenon, in which the predicted mean risk do not reach zero when the true risk is close to zero, and all values are shrunken towards the true (prior) mean of one. Notice that the second plot of Figure \ref{fig:scatterquantile}, resulting from the maximum family size equal to twenty, has a lower shrinkage compared to the first plot which has a maximum family size equal to five. This well-known phenomenon is due to the fact that a large family size is required to increase the sum of cumulative hazards on observed time and allow the mean to shrink towards zero \cite{balan2019frailtyem, balan2020tutorial}. One should keep in mind this limitation of the posterior frailty risk mean when running risk prediction. For large dataset, the shrinkage effect becomes smaller and smaller towards zero and thus we do not encounter this problem on the real case data because of its high dimension.
 
-However notice that, as the family size decreases, the mean is known to exhibit a shrinkage problem due to the low number of events occurring within families. Figure \ref{fig:scatterquantile} illustrates this phenomenon, in which the posterior mean values do not reach zero when the true frailty value is close to zero, and all values are shrunken towards the frailty mean of one - recall also that we have as prior a Gamma($\theta,\theta$) distribution with mean exactly one -. Notice that the second plot of Figure \ref{fig:scatterquantile} with higher parameters for family size (maximum twenty members per family) has a lower shrinkage compared to the first plot with, indeed, lower family size (maximum five members per family). This well-known phenomenon is due to the fact that a large family size is required to increase the sum of cumulative hazards on observed time and allow the mean to shrink towards zero \cite{balan2019frailtyem, balan2020tutorial}. One should keep in mind this limitation of the posterior frailty mean to predict the family-specific frailty. For large dataset, the shrinkage effect becomes smaller and smaller towards zero and thus we do not encounter this problem for example later on the available data thanks to their high dimension.
+Therefore, we adopt the mean as the best posterior frailty risk summary and perform final computations using only the multivariate model, which is up to this point the best in performances. 
 
 \begin{center}
 \begin{table*}[!h]%
@@ -590,6 +590,8 @@ Following some calculation, we can use a classifier to identify the membership i
 
 The accuracy of the binary classification can be analyzed using the classical area under the ROC curve (AUC), the positive predictive value (PPV), and the negative predictive value (NPV), which are all measures associated with the binary diagnostic testing. The AUC, PPV, and NPV are presented in Table \ref{tab:1.3} and indicate that all measures improve as the family size increases, as expected. This can be appreciated also from the ROC curve in Figure \ref{fig:1.4}, where the case with the higher family size with a maximum of twenty correctly classifies the 97\% of families in the right group, the 15\% above the case with maximum five family members. However, all the results are promising as shown in Table \ref{tab:1.3}, since the AUC is in the range 0.7-0.85: this indicates that around the 70\%-85\% of families are correctly classified in the right category low-risk or high-risk also with small family sizes. Now, the negative predictive value (NPV) is always significantly higher than the positive predictive value, meaning that to the higher value of the AUC the NPV contributes more. 
 
+Prediction accuracy is determined through an in-sample validation, without distinguishing between a training and a test set. 
+
 Figure \ref{fig:1.3} displays a scatter-plot that depicts the relationship between the true frailty percentiles into the population (prior) distribution and the posterior probability of belonging to the highest-risk families, with the threshold set at 95$\%$. The threshold for splitting families into two groups can be easily changed and run again the split, but we chose 95$\%$ because we wanted to identify the highest 5$\%$ risk group. From this plot we can appreciate how increasing the family size in the sample the highest-risk families can be more identified by noting a more distinguished point cloud, and a more inclined smoothed line indicating the tendency of the entire cloud. It is interesting to notice that we can identify two risk groups. 
 \begin{figure}[ht]
     \centering
@@ -609,16 +611,19 @@ Figure \ref{fig:1.3} displays a scatter-plot that depicts the relationship betwe
     AUC &0.80 (0.0001) &0.83 (0.0001) &0.94 ($<$0.0001) &\hl{\textbf{0.97 ($<$0.001)}} \\ % &0.97($<$0.001) \\ 
     PPV &0.39 (0.0002) &0.41 (0.0002) &0.56 (0.0002) &\hl{\textbf{0.63 ($<$0.001)}} \\ %&0.63($<$0.001)  \\
     NPV &0.97 ($<$0.0001) &0.97 ($<$0.0001) &\textbf{0.98 ($<$0.0001)} &\textbf{0.98 ($<$0.001)} \\ % &0.98($<$0.001) \\ 
+    Concordance \\
     \midrule
     Univariate $FH$ \\ 
     AUC  &0.53 (0.0001) &0.54 (0.0001) &0.66 (0.0001) &\textbf{0.70 ($<$0.001)} \\ % &0.70($<$0.001) \\ 
     PPV &\textbf{0.32 (0.0004)} &0.29 (0.0003) &0.25 (0.0001) &0.21 ($<$0.001) \\ % &0.21($<$0.001) \\
     NPV &\hl{\textbf{0.99 ($<$0.0001)}} &\hl{\textbf{0.99 ($<$0.0001)}} &0.94 ($<$0.0001) &0.90 ($<$0.001) \\ % &0.90($<$0.001) \\ 
+    Concordance \\ 
     \midrule
     Univariate $FH(t)$ \\ 
     AUC &0.55 (0.0004) &0.56 (0.0004) &0.59 (0.0003) &0.57 (0.0002) \\ 
     PPV &0.27 (0.0013) &0.24 (0.0012) &0.16 (<0.0001) &0.14 (0.0001) \\ 
     NPV &0.91 (0.0004) &0.88 (0.0005) &0.52 (0.0006) &0.36 (0.0005) \\ 
+    Concordance \\ 
     \bottomrule
     % \multicolumn{6}{l}{1000000 families} \\ \hline
     % AUC &0.7027 &0.7112 &0.7133 &\textbf{0.8257} &0.8233  \\
