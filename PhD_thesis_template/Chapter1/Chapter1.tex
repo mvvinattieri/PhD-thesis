@@ -377,64 +377,15 @@ To generate survival times from this model (with a set of parameter values with 
  with $\widetilde{F}^{-1}( \cdot)$ the quantile function of the time-to-event distribution. Since we explore several distributions, we can easily find the two-parameter distributions in the basic \texttt{R} software, while the package \texttt{FAdist}, still from the \texttt{R} software, contains functions for the cumulative distribution function (CDF), density function, quantile function, and random sample function from the three-parameter Gamma and three-parameter Lognormal. 
 \end{itemize}
 \end{enumerate}
-Independent (typically, administrative) right censoring of all observations can be applied to obtain the observed data. 
+Independent (typically, administrative) right censoring of all observations can be applied to obtain the observed data. Censoring is the minimum between the date of death and the end year of the follow-up, set at 2020. For building the follow-up we need to fix a starting point for all the individuals, which is date of birth. We start from generating the mother date of birth from a Uniform between 1905 and 1945. The daughter dates of birth are generated summing up to their mother birth date a value from a Uniform between 25 and 35, which coincides to the age the mother gave birth. If one takes into account the fact that family members from different generations have different birth dates (hence in calendar time), follow-up is clearly longer for members born earlier. Date of death is generated similarly keeping a time coherence between mothers and daughters. 
 
-For building the follow-up we need to fix a starting point of it, which is date of birth. Birth times of the family members were generated as values from Uniform distributions with a lower-bound and an upper-bound. First, the birth time of mothers is generated from a Uniform on years between the 1905 and the 1945. Then, the birth times of the main subject and all sisters have been generated summing up to the birth time of the mother a value from a Uniform between 25 and 35, which coincides to the age the mother gave birth. Administrative right censoring was generated as the minimum between death time (which similarly follows the generation of birth times) and 2020, the end of the follow-up year.
+In the multivariate scenario, the data generating follows easily from the conditional independence assumption within each family, assuming for all family members the same frailty risk $r$. Also, in this scenario is crucial to random generate the size of families included in the sample. To this end, we randomly generate family size as one plus the minimum of a fixed number ($n_F-1$) and a value generated from a Poisson random variable with parameter $\lambda_F$. To give an insight, one can see $n_F$ as the maximum family size all over the sample, and $\lambda_F$ the average number of first-degree female relatives a subject can have. 
 
-For data generation, we also need to set some fixed parameter values ($p, shape$,
-$scale, threshold, \theta$) = (0.85, 8, 6, 15, 0.2), where $p$ is the probability of being a ``non-case'', the $shape, scale, threshold$ are the three parameters of the survival times of the ``cases'' -- notice that when we use a two-parameter distribution we only use the first two of them: $shape, scale$ --, and $\theta$ is the frailty parameter. 
+The parameters involved in the models are set to $p = 0.85$, $shape = 8$, $scale = 6$, $threshold = 15$, $\theta = 0.2$ where, recall, $p$ is the cured fraction, $shape$, $scale$, $threshold$ are the three parameters of the baseline survival function on cases. The threshold parameter is only used for a three-parameter distribution. And, $\theta$ is the frailty risk parameter. Also, notice that when we employ the Lognormal distribution the parameters are called differently $\mu = 6$ and $\sigma^2 = 8$, replacing respectively $shape$ and $scale$.
 
-We also need to generate the family size into the dataset. To this end, we randomly generate family size as one plus the minimum of a fixed number ($n_F-1$) and a value generated from a Poisson random variable with parameter $\lambda_F$. 
+On the other hand, if a traditional survival function is involved, the data generation would typically be simpler. For example, if $S_r(t)=[S_0(t)]^r$ with $S_0(t)$ the traditional survival function of the Weibull($k,\lambda$) random variable, it is immediate to check that $T\mid R = r\sim$Weibull$\left( k, \lambda\sqrt[k]{r}\right)$. Usually, a reparametrization dependent on the frailty risk is sufficient to obtain the updated distribution. 
 
-Here are some comments regarding the data generating process. If one takes into account the fact that family members from different generations have different birth dates (hence in calendar time), follow-up is clearly longer for members born earlier.
-
-In the multivariate scenario, the data generating follows easily from the conditional independence assumption within each family, assuming for all family members the same frailty risk $r$. 
-
-Notice also that for traditional survival models the data generation would typically be simpler. For example, if $S_r(t)=[S_0(t)]^r$ with $S_0(t)$ the traditional survival function of the Weibull($k,\lambda$) random variable, it is immediate to check that $T\mid R = r\sim$Weibull$\left( k, \lambda\sqrt[k]{r}\right)$. Usually, a reparametrization dependent on the frailty risk is sufficient to obtain the updated distribution. 
-
-% Recall from above the general Lehmann family of distributions that defines a proportional hazards (PH) structure:
-% \begin{equation}
-% \left\{  S_{\alpha}(t) = \left[ \widetilde{S}_0(t) \right]^{\alpha}, \ \ \alpha >0  \right\},   
-% \label{formula:1.PH}
-% \end{equation}
-% where $\widetilde{S}(t)$ is the traditional baseline survival function and the term $\alpha$ modifies it to become the (also traditional) survival function $S_\alpha(t)$. It is then easy to check that, with obvious notation, $\lambda_{\alpha}(t) = \alpha \lambda_0(t)$ for any choice of positive and finite $\alpha$. When $\alpha$ is modelled through a regression structure one has the celebrated Cox proportional hazards survival model \cite{cox1972regression}.
-
-% We extend the general Lehmann family in Equation \ref{formula:1.PH} to the model defined by the more general Lehmann Cure-Rate family obtained by applying the Lehmann power transformation to a cure-rate survival function:
-% \begin{equation}
-% \left\{  S_{\alpha}(t) = \left[ p + (1-p) \widetilde{S}(t) \right]^{\alpha}, \ \ \alpha >0  \right\}.
-% \label{formula:1.LehmannCR}
-% \end{equation}
-
-% For a fixed value $\alpha$, the model in \ref{formula:1.LehmannCR} is such that the survival function $S_{\alpha}(t)$ also defines a cure-rate model. It is easy to check that $\lim_{t \rightarrow \infty} S_{\alpha}(t) = p^{\alpha}$, and that $S_{\alpha}(t)$ can be written as
-% \[
-% S_{\alpha}(t) = p^{\alpha} + \left( 1-p^{\alpha} \right) \widetilde{S}_{\alpha}(t)
-% \]
-% with proper conditional survival function for the cases equal to
-% \[
-% \widetilde{S}_{\alpha}(t) = \frac{\left[ p + (1-p) \widetilde{S}(t) \right] ^{\alpha} - p^{\alpha}}{1-p^{\alpha}}
-% \]
-% and proper conditional density function for the cases equal to
-% \begin{eqnarray}
-% \widetilde{f}_{\alpha} (t) = - \frac{d}{d t} \widetilde{S}_{\alpha}(t) = \frac{1-p}{1-p^{\alpha}} \alpha \left[ p + (1-p) \widetilde{S}(t) \right]^{\left(\alpha -1 \right)} \widetilde{f}(t).  
-% \label{formula:1.conddens2}
-% \end{eqnarray}
-
-% The term $\alpha$ may depend on a latent or observed covariate $R$, so that $\alpha = \alpha(R)$, that in our case it can be seen as the family-specific frailty risk.
-
-% Consider $S^*(t)$ the time distribution on cases. When the distribution $S^*(t)$ is not as trivial as the -- typically not useful -- exponential distribution, generation of observations require inversion of the survival function $S^*(t)$. This may not be easy to do analytically, and typically requires numerical integration from the conditional density function $f^*(t)$ of cases itself. Numerical inversion would then be needed to produce samples from the distribution.
-
-% A faster (and still precise) algorithm can be obtained by recalling the well known distribution of the main quantities we use: recall that since any cumulative distribution function $F_T(t)$ of $T$ is distributed according to a Uniform $U=F_T(t)\sim U(0,1)$, the same result holds for any survival function $S_T(t)$ of $T$, $U=S_T(T) \sim U(0,1)$. One may indeed generate values $u$ from the $U(0,1)$ distribution and invert $S_R(t)$ directly to produce the value $t=S_R^{-1}(u)$. Given the nature of the random variable $T$, however, one should produce the value $T=\infty$, the time of the controls who will never experience the event, whenever $u< p_r=p_0^{\alpha(r)}$, with $p_0$ the probability of a non-case and $r$ the frailty value previously sampled from the population (prior) frailty distribution Gamma($shape = 1/\theta$, $\theta$), and solve $u=S_R(t)=[S_0(t) ]^{\alpha(r)}$ for $t$ in the case $u>p_r=p_0^{\alpha(r)}$. Recalling the shape of $S_0(t) = p_0 + (1-p_0)S^*(t)$, with $S^*(t)$ a proper survival function, it is easy to check that
-% \[
-% t= \widetilde S^{-1} \left( \dfrac{u^{1/\alpha(r)}-p_0}{1-p_0}  \right) = \widetilde F^{-1} \left( \dfrac{1-u^{1/\alpha(r)}}{1-p_0}  \right),
-% \]
-% which can be easily computed from the quantile function, available in most software packages for a large number of distributions (one just needs to make sure that the quantile function is never invoked for $u<p_0^{\alpha(r)}$). The proper survival function $\widetilde S(t)$ can be distributed according to any proper form and we explore the five we have already said about. We easily find the software packages for the two-parameters distributions, while the package \texttt{FAdist} contains functions for the cumulative distribution function (CDF), density function, quantile function, and random generation from the three parameter distributions. 
-
-% In the end, we prioritize the three-parameters Gamma for its high goodness of fit and the flexibility we may gain with the additional parameter. This distribution on the cases, also called the Pearson type III distribution (see, e.g., \cite{bobee1991risk, singh2022generalized}) ADD JOHNSON AND KOTZ HERE IF YOU FIND THE DENSITY THERE!, allows for a continuous multiplicative gamma ($shape = 1/\theta$, $scale = \theta$) frailty $R$. And, in addition but not less importantly, the \texttt{R} package \texttt{FAdist} contains functions for the cdf, density function, quantile function, and random generation from the distribution. 
-
-
-% The Lehmann cure-rate structure allows for semiparametric estimation of models through a Cox proportional hazards model for estimating frailty and the effect of observed covariates. However, the cure-rate assumption conflicts with the necessary proportional hazard assumption in the Cox model setting, as it does not allow for infinite time-to-event. To solve this issue, an upper-bound of the observed time, $T = 10000$, is set. This value is sufficiently large to enable the cure-rate model to account for the usual end of life-time, while assuming that proper survival behavior is observed after that time, with all subjects eventually experiencing the event. 
-
-\subsection{Semiparametric models}
+\subsection{Semiparametric scenario}
 The first analysis focuses on the semiparametric models, namely, the Multivariate Shared Frailty Cox (MSFCox) model and the Cox model with family history as a fixed covariate (CFHCox) or time-varying covariate (TVFHCox). Notice that the fixed family history indicator takes a value of one if, by the end of each woman's follow-up time, she had at least one female family member who had been diagnosed with breast cancer. Conversely, the time-varying family history indicator $FH(t)$ takes a value of one at the first time when a female family member has been diagnosed with breast cancer, and also the time of the indicator change is tracked.
 
 We first compare, as a check, the true parameter values set for the data generation process to the estimated values. The inference step is performed through an EM algorithm, that can be carried out using functions from the \texttt{R} package \texttt{frailtyEM} \cite{balan2019frailtyem, balan2020tutorial}. However, this package is time and memory-consuming for large dataset. In contrast to the approach commonly found in the literature, we speed up this process by utilizing the \texttt{cox} function in the \texttt{survival} package. This allows us to efficiently obtain all the necessary quantities within a reasonable time and without excessive memory usage.
