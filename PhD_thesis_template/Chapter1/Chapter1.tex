@@ -358,7 +358,32 @@ Notice that the Cure-Rate models we develop, i.e. the Multivariate frailty Cure-
 
 The section is organized starting with the data generating process, above all for the cure-rate structure, and then progressing to the fitting of semiparametric models and then parametric models. We need to make a distinction between them because only in the parametric scenario we analyse different time-to-event distributions. All over the section we compare the model goodness of fit, and their predictive accuracy through the AUC, PPV, NPV and Harrell's Concordance index.
 
-\subsection{Data generating process}
+\subsection{Data generating process from the Lehmann Cure-Rate model}
+
+A critical aspect to consider when generating data from a cure-rate survival model \cite{mota2022new} is that one needs to employ distinct methods for generating survival times for cases and cured observations. 
+
+Recall that the model takes the Lehmann form
+\[ S(t; r) = \left[ S_0(t) \right]^r {\rm,\  with\ } S_0(t)=\left[ p_0+(1-p_0) \widetilde{S}(t) \right], \ i.e.\ \alpha(r)=r \ {\rm for}\  r >0. \]
+
+To generate survival times from this model (with a set of parameter values with varying lenght), one may proceed as follows:
+\begin{enumerate}
+\item generate a family-specific (or subject-specific if the model is univariate) frailty risk term $r$ from the Gamma$(shape = \theta, rate = \theta)$ distribution;
+\item generate a subject-specific value $u$ from the Unif$(0,1)$ distribution;
+\item {\sf if} $u \leq p_0^r$
+\begin{itemize}
+\item[] {\sf then} set $t = + \infty$ (a cured observation);
+\item[] {\sf else} solve $u = \left[ p_0 + (1-p_0) \widetilde{S}(t)  \right]^r$, which yields immediately
+\[ t = \widetilde{S}^{-1} \left( \frac{u^{1/r} - p_0}{1-p_0} \right)=\widetilde{F}^{-1} \left( \frac{1-u^{1/r}}{1-p_0} \right), \]
+ with $\widetilde{F}^{-1}( \cdot)$ the quantile function of the time-to-event distribution. Since we explore several distributions, we can easily find the two-parameter distributions in the basic \texttt{R} software, while the package \texttt{FAdist}, still from the \texttt{R} software, contains functions for the cumulative distribution function (CDF), density function, quantile function, and random sample function from the three-parameter Gamma and three-parameter Lognormal. 
+\end{itemize}
+\end{enumerate}
+Generation for the multivariate version of this model, i.e. from the shared multiplicative frailty cure-rate model, follows easily from the conditional independence assumption within each family, using for all family members the same frailty value $r$. Lastly, independent (typically, administrative) right censoring of all observations can be applied to obtain the observed data. If one takes into account the fact that family members from different generations have different birth dates (hence in calendar time), follow-up is clearly longer for members born earlier. 
+\newline \\ \newline
+{\bf Note:} as we have mentioned the true, underlying structure of this model is based on the CR Lehmann structure, the fact that one does not ever observe any survival times beyond some limited time $T^*$ (when follow-up stops) is such that semiparametric estimation of the model is also possible, for example with the \texttt{R} function \texttt{emfrail}. Indeed, beyond time $T^*$ the baseline survival distribution $S_0(t)=\left[ p_0+(1-p_0) \widetilde{S}(t) \right]$ (and therefore all the frailty-specific survival distributions $S(t; r) = \left[ S_0(t) \right]^r$ might tend to zero instead to $p_0^r$ as $t \rightarrow \infty$, while still maintaining the multiplicative frailty structure. In other words, given the necessarily finite follow-up, one may assume (perhaps not realistically) that $p_0=0$ and perform semiparametric inference. This same argument allows the estimation of models within the Lehmann CR structure semiparametrically through a traditional Cox PH model for the estimation of the effect of the frailty risk and the observed covariates.
+
+Lastly, note that for non-cure-rate models the data generation would typically be simpler. For example, if $S_r(t)=[S_0(t)]^r$ with $S_0(t)$ the survival function of the Weibull($k,\lambda$) random variable, it is immediate to check that $T\mid R = r\sim$Weibull$\left( k, \lambda\sqrt[k]{r}\right)$. Usually, a reparametrization dependent on the frailty risk is sufficient to obtain the updated distribution. 
+\newline \\ \newline
+
 Recall from above the general Lehmann family of distributions that defines a proportional hazards (PH) structure:
 \begin{equation}
 \left\{  S_{\alpha}(t) = \left[ \widetilde{S}_0(t) \right]^{\alpha}, \ \ \alpha >0  \right\},   
@@ -388,32 +413,12 @@ and proper conditional density function for the cases equal to
 
 The term $\alpha$ may depend on a latent or observed covariate $R$, so that $\alpha = \alpha(R)$, that in our case it can be seen as the family-specific frailty risk.
 
-A critical aspect to consider is our use of a cure-rate survival model \cite{mota2022new}. Recall that such a model accounts for the presence of a ``cured'' population (or ``non-cases'') which comprises individuals who will never experience the event of interest, regardless of how long they live. In contrast, the remaining population, referred to as ``cases'', has a non-zero probability of eventually experiencing breast cancer onset. Given this duality in survival, distinct methods for generating survival times are required for cases and non-cases.
 
-\subsection{Data generating process from the Lehmann Cure-Rate model with multiplicative gamma frailty}
+
+\subsection{}
 The results from the previous subsection can be easily extended to the generation of samples from the CR model with, say, three-parameter Gamma distribution $\widetilde{S}(t)$ for the cases, when the model is enlarged to allow for a continuous multiplicative Gamma$(\theta, \theta)$ frailty $R$. Recall that the three-parameter Gamma distribution$(shape, scale, threshold)$ is also known as the Pearson type III distribution (see, e.g., \cite{bobee1991risk}). We report this example to extend the data generation process to its maximum dimension of the parameter collection. 
 
-This model takes the Lehmann form
-\[ S(t; r) = \left[ S_0(t) \right]^r {\rm,\  with\ } S_0(t)=\left[ p_0+(1-p_0) \widetilde{S}(t) \right], \ i.e.\ \alpha(r)=r \ {\rm for}\  r >0. \]
-
-To generate survival times from this model (with set parameter values $\theta, p_0$, scale, shape, and threshold), one may proceed as follows:
-\begin{enumerate}
-\item generate a family-specific (or subject-specific if the model is univariate) frailty term $r$ from the Gamma$(shape = \theta, rate = \theta)$ distribution;
-\item Generate a subject-specific value $u$ from the Unif$(0,1)$ distribution;
-\item {\sf if} $u \leq p_0^r$
-\begin{itemize}
-\item[] {\sf then} set $t = + \infty$ (a non-case);
-\item[] {\sf else} solve $u = \left[ p_0 + (1-p_0) \widetilde{S}(t)  \right]^r$, which yields immediately
-\[ t = \widetilde{S}^{-1} \left( \frac{u^{1/r} - p_0}{1-p_0} \right)=\widetilde{F}^{-1} \left( \frac{1-u^{1/r}}{1-p_0} \right), \]
- with $\widetilde{F}^{-1}( \cdot)$ the quantile function of the three-parameter Gamma distribution. We easily find the two-parameters distributions in the basic \texttt{R} software, while the package \texttt{FAdist} contains functions for the cumulative distribution function (CDF), density function, quantile function, and random generation from the three-parameters distribution. 
-\end{itemize}
-\end{enumerate}
-Generation for the multivariate version of this model, i.e. from the shared multiplicative frailty cure-rate model, follows easily from the conditional independence assumption within each family, using for all family members the same frailty value $r$. Lastly, independent (typically, administrative) right censoring of all observations can be applied to obtain the observed data. If one takes into account the fact that family members from different generations have different birth dates (hence in calendar time), follow-up is clearly longer for members born earlier. 
-\newline \\ \newline
-{\bf Note:} as we have mentioned the true, underlying structure of this model is based on the CR Lehmann structure, the fact that one does not ever observe any survival times beyond some limited time $T^*$ (when follow-up stops) is such that semiparametric estimation of the model is also possible, for example with the \texttt{R} function \texttt{emfrail}. Indeed, beyond time $T^*$ the baseline survival distribution $S_0(t)=\left[ p_0+(1-p_0) \widetilde{S}(t) \right]$ (and therefore all the frailty-specific survival distributions $S(t; r) = \left[ S_0(t) \right]^r$ might tend to zero instead to $p_0^r$ as $t \rightarrow \infty$, while still maintaining the multiplicative frailty structure. In other words, given the necessarily finite follow-up, one may assume (perhaps not realistically) that $p_0=0$ and perform semiparametric inference. This same argument allows the estimation of models within the Lehmann CR structure semiparametrically through a traditional Cox PH model for the estimation of the effect of the frailty risk and the observed covariates.
-
-Lastly, note that for non-cure-rate models the data generation would typically be simpler. For example, if $S_r(t)=[S_0(t)]^r$ with $S_0(t)$ the survival function of the Weibull($k,\lambda$) random variable, it is immediate to check that $T\mid R = r\sim$Weibull$\left( k, \lambda\sqrt[k]{r}\right)$. Usually, a reparametrization dependent on the frailty risk is sufficient to obtain the updated distribution. 
-\newline \\ \newline
+This 
 % Consider $S^*(t)$ the time distribution on cases. When the distribution $S^*(t)$ is not as trivial as the -- typically not useful -- exponential distribution, generation of observations require inversion of the survival function $S^*(t)$. This may not be easy to do analytically, and typically requires numerical integration from the conditional density function $f^*(t)$ of cases itself. Numerical inversion would then be needed to produce samples from the distribution.
 
 % A faster (and still precise) algorithm can be obtained by recalling the well known distribution of the main quantities we use: recall that since any cumulative distribution function $F_T(t)$ of $T$ is distributed according to a Uniform $U=F_T(t)\sim U(0,1)$, the same result holds for any survival function $S_T(t)$ of $T$, $U=S_T(T) \sim U(0,1)$. One may indeed generate values $u$ from the $U(0,1)$ distribution and invert $S_R(t)$ directly to produce the value $t=S_R^{-1}(u)$. Given the nature of the random variable $T$, however, one should produce the value $T=\infty$, the time of the controls who will never experience the event, whenever $u< p_r=p_0^{\alpha(r)}$, with $p_0$ the probability of a non-case and $r$ the frailty value previously sampled from the population (prior) frailty distribution Gamma($shape = 1/\theta$, $\theta$), and solve $u=S_R(t)=[S_0(t) ]^{\alpha(r)}$ for $t$ in the case $u>p_r=p_0^{\alpha(r)}$. Recalling the shape of $S_0(t) = p_0 + (1-p_0)S^*(t)$, with $S^*(t)$ a proper survival function, it is easy to check that
