@@ -508,24 +508,24 @@ Also, another limitation of the posterior frailty risk mean is the variability i
 \end{figure}
 % Code from postPredBackup3.R
 
-Given the structural limitations of the posterior mean frailty that we report so far, we suggest an alternative approach. Specifically, we compute the family-specific posterior probability of belonging to the group of the highest-risk families as anticipated in Section \ref{sec4}. This is achieved by calculating the probability of the posterior frailty (mean, median, mode) exceeding the $(1-\alpha)$ percentile (say 95\% below) of the frailty population, or say prior, Gamma distribution. A plot of the the true prior versus the estimated posterior probability of belonging to the high-risk families is reported in Figure \ref{fig:1.3}, assessing that the relation between the true and the estimated probability of belonging to the highest-risk family is coherent, i.e. the posterior probability increases when the prior probability increases.
-
-Following some calculation, we can use a classifier to identify the membership in the extreme cluster of families with the same threshold, where the indicator is equal to one whenever the family-specific probability is at least equal to 15\%, that is the $95$th quantile in the posterior distribution of the population probability. Also, notice from Figure \ref{fig:1.3} that we can distinguish two clouds of points, where the highest recall the highest-risk families. 
-
-Therefore, after all the analysis run, we adopt the mean as the best posterior frailty risk summary and thus we perform final computations only with the Multivariate frailty Cox model.
-
-The accuracy of the binary classification can be analyzed using the classical area under the ROC curve (AUC), the positive predictive value (PPV), and the negative predictive value (NPV), which are all measures associated with the binary diagnostic testing. The AUC, PPV, and NPV are presented in Table \ref{tab:1.3} and indicate that all measures improve as the family size increases, as expected. This can be appreciated also from the ROC curve in Figure \ref{fig:1.4}, where the case with the higher family size with a maximum of twenty correctly classifies the 97\% of families in the right group, the 15\% above the case with maximum five family members. However, all the results are promising as shown in Table \ref{tab:1.3}, since the AUC is in the range 0.7-0.85: this indicates that around the 70\%-85\% of families are correctly classified in the right category low-risk or high-risk also with small family sizes. Now, the negative predictive value (NPV) is always significantly higher than the positive predictive value, meaning that to the higher value of the AUC the NPV contributes more. 
-
-Prediction accuracy is determined through an in-sample validation, without distinguishing between a training and a test set. 
-
-Figure \ref{fig:1.3} displays a scatter-plot that depicts the relationship between the true frailty percentiles into the population (prior) distribution and the posterior probability of belonging to the highest-risk families, with the threshold set at 95$\%$. The threshold for splitting families into two groups can be easily changed and run again the split, but we chose 95$\%$ because we wanted to identify the highest 5$\%$ risk group. From this plot we can appreciate how increasing the family size in the sample the highest-risk families can be more identified by noting a more distinguished point cloud, and a more inclined smoothed line indicating the tendency of the entire cloud. It is interesting to notice that we can identify two risk groups. 
-\begin{figure}[ht]
+To make the posterior risk mean more meaningful to the end-user, we compute the probability that it exceeds the $(1-\alpha)$ percentile (say 95\%) of the prior frailty risk Gamma distribution. In Figure \ref{fig:1.3} the plot of the the true risk percentile versus the predicted probability of belonging to the highest-risk families is reported. This allows us to assess that the relation between the true risk percentile and the predicted probability of belonging to the highest-risk family is coherent, i.e. the (posterior) predicted probability increases when the (prior) true probability increases. Notice that we can distinguish two clouds of points which can be seen as representing the splitting of families into two risk groups. Indeed, a binary splitting can be run fixing the threshold to the $95$th quantile in the predicted distribution of the probability of belonging to the highest-risk families, estimated at 0.15. 
+\begin{figure}
     \centering
     \includegraphics[width=\linewidth]{PhD_thesis_template/plots/Rplot104.pdf}
     \includegraphics[width=\linewidth]{PhD_thesis_template/plots/Rplot103.pdf}
-    \caption{True frailty percentiles into the population (prior) distribution and the posterior probability of belonging to the highest-risk families, with a 95$\%$ threshold.}
+    \caption{True frailty risk percentiles versus the predicted probability of belonging to the highest-risk families, with a smoothed regression line (in blue).}
     \label{fig:1.3}
 \end{figure}
+% code?????
+
+Therefore, after all of the analyses, we adopt the mean as the best posterior frailty risk summary and thus we perform final computations only with the Multivariate frailty Cox model.
+
+Prediction accuracy for the posterior mean and the family history is reported in Table \ref{tab:1.3} through the Harrell's Concordance index, respectively for the Multivariate frailty Cox model and the two Univariate Cox models, distinguishing according to the nature of the family history. Also, the accuracy of the binary classification can be analyzed by reporting the AUC, the positive predicted value PPV, and the negative predictive value (NPV). As a result all measures improve as the family size increases, as expected. This can be appreciated also from the ROC curve in Figure \ref{fig:1.4}, where the scenario with maximum family size equal to twenty correctly classifies the 97\% of families in the right group, the 15\% more than the scenario with maximum five family members. However, all the results are promising since the AUC is in the range 0.7-0.85: this indicates that around the 70\%-85\% of families are correctly classified in the right group also with small family sizes. Now, the negative predictive value (NPV) is always significantly higher than the positive predictive value, meaning that to the higher value of the AUC the NPV contributes more. 
+
+
+
+Figure \ref{fig:1.3} displays a scatter-plot that depicts the relationship between the true frailty percentiles into the population (prior) distribution and the posterior probability of belonging to the highest-risk families, with the threshold set at 95$\%$. The threshold for splitting families into two groups can be easily changed and run again the split, but we chose 95$\%$ because we wanted to identify the highest 5$\%$ risk group. From this plot we can appreciate how increasing the family size in the sample the highest-risk families can be more identified by noting a more distinguished point cloud, and a more inclined smoothed line indicating the tendency of the entire cloud. It is interesting to notice that we can identify two risk groups. 
+
 \newpage
 \begin{center}
 \begin{table*}[!h]%
@@ -588,6 +588,7 @@ It should be noted that in the case of the Swedish multi-generational breast can
 % \end{minipage}
 \end{figure}
 % Code from postPredBackup3.R  
+
 % \begin{figure}
 % % \begin{minipage}{0.5\linewidth}
 %     \centering
