@@ -393,18 +393,18 @@ In Table \ref{tab:1.1} we compare the models in terms of recovering the true par
 Parameter estimation is performed through an EM algorithm, that can be carried out using functions from the \texttt{R} package \texttt{frailtyEM} \cite{balan2019frailtyem, balan2020tutorial}. However, the functions of the \texttt{frailtyEM} package are time and memory-consuming for large datasets. In contrast to the approach commonly found in the literature, we speed up this process by utilizing the \texttt{cox} function in the \texttt{survival} package. This allows us to efficiently obtain all the necessary quantities within a reasonable time and without excessive memory usage. 
 \begin{center}
 \begin{table*}[!h]%
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llll@{}}
 \toprule
-    &$\theta$ &mean($\widehat{\theta}$) (se) &mean($\widehat{\beta}_{FH}$) (se) &mean(C) (se) \\ \cmidrule{2-5} 
-    Multivariate frailty Cox &0.2 &0.199 (0.004) &- &0.966 (<0.001) \\
-    Univariate $FH$ Cox &&- &2.835 (0.081) &0.542 (0.002) \\ 
-    Univariate $FH(t)$ Cox &&- &5.846 (0.166) &0.556 (0.002) \\ \midrule
-    Multivariate frailty Cox &0.5 &0.499 (0.012) &- &0.949 (0.001) \\ 
-    Univariate $FH$ Cox &&- &1.455 (0.040) &0.514 (0.001) \\
-    Univariate $FH(t)$ Cox &&- &2.956 (0.083) &0.533 (0.001)  \\ \midrule
-    Multivariate frailty Cox &0.8 &0.802 (0.029) &- &0.943 (0.001) \\ 
-    Univariate $FH$ Cox &&- &1.102 (0.033) &0.503 (0.001) \\
-    Univariate $FH(t)$ Cox &&- &2.227 (0.066) &0.523 (0.001) \\ \bottomrule
+    &$\theta$ &mean($\widehat{\theta}$) (se) &mean($\widehat{\beta}_{FH}$) (se) \\ \cmidrule{2-4} 
+    Multivariate frailty Cox &0.2 &0.199 (0.004) &- \\
+    Univariate $FH$ Cox &&- &2.835 (0.081) \\ 
+    Univariate $FH(t)$ Cox &&- &5.846 (0.166) \\ \midrule
+    Multivariate frailty Cox &0.5 &0.499 (0.012) &- \\ 
+    Univariate $FH$ Cox &&- &1.455 (0.040) \\
+    Univariate $FH(t)$ Cox &&- &2.956 (0.083) \\ \midrule
+    Multivariate frailty Cox &0.8 &0.802 (0.029) &- \\ 
+    Univariate $FH$ Cox &&- &1.102 (0.033) \\
+    Univariate $FH(t)$ Cox &&- &2.227 (0.066) \\ \bottomrule
     \end{tabular*}
     \caption{Mean and standard error of the estimated parameters and Harrell's Concordance index (C) in the last column. The first column $\theta$ stands for the true value set at the data generating step and varying among (0.2, 0.5, 0.8).}
     \label{tab:1.1}
@@ -413,8 +413,6 @@ Parameter estimation is performed through an EM algorithm, that can be carried o
 % codice simulation-cox-contfrailty-multiFhCostantAndTimevar-MVV.R LOCAL COMPUTER
 
 Results from Table \ref{tab:1.1} show that the Multivariate frailty Cox model can accurately estimate the value of $\theta$ from the given data, while the Univariate models only estimate the parameter $\beta_F$ and nothing can be said about parameter recovery. Even though the parameter $\beta_F$ has little meaning because is not part of the data generating process, it is interesting to notice is always estimated positive. This means that the family history is a valid and positive indicator for breast cancer development.
-
-Also, in Table \ref{tab:1.1}, the Harrell's Concordance index is reported. Notice that the value of the Harrell's Concordance index depends on the discrete nature of the predicted risk: for example, if a model predicts only two levels of risk, then the numerator of the index will tend to be small, as all tied pairs $(i,j)$ for which $\widehat r_i = \widehat r_j$ are excluded. This may happen with the univariate models which include $FH$ and $FH(t)$. Results show that the Multivariate frailty Cox model is, not surprisingly, the best among the models, as it is used to generate the data. Given its benchmark Concordance index value of about 0.95, the Univariate models have a poor Concordance performance around only the 50\% of pairs $(i,j)$ to be concordant in terms of time-to-event and risk values. In Table \ref{tab:1.1} the best result by true value of $\theta$ is in bold, while the absolute best among all the scenario is highlighted). 
 
 % \begin{table}[ht] 
 %     \centering
@@ -518,103 +516,56 @@ To make the posterior risk mean more meaningful to the end-user, we compute the 
 \end{figure}
 % code?????
 
-Therefore, after all of the analyses, we adopt the mean as the best posterior frailty risk summary and thus we perform final computations only with the Multivariate frailty Cox model.
+Therefore, after all of the analyses, we adopt the mean as the best posterior frailty risk summary for Multivariate frailty Cox model.
 
-Prediction accuracy for the posterior mean and the family history is reported in Table \ref{tab:1.3} through the Harrell's Concordance index, respectively for the Multivariate frailty Cox model and the two Univariate Cox models, distinguishing according to the nature of the family history. Also, the accuracy of the binary classification can be analyzed by reporting the AUC, the positive predicted value PPV, and the negative predictive value (NPV). As a result all measures improve as the family size increases, as expected. This can be appreciated also from the ROC curve in Figure \ref{fig:1.4}, where the scenario with maximum family size equal to twenty correctly classifies the 97\% of families in the right group, the 15\% more than the scenario with maximum five family members. However, all the results are promising since the AUC is in the range 0.7-0.85: this indicates that around the 70\%-85\% of families are correctly classified in the right group also with small family sizes. Now, the negative predictive value (NPV) is always significantly higher than the positive predictive value, meaning that to the higher value of the AUC the NPV contributes more. 
+Prediction accuracy for the posterior mean and the family history, respectively for the Multivariate frailty Cox model and the two Univariate Cox models, is reported in Table \ref{tab:1.3} through the Harrell's Concordance index. Notice that the value of the Harrell's Concordance index depends on the discrete nature of the predicted risk: for example, if a model predicts only two levels of risk, then the numerator of the index will tend to be small, as all tied pairs $(i,j)$ for which $\widehat r_i = \widehat r_j$ are excluded. This may happen with the two Univariate Cox models which include $FH$ and $FH(t)$. Results show that the Multivariate frailty Cox model is, not surprisingly, the best in prediction performances, as it is used to generate the data. Because the Concordance value  from the Multivariate frailty Cox model ranges in between 0.83 and 0.95, it outperforms the Univariate models which are able to coherently predict the risk only for 50 to 62\% of pairs $(i,j)$. 
 
+Also, the accuracy of the binary classification can be analyzed by reporting the AUC, the positive predicted value PPV, and the negative predictive value NPV. As a result, the AUC increases when the family size is larger, as expected. This can be appreciated also from the ROC curve in Figure \ref{fig:1.4}, where the scenario with maximum family size equal to twenty correctly classifies the 97\% of families in the right group, the 14\% in average more than the scenario with maximum five family members.
 
-
-Figure \ref{fig:1.3} displays a scatter-plot that depicts the relationship between the true frailty percentiles into the population (prior) distribution and the posterior probability of belonging to the highest-risk families, with the threshold set at 95$\%$. The threshold for splitting families into two groups can be easily changed and run again the split, but we chose 95$\%$ because we wanted to identify the highest 5$\%$ risk group. From this plot we can appreciate how increasing the family size in the sample the highest-risk families can be more identified by noting a more distinguished point cloud, and a more inclined smoothed line indicating the tendency of the entire cloud. It is interesting to notice that we can identify two risk groups. 
-
-\newpage
+In conclusion, the Multivariate Shared Frailty Cox model appears to be an effective approach to the study of family history effects and risk prediction. Once the posterior frailty distribution is obtained for each family, we recommend to report the posterior frailty mean as well as the posterior probability and binary indicator of belonging to the highest-risk families based on a threshold from the population (prior) distribution (for example the top 5\% as above).
 \begin{center}
 \begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
 \toprule
     &\multicolumn{4}{c}{($n_F, \lambda_F$)} \\ \cmidrule{2-5}
-    &(2, 0.8) &(5, 0.8) &(10, 5) &(20, 10) \\ \midrule % &(50, 10) \\ 
-    Multivariate \\
-    AUC &0.80 (0.0001) &0.83 (0.0001) &0.94 ($<$0.0001) &\hl{\textbf{0.97 ($<$0.001)}} \\ % &0.97($<$0.001) \\ 
-    PPV &0.39 (0.0002) &0.41 (0.0002) &0.56 (0.0002) &\hl{\textbf{0.63 ($<$0.001)}} \\ %&0.63($<$0.001)  \\
-    NPV &0.97 ($<$0.0001) &0.97 ($<$0.0001) &\textbf{0.98 ($<$0.0001)} &\textbf{0.98 ($<$0.001)} \\ % &0.98($<$0.001) \\ 
-    Concordance \\
+    &(2, 0.8) &(5, 0.8) &(10, 5) &(20, 10) \\ \midrule
+    Multivariate frailty Cox \\
+    AUC & 0.73 (0.0001) &0.83 (0.0001) &0.88 (0.0001) &0.97 ($<$0.0001) \\
+    PPV &0.35 (0.0001) &0.37 (0.0001) &0.52 (0.0001) &0.61 (0.0001) \\ 
+    NPV &0.93 ($<$0.0001) &0.97 ($<$0.0001) &0.95 ($<$0.0001) &0.96 ($<$0.0001) \\
+    Concordance &0.96 ($<$0.0001) & 0.94 ($<$0.0001) & 0.86 ($<$0.0001) & 0.83 ($<$0.0001) \\
     \midrule
-    Univariate $FH$ \\ 
-    AUC  &0.53 (0.0001) &0.54 (0.0001) &0.66 (0.0001) &\textbf{0.70 ($<$0.001)} \\ % &0.70($<$0.001) \\ 
-    PPV &\textbf{0.32 (0.0004)} &0.29 (0.0003) &0.25 (0.0001) &0.21 ($<$0.001) \\ % &0.21($<$0.001) \\
-    NPV &\hl{\textbf{0.99 ($<$0.0001)}} &\hl{\textbf{0.99 ($<$0.0001)}} &0.94 ($<$0.0001) &0.90 ($<$0.001) \\ % &0.90($<$0.001) \\ 
-    Concordance \\ 
+    Univariate $FH$ Cox \\ 
+    AUC  &0.56 (0.0001) &0.57 (0.0001) &0.70 (0.0001) &0.69 (0.0001) \\ 
+    PPV &0.28 (0.0002) &0.26 (0.0001) &0.21 ($<$0.0001) &0.17 ($<$0.0001) \\ 
+    NPV &0.95 ($<$0.0001) &0.93 ($<$0.0001) &0.70 ($<$0.0001) &0.54 (0.0001) \\
+    Concordance &0.50 ($<$0.0001) & 0.50 ($<$0.0001) &0.51 (0.0001) & 0.52 (0.0001) \\ 
     \midrule
-    Univariate $FH(t)$ \\ 
-    AUC &0.55 (0.0004) &0.56 (0.0004) &0.59 (0.0003) &0.57 (0.0002) \\ 
-    PPV &0.27 (0.0013) &0.24 (0.0012) &0.16 (<0.0001) &0.14 (0.0001) \\ 
-    NPV &0.91 (0.0004) &0.88 (0.0005) &0.52 (0.0006) &0.36 (0.0005) \\ 
-    Concordance \\ 
+    Univariate $FH(t)$ Cox \\ 
+    AUC &0.55 ($<$0.0001) &0.56 ($<$0.0001) &0.59 ($<$0.0001) &0.57 ($<$0.0001) \\ 
+    PPV &0.26 (0.0001) &0.24 (0.0001) &0.16 ($<$0.0001) &0.14 ($<$0.0001) \\ 
+    NPV &0.91 ($<$0.0001) &0.88 ($<$0.0001) &0.52 (0.0001) &0.36 (0.0001) \\ 
+    Concordance & 0.52 ($<$0.0001) & 0.52 ($<$0.0001) & 0.59 (0.0001) & 0.62 (0.0001) \\ 
     \bottomrule
-    % \multicolumn{6}{l}{1000000 families} \\ \hline
-    % AUC &0.7027 &0.7112 &0.7133 &\textbf{0.8257} &0.8233  \\
-    % Positive Predictive Value &0.348 &0.3485 &0.3513 &\textbf{0.6126} &0.6120 \\
-    % Negative Predictive Value &0.9704 &0.9713 &0.9717 &\textbf{0.9776} &\textbf{0.9776} \\ \hline
     \end{tabular*}
-    \caption{AUC, PPV and NPV corresponding to the ROC curve on the binary frailty risk with threshold (1 - $\alpha) = 0.95$. Family size is varying with the values ($n_f, \lambda_F$), on 100 simulations on 100,000 families.}
+    \caption{AUC, PPV, and NPV corresponding to the ROC curve on the binary frailty risk with threshold (1 - $\alpha) = 0.95$, and Harrell's Concordance index.}
     \label{tab:1.3}
 \end{table*}
 \end{center}
 % Complete code from postPredBackup3.R or
-% AUC for (5,0.8) - but anyway every change of parameters can be done - is in the code \texttt{simulation-cox-contfrailty-multFhConstAndTimevar-postprediction-MVV}. 
-In conclusion, the Multivariate Shared Frailty Cox model appears to be an effective approach to the study of family history effects and risk prediction. Once the posterior frailty distribution is obtained for each family, we recommend to report the posterior frailty mean as well as the posterior probability and binary indicator of belonging to the highest-risk families based on a threshold from the population (prior) distribution (for example the top 5\% as above).
-
-It should be noted that in the case of the Swedish multi-generational breast cancer dataset, or in general the available data, the binary indicator of belonging to the highest-risk families is not defined only in the case of a population threshold. Indeed, one may also classify a family in relative terms of the highest-risk group of families by a comparison to the empirical distribution of the family-specific posterior probabilities of belonging to that top risks group, across all families in the dataset.
+% or simulation-cox-contfrailty-multFhConstAndTimevar-postprediction-MVV. 
 \begin{figure}
-% \begin{minipage}{0.5\linewidth}
     \centering
-    % \includegraphics[width=\linewidth]{plots/Rplot77.pdf}
     \includegraphics[width=\linewidth]{plots/Rplot75.pdf}
-    % \includegraphics[width=0.8\linewidth]{plots/Rplot73.pdf}
     \includegraphics[width=\linewidth]{plots/Rplot71.pdf}
-    % \includegraphics[width=\linewidth]{plots/Rplot69.pdf}
-    \caption{ROC curve of the predicted indicator of belonging to the highest-risk families versus the true membership to the group of the highest-risk families (top 5\%). Family size is varying with smaller and higher values, with the maximum members per family up to 5 or 20, respectively.}
+    \caption{ROC curve of the predicted indicator of belonging to the highest-risk families versus the true membership to the highest-risk families (top 5\%).}
     \label{fig:1.4}
-% \end{minipage}%
-% \begin{minipage}{0.5\linewidth}
-%     \centering
-%     \includegraphics[width=0.8\linewidth]{plots/Rplot86.pdf}
-%     \includegraphics[width=0.8\linewidth]{plots/Rplot91.pdf}
-%     \includegraphics[width=0.8\linewidth]{}
-%     \includegraphics[width=0.8\linewidth]{}
-%     \includegraphics[width=0.8\linewidth]{}
-%     \caption{ROC curve on one million families of the predicted indicator of belonging to the highest-risk families versus the true membership to the highest-risk families. Family size is varying among the couples of maximum and expected value of the minimum: (2, 0.8), (5, 0.8), (10, 5), (20, 10), (50, 10).}
-%     \label{fig:smoothregline}
-% \end{minipage}
 \end{figure}
-% Code from postPredBackup3.R  
+% Code from postPredBackup3.R 
 
-% \begin{figure}
-% % \begin{minipage}{0.5\linewidth}
-%     \centering
-%     \includegraphics[width=\linewidth]{plots/Rplot78.pdf}
-%     % \includegraphics[width=0.8\linewidth]{plots/Rplot76.pdf}
-%     % \includegraphics[width=0.8\linewidth]{plots/Rplot74.pdf}
-%     % \includegraphics[width=0.8\linewidth]{plots/Rplot72.pdf}
-%     \includegraphics[width=\linewidth]{plots/Rplot70.pdf}
-%     \caption{Scatter-plot on 10000 families of the true frailty percentile into the population distribution versus the posterior probability of belonging to the highest-risk families (top 5\%). Family size is varying with the values $(n_f,\lambda_F)$: (2, 0.8), (5, 0.8), (10, 5), (20, 10), (50, 10).}
-%     \label{fig:smoothregline}
-% % \end{minipage}%
-% % \begin{minipage}{0.5\linewidth}
-% %     \centering
-% %     \includegraphics[width=0.8\linewidth]{plots/Rplot89.jpg}
-% %     \includegraphics[width=0.8\linewidth]{plots/Rplot92.jpg}
-% %     \includegraphics[width=0.8\linewidth]{}
-% %     \includegraphics[width=0.8\linewidth]{}
-% %     \includegraphics[width=0.8\linewidth]{}
-% %     \caption{Scatter-plot on one million families of the true frailty percentile into the population distribution versus the posterior probability of belonging to the highest-risk families, fixed the percentile at $95\%$. Family size is varying among the couples of maximum and expected value of the minimum: (2, 0.8), (5, 0.8), (10, 5), (20, 10), (50, 10).}
-% %     \label{fig:smoothregline}
-% % \end{minipage}
-% \end{figure}
-% probably the code is in postPredBackup3.R SWEDISH COMPUTER but I am not that sure about this. 
-\clearpage
+On the other side, the Multivariate frailty Cox model is poor in estimating some meaningful measures for explaining the phenomenon of breast cancer. That is why we develop the three aforementioned models into the parametric scenario. This allows us to employee the cure-rate survival function which helps us identifying the cured fraction into the population and estimating the survival curve of breast cancer cases. Let us take a closer look at the development of parametric models in next section. 
 
-\subsection{Parametric models}
+\subsection{Parametric scenario}
 Now we explore the Multivariate Shared Frailty parametric model, the Univariate Frailty parametric, and the Univariate model with the constant family history covariate in terms of parameter recovery and accuracy in risk prediction. As we can expect, the Univariate model with the family history covariate can not recover well the parameters because the family history coefficient is not part of the data generating process. Let us start with the analysis. 
 
 Parameter estimation in the parametric case allows for a more detailed description compared to the case of semiparametric estimation, due to the inclusion of a parametric baseline survival function and of the fraction of ``non-cases'' assumed by the cure-rate structure incorporated in the models. We conduct this simulation study on $n=100,000$ families for 100 iterations to obtain average point estimates and their standard errors across repetitions. As above, to generate the family size we use the parameter to control the maximum of the family size $n_F$ and the frailty variance parameter of the Poisson distribution involved $\lambda_F$. For the parameter recovery we set the parameter at $(n_F, \lambda_F) = (5,0.8)$, and the other parameter values are fixed with values reported in the caption of the tables themselves, according to the baseline survival distributions. Indeed, we consider five different baseline survival functions, namely Weibull, Gamma, Lognormal, three-parameters Gamma, and three-parameters Lognormal. In Tables \ref{tab:1.4}, \ref{tab:1.5}, \ref{tab:1.6}, \ref{tab:1.7}, \ref{tab:1.8} we report the true value of the frailty parameters, varying among $(0.2,0.5,0.8)$ in the first column, followed by the baseline survival function parameters recovery, and the frailty parameter recovery in the last column. In bold there are the cases of a good recovery of the true parameter value. 
