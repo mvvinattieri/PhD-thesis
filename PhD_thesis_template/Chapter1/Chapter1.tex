@@ -43,50 +43,34 @@ We call our model the Multivariate frailty Cure-Rate model where ``multivariate'
 
 A comparative analysis is conducted to evaluate the benefits of using the Multivariate frailty Cure-Rate model. We start from a model with includes a strong risk factor associated to breast cancer development: the first-degree family history indicator. This takes value one if at least one family member has experienced the breast cancer onset, or zero if none have, and it can be measured either at the end of the follow-up period or as time-varying during the follow-up. This model motivates the use of univariate models, such as also the Univariate frailty Cure-Rate model, that is the univariate counterpart of the Multivariate frailty Cure-Rate model. Lastly, also the known and widespread Cox model, in several of its forms, is included in the comparative analysis to assess that the predictive power of the Multivariate frailty Cure-Rate model reaches the same accuracy of the Multivariate frailty Cox model. Furthermore the Multivariate frailty Cure-Rate model, at contrary of the Multivariate frailty Cox model, reaches higher precision in inference and explanation of the phenomenon by estimating the cured fraction and the distribution of breast cancer cases. 
 
-Section \ref{sec2} provides an overview of the background of the setting. In Section \ref{sec3} we describe the specific models employed in the analysis, and in Section \ref{sec4} we focus on the procedure of predicting the posterior risk. The simulation results are presented in Section \ref{sec5}, while the findings from the real case dataset, the Multi-Generational Swedish Breast Cancer registry, are discussed in Section \ref{sec:1.6}. 
+Section \ref{sec2} provides an overview of the background of the setting, and the deep description of the specific models employed in the analysis, and in Section \ref{sec4} we focus on the procedure of predicting the posterior risk. The simulation results are presented in Section \ref{sec5}, while the findings from the real case dataset, the Multi-Generational Swedish Breast Cancer registry, are discussed in Section \ref{sec:1.6}. 
 
-\section{Background}\label{sec2}
-We model the age (in years) $T$ of breast cancer onset, where the conditional hazard function is denoted by $\lambda(t\mid r)$, where $R = r$ indicates the frailty risk.  
+\section{Model specification}\label{sec2}
+We model the age (in years) $T$ of breast cancer onset, where the conditional hazard function is denoted by $\lambda_r(t) = \lambda(t\mid r)$, where $R = r$ indicates the frailty risk.  
 
-The Univariate frailty model \cite{duchateau2008frailty} allows the hazard function to depend on the frailty quantity $R$ to capture the unobserved heterogeneity among subjects. The conditional hazard function at time $t$ is given by \[\lambda(t\mid r) = \alpha(r)\lambda_0(t),\] where $\alpha(r)$ can be any continuous function of the risk, and $\lambda_0(t)$ is the baseline hazard function corresponding to the value of the risk $r$ such that $\alpha(r)=1$. 
+The Univariate frailty model \cite{duchateau2008frailty} allows the hazard function to depend on the frailty quantity $R$ to capture the unobserved heterogeneity among subjects. The conditional hazard function at time $t$ is given by \[\lambda_r(t) = \alpha(r)\lambda_0(t),\] where $\alpha(r)$ can be any continuous function of the risk, and $\lambda_0(t)$ is the baseline hazard function corresponding to the value of the risk $r$ such that $\alpha(r)=1$. 
 
-In presence of a vector of subject-specific covariates $x_j$ for the subject $j$, the frailty risk explains the unobserved heterogeneity that the covariates are not able to capture. The conditional hazard function at time $t$ for subject $j$, with frailty risk $r_j$, results \[\lambda_j(t\mid r_j) =\alpha(r_j)\lambda_0(t;x_j).\] 
+In presence of a vector of subject-specific covariates $x$ for a subject, the frailty risk explains the unobserved heterogeneity that the covariates are not able to capture. The conditional (subject-specific) hazard function at time $t$ for the subject, with frailty risk $r$, results \[\label{sub-spec_hazard} \lambda_r(t) =\alpha(r)\lambda_0(t;x).\] 
 
-In the Multivariate frailty model, the hazard function includes a frailty risk that is family-specific because subjects within the same family share the same frailty risk. The conditional hazard function at time $t$ for subject $j$ of family $i$ id given by \[ \lambda_j(t\mid r_i) = \alpha(r_i)\lambda_0(t;x_{ij}), \] with $x_{ij}$ the subject-specific vector of covariates and $r_i$ the risk of family $i$. 
-
-One can choose several form of the function  $\alpha(r_i)$, as a polynomial form, an exponential form, or other (non-negative) forms. One may implement a hazard function for subject $j$ of family $i$ that is linearly dependent on the frailty, i.e.
+One can choose several form of the function  $\alpha(r)$, as a polynomial form, an exponential form, or other (non-negative) forms. One may implement a hazard function that is linearly dependent on the frailty, i.e.
 \[
-\lambda_j(t\mid r_i) = r_i\lambda_0(t; x_{ij})
+\lambda_r(t) = r\lambda_0(t; x)
 \] \cite{duchateau2008frailty, ripatti2000estimation}. 
-Notice that this readily coincides with the model specification, known also as Lehmann structure, given by \[\Lambda_j(t\mid r_i) = r_i\Lambda_0(t; x_{ij}), \qquad S_j(t\mid r_i) =  [S_0(t;x_{ij})]^{r_i}, \] where $\Lambda$ indicates the cumulative hazard function, and $S$ indicates the survival function. Notice that for proving the model identifiability, $\mathbb{E}(R) = 1$ is usually assumed and allows by the frailty risk distribution. 
+Notice that this readily coincides with the model specification, known also as Lehmann structure, given by \[\Lambda_r(t) = r\Lambda_0(t; x), \qquad S_r(t) =  [S_0(t;x)]^r, \] where $\Lambda$ indicates the cumulative hazard function, and $S$ indicates the survival function. Notice that for proving the model identifiability, $\mathbb{E}(R) = 1$ is usually assumed and allows by the frailty risk distribution. 
 
-In the Multivariate frailty model, the family-specific joint survival function is computed under the conditional independence assumption \cite{rodriguez2010multivariate}. Consider the case with only two women belonging to the same family. Let $T_1 = t_1$ and $T_2 = t_2$ be the times-to-event of the two women, with survival function $S_1$ and $S_2$ from family $i$, with $r_i$ be their  family-specific frailty risk. By the conditional independence assumption one has that the joint survival function factorizes conditional to the frailty risk: \[
-S_{12}(t_1,t_2\mid r_i) \overset{T_1\perp T_2\mid R}{=} S_1(t_1\mid r_i)S_2(t_2\mid r_i).
-\] 
+In the Multivariate frailty model, the subject-specific hazard function has the same equation as in \ref{sub-spec_hazard}, but the frailty risk $r$ is considered shared among members of the same family. What changes is that one need to compute also the the family-specific joint survival function. This last is obtained under the conditional independence assumption \cite{rodriguez2010multivariate}. Consider the case with only two women belonging to the same family. Let $T_1 = t_1$ and $T_2 = t_2$ be the times-to-event of the two women, with survival function $S_1$ and $S_2$ from family $i$, with $r_i$ be their  family-specific frailty risk. By the conditional independence assumption one has that the joint survival function factorizes conditional to the frailty risk: \[
+S_r(t_1,t_2) \overset{T_1\perp T_2\mid R}{=} S_1(t_1\mid r)S_2(t_2\mid r),
+\] which, in the case of equality between the survivals, reduces to \[
+S_r(t_1,t_2) \overset{T_1\perp T_2\mid R}{=} S_r(t_1)S_r(t_2) = [S_0(t_1)]^r[S_0(t_2)]^r = [S_0(t_1)S_0(t_2)]^r = [S_0(t_1,t_2)]^r.
+\]
 
-And the unconditional joint survival function is equal to \begin{align*}
+Moreover, one case compute the unconditional joint survival function which is equal to \begin{align*}
     S_{12}(t_1,t_2) = \int_{0}^{\infty} S_{12}(t_1,t_2\mid r)g(r)dr &= \int_{0}^{\infty} e^{-r(\Lambda_{01}(t_1)\Lambda_{02}(t_2))} g(r)dr \\
     &=\mathcal{L}_g(\Lambda_{01}(t_1)\Lambda_{02}(t_2))
 \end{align*} where $\mathcal{L}_g(r)$ is the Laplace transform of the density function $g(r)$ of $R$ evaluated at $\Lambda_{01}(t_1)\Lambda_{02}(t_2)$. To obtain the explicit form of $S_{12}(t_1,t_2)$ one should specify $g(r)$, that is typically a Gamma or Lognormal distribution. This framework can be easily extended to more than two subjects \cite{hougaard2012analysis}.
 
-% MB: explain how one can use a non-parametric frailty here. 
-% MB: explain where the Cox models enter here.
+Now, we make the notation more complex to explore the formal context where we tackle the problem in-depth.
 
-% it counts for the correlation among survival times in a family but not for the covariate effect. A more general random effects model is the proportional hazard mixed-effects model \begin{align*}
-%     &\lambda_{ij}(t) = \lambda_0(t)\text{exp}(\beta'x_{ij} + b'_i W_{ij}) \\
-%     &b_i\overset{i.i.d.}{\sim} N(0, \sigma^2)
-% \end{align*} where the $W_{ij}$ are covariates with random effects. The inference is made through the full likelihood! 
-
-% While an other way to model a common effect given by clustered data is through the marginal approach (WLW) \begin{align*}
-%     &\lambda_{ij}(t) = \lambda_0(t)\text{exp}(\beta_j'x_{ij}) \\
-%     &\beta_j \text{ is the failure-specific effect}
-% \end{align*} for each subject $i$ for failure type $j$. In our case we can consider $x_{ij}$ different treatments/groups, then high/low risk group. 
-
-% The other aspect to consider is the multivariate setting of the problem. We rely on Multivariate Survival function \cite{hougaard2012analysis}. The name ``multivariate'' holds for referring to many outcomes (time-to-event), not just many explanatory variables \cite{rodriguez2010multivariate}. Taking into account the problem of family history in breast cancer, if two women have their time-to-event similar within the same family, then their time-to-event are dependent: we are facing a case of clustered survival data where the cluster is the family itself. Conditionally to the family their time-to-event are completely independent. Let's look at this issue in the scenario of the bivariate frailty models, denoting with $\theta$ the family membership parameter, where it represents a random effect (genetic or environmental effects) such that conditionally to it, the time-to-event, let's say $T_1$, $T_2$ are independent. This case can be readily generalized to more than two survival times. The assumption of \textbf{Conditional Independence} can be written as follows \begin{align*}
-%     S_{12}(t_1,t_2\mid \theta) = S_1(t_1\mid \theta)S_2(t_2\mid \theta).
-% \end{align*}
-
-\section{Model Specification}\label{sec3}
 Let $i=1,\dots,n$ identify the family and the main subject of a family, and $\{m,s_1\}$ to identify the two family members ``mother'' and ``first sister'', respectively. The generalization of this to families with more than three members is straightforward. The observed survival data is $\underline X=\left(\underline X_1,\dots,\underline X_n\right)^T$, where $\underline X_i=(\underline x_i, \underline{xs}_{1i}, \underline xm_i)^T$. 
 For the generic subject $i$, $\underline x_i=(x_{i}=\text{min}(t_{i}, c_{i}),\delta_{i})^T$, $\delta_{i}=\mathbb{I}(t_{i} \le c_{i})$ following the usual notation where $t_i$ indicates the survival time, and $c_i$ indicates the administrative (independent) censoring time, both measured from the same origin, that in our case is the birth $b_i$. The notation for the other family members is obtained by having $x, \ t, \ c, \ b$, and $\delta$ be followed by $m$, and  $s_1$. If subject $i$ does not have a sister, then the sister birthday is set as $bs_{1i} = +\infty$ and consequently the time-to-event is $ts_{1i} = +\infty$. The distinction between mother and sister is not strictly needed here as we assume that their time-to-event distributions are equal but it will make the extension to more complex models easier.
 
@@ -453,31 +437,31 @@ Results show that the median performs poorly as a risk predictor, especially whe
     &\multicolumn{4}{c}{($n_F, \lambda_F$)} \\\cmidrule{2-5} 
     % &(1, 0.8) 
     &(2, 0.8) &(5, 0.8) &(10, 5) &(20, 10) \\ \midrule % &(50, 10)
-    Multivariate \\ 
-    MSPE$_\text{mean}$ &3.78(<0.01) &3.68(<0.01) &\hl{\textbf{2.88(<0.01)}} &3.44(<0.01) \\ % &3.51(<0.01) \\
-    MSPE$_\text{median}$ &5.77(<0.01) &5.85(<0.01) &4.88(<0.01) &\hl{\textbf{4.00(<0.01)}} \\ % &\textbf{3.92(<0.01)} \\ 
-    $R^2_\text{mean}$ &0.23(<0.01) &0.25(<0.01) &0.51(<0.01) &\hl{\textbf{0.65(<0.01)}} \\ %&\textbf{0.65(<0.01)} \\
-    $R^2_\text{median}$ &0.16(<0.01) &0.16(<0.01) &0.25(<0.01) &\hl{\textbf{0.29(<0.01)}} \\ %&\textbf{0.29(<0.01)} \\
-    $\widehat{\beta}_{\text{mean}}$ &\hl{\textbf{0.94(<0.01)}} &0.91(<0.01) &0.72(<0.01) &0.61(<0.01) \\ % &0.60(<0.01) \\
-    $\widehat{\beta}_{\text{median}}$ &11.81(0.01) &9.03(0.01) &2.99(<0.01) &\hl{\textbf{1.45(<0.01)}} \\ % &\textbf{1.44(<0.01)} \\ 
-    $\rho_\text{mean}$ &0.49(<0.01) &0.54(<0.01) &0.74(<0.01) &\hl{\textbf{0.81(<0.01)}} \\ % &\textbf{0.82(<0.01)} \\
-    $\rho_\text{median}$ &0.42(<0.01) &0.42(<0.01) &0.52(<0.01) &\hl{\textbf{0.55(<0.01)}} \\ % &\textbf{0.55(<0.01)}  \\
-    Rank $\rho_\text{mean}$ &0.24(<0.01) &0.28(<0.01) &0.48(<0.01) &\hl{\textbf{0.58(<0.01)}} \\ % &\textbf{0.58(<0.01)} \\ 
-    Rank $\rho_\text{median}$ &0.11(<0.01) &0.15(<0.01) &0.36(<0.01) &\hl{\textbf{0.49(<0.01)}} \\ % &0.49(<0.01) \\ 
+    Multivariate frailty Cox \\ 
+    MSPE$_\text{mean}$ &3.80 (0.0020) &3.50 (0.0019) &2.85 (0.0024) &3.63 (0.0032) \\ 
+    MSPE$_\text{median}$ &5.79 (0.0025) &5.64 (0.0034) &5.01 (0.0031) &3.89 (0.0023) \\ 
+    $R^2_\text{mean}$ &0.23 (0.0002) &0.26 (0.0001) &0.52 (0.0001) &0.65 (0.0002) \\ 
+    $R^2_\text{median}$ &0.16 (0.0001) &0.16 (0.0001) &0.26 (0.0002) &0.29 (0.0002) \\ 
+    $\widehat{\beta}_{\text{mean}}$ &0.94 (0.0013) &0.96 (0.0008) &0.74 (0.0003) &0.60 (0.0002) \\ 
+    $\widehat{\beta}_{\text{median}}$ &11.67 (0.0120) &8.81 (0.0108) &3.08 (0.0015) &1.46 (0.0005) \\ 
+    $\rho_\text{mean}$ &0.49 (0.0002) &0.55 (0.0002) &0.74 (0.0001) &0.82 (0.0001) \\  
+    $\rho_\text{median}$ &0.42 (0.0002) &0.43 (0.0002) &0.53 (0.0002) &0.55 (0.0002) \\  
+    Rank $\rho_\text{mean}$ &0.24(0.0001) &0.28 (0.0001) &0.48 (0.0001) &0.58 (0.0001) \\  
+    Rank $\rho_\text{median}$ &0.11 (0.0001) &0.15 (0.0001) &0.36 (0.0001) &0.49 (0.0001) \\ 
     \midrule
-    Univariate FH \\
-    MSPE &5.87(<0.01) &5.97(<0.01) &5.47(<0.01) &\textbf{5.36(<0.01)} \\ % &5.27(<0.01)  \\
-    $R^2$ &0.03(<0.01) &0.03(<0.01) &0.13(<0.01) &\textbf{0.16(<0.01)} \\ % &0.16(<0.01) \\
-    $\widehat{\beta}_{\text{FH}}$ &3.48(<0.01) &3.29(<0.01) &2.99(<0.01) &\textbf{2.71(<0.01)} \\ % &2.71(<0.01) \\ 
-    $\rho$ &0.17(<0.01) &0.19(<0.01) &0.36(<0.01) &\textbf{0.39(<0.01)} \\ % &0.39(<0.01)  \\ 
-    Rank $\rho$ &0.14(<0.01) &0.16(<0.01) &0.35(<0.01) &\textbf{0.43(<0.01)} \\ % &0.43(<0.01) \\ 
+    Univariate $FH$ Cox \\
+    MSPE &5.91 (0.0022) &5.87 (0.0038) &5.67 (0.0031) &5.23 (0.0027) \\ 
+    $R^2$ &0.03 (0.0001) &0.04 (0.0001) &0.13 (0.0001) &0.16 ($<$0.0001) \\ 
+    $\widehat{\beta}_{\text{FH}}$ &3.59 (0.0039) &3.34 (0.0035) &3.03 (0.0014) &2.70 (0.0010) \\ 
+    $\rho$ &0.17 (0.0002) &0.19 (0.0002) &0.36 (0.0001) &0.40 (0.0001) \\ 
+    Rank $\rho$ &0.14 (0.0001) &0.16 (0.0001) &0.35 (0.0001) &0.43 (0.0001) \\ 
     \midrule 
-    Univariate FH(t) \\ 
-    MSPE &2.32(0.0067) &2.3(0.0065) &\textbf{2.08(0.006)} &2.22(0.0064) \\ 
-    $R^2$ &0.03(0.0004) &0.04(0.0003) &\textbf{0.05(0.0002)} &0.04(0.0001) \\ 
-    $\widehat\beta_F$ &\textbf{0.91(0.0062)} &0.87(0.0049) &0.62(0.0017) &0.47(0.001) \\ 
-    $\rho$ &0.18(0.0011) &0.19(0.0009) &\textbf{0.23(0.0004)} &0.19(0.0004) \\ 
-    Rank $\rho$ &0.18(0.0008) &0.2(0.0006) &\textbf{0.28(0.0004)} &0.25(0.0004) \\ 
+    Univariate $FH(t)$ Cox \\ 
+    MSPE &2.32 (0.0067) &2.30 (0.0065) &2.08 (0.006) &2.22 (0.0064) \\ 
+    $R^2$ &0.03 (0.0004) &0.04 (0.0003) &0.05 (0.0002) &0.04 (0.0001) \\ 
+    $\widehat\beta_F$ &0.91 (0.0062) &0.87 (0.0049) &0.62 (0.0017) &0.47 (0.0010) \\ 
+    $\rho$ &0.18 (0.0011) &0.19 (0.0009) &0.23 (0.0004) &0.19 (0.0004) \\ 
+    Rank $\rho$ &0.18 (0.0008) &0.20 (0.0006) &0.28 (0.0004) &0.25 (0.0004) \\ 
   \bottomrule
     \end{tabular*}
     \caption{Prediction accuracy measures for family size defined by the two parameters ($n_F, \lambda_F$) among the values (2, 0.8), (5, 0.8), (10, 5), (20, 10); $n_F$ indicates the largest number of family members, and $\lambda_F$ represents the parameter of the Poisson distribution used to generate the additional number of family members apart the main subject.}
@@ -562,9 +546,9 @@ In conclusion, the Multivariate Shared Frailty Cox model appears to be an effect
     \label{fig:1.4}
 \end{figure}
 % Code from postPredBackup3.R 
-
+\newpage
 On the other side, the Multivariate frailty Cox model is poor in estimating some meaningful measures for explaining the phenomenon of breast cancer. That is why we develop the three aforementioned models into the parametric scenario. This allows us to employee the cure-rate survival function which helps us identifying the cured fraction into the population and estimating the survival curve of breast cancer cases. Let us take a closer look at the development of parametric models in next section. 
-
+% qui
 \subsection{Parametric scenario}
 Now we explore the Multivariate Shared Frailty parametric model, the Univariate Frailty parametric, and the Univariate model with the constant family history covariate in terms of parameter recovery and accuracy in risk prediction. As we can expect, the Univariate model with the family history covariate can not recover well the parameters because the family history coefficient is not part of the data generating process. Let us start with the analysis. 
 
