@@ -441,21 +441,21 @@ Results show that the median performs poorly as a risk predictor, especially whe
     % &(1, 0.8) 
     &(2, 0.8) &(5, 0.8) &(10, 5) &(20, 10) \\ \midrule % &(50, 10)
     Multivariate frailty Cox \\ 
-    MSPE$_\text{mean}$ &3.80 (0.0020) &3.50 (0.0019) &2.85 (0.0024) &3.63 (0.0032) \\ 
-    MSPE$_\text{median}$ &5.79 (0.0025) &5.64 (0.0034) &5.01 (0.0031) &3.89 (0.0023) \\ 
-    $R^2_\text{mean}$ &0.23 (0.0002) &0.26 (0.0001) &0.52 (0.0001) &0.65 (0.0002) \\ 
-    $R^2_\text{median}$ &0.16 (0.0001) &0.16 (0.0001) &0.26 (0.0002) &0.29 (0.0002) \\ 
+    MSPE(mean) &3.80 (0.0020) &3.50 (0.0019) &2.85 (0.0024) &3.63 (0.0032) \\ 
+    MSPE(median) &5.79 (0.0025) &5.64 (0.0034) &5.01 (0.0031) &3.89 (0.0023) \\ 
+    $R^2$(mean) &0.23 (0.0002) &0.26 (0.0001) &0.52 (0.0001) &0.65 (0.0002) \\ 
+    $R^2$(median) &0.16 (0.0001) &0.16 (0.0001) &0.26 (0.0002) &0.29 (0.0002) \\ 
     $\widehat{\beta}_{\text{mean}}$ &0.94 (0.0013) &0.96 (0.0008) &0.74 (0.0003) &0.60 (0.0002) \\ 
     $\widehat{\beta}_{\text{median}}$ &11.67 (0.0120) &8.81 (0.0108) &3.08 (0.0015) &1.46 (0.0005) \\ 
-    $\rho_\text{mean}$ &0.49 (0.0002) &0.55 (0.0002) &0.74 (0.0001) &0.82 (0.0001) \\  
-    $\rho_\text{median}$ &0.42 (0.0002) &0.43 (0.0002) &0.53 (0.0002) &0.55 (0.0002) \\  
-    Rank $\rho_\text{mean}$ &0.24(0.0001) &0.28 (0.0001) &0.48 (0.0001) &0.58 (0.0001) \\  
-    Rank $\rho_\text{median}$ &0.11 (0.0001) &0.15 (0.0001) &0.36 (0.0001) &0.49 (0.0001) \\ 
+    $\rho$(mean) &0.49 (0.0002) &0.55 (0.0002) &0.74 (0.0001) &0.82 (0.0001) \\  
+    $\rho$(median) &0.42 (0.0002) &0.43 (0.0002) &0.53 (0.0002) &0.55 (0.0002) \\  
+    Rank $\rho$(mean) &0.24(0.0001) &0.28 (0.0001) &0.48 (0.0001) &0.58 (0.0001) \\  
+    Rank $\rho$(median) &0.11 (0.0001) &0.15 (0.0001) &0.36 (0.0001) &0.49 (0.0001) \\ 
     \midrule
     Univariate $FH$ Cox \\
     MSPE &5.91 (0.0022) &5.87 (0.0038) &5.67 (0.0031) &5.23 (0.0027) \\ 
     $R^2$ &0.03 (0.0001) &0.04 (0.0001) &0.13 (0.0001) &0.16 ($<$0.0001) \\ 
-    $\widehat{\beta}_{\text{FH}}$ &3.59 (0.0039) &3.34 (0.0035) &3.03 (0.0014) &2.70 (0.0010) \\ 
+    $\widehat{\beta}_{FH}$ &3.59 (0.0039) &3.34 (0.0035) &3.03 (0.0014) &2.70 (0.0010) \\ 
     $\rho$ &0.17 (0.0002) &0.19 (0.0002) &0.36 (0.0001) &0.40 (0.0001) \\ 
     Rank $\rho$ &0.14 (0.0001) &0.16 (0.0001) &0.35 (0.0001) &0.43 (0.0001) \\ 
     \midrule 
@@ -669,78 +669,79 @@ Parameter estimation in the parametric case allows for a more detailed descripti
     \label{tab:1.8}
 \end{table*}
 \end{center}
-\newpage
+The findings presented in Tables \ref{tab:1.4}, \ref{tab:1.5}, \ref{tab:1.6}, \ref{tab:1.7}, and \ref{tab:1.8} align with our initial expectations: the Multivariate frailty Cure-Rate model is able to accurately identify and estimate the model parameters, given that the data are generated from a multivariate scenario. On the contrary, the Univariate frailty Cure-Rate model loses prediction accuracy by excluding family information; while the Univariate $FH$ Cure-Rate model is not able to recover well the parameters because the family history coefficient is not even part of the data generating process. 
+
+However, there are some identification issues regarding the three-parameter distribution. At least, the three-parameter Gamma Multivariate frailty Cure-Rate model can almost accurately identify the true value of the parameters used in the data generating process. Indeed, from the estimated Kaplan-Meier curve in Figure \ref{fig:KM1} we can appreciate how in these scenarios the survival curves remain constant before the time fixed as threshold, that in this case is set at 15, when censoring and breast cancer cases begin to show up. On the contrary, the three-parameter Lognormal distribution Multivariate frailty Cure-Rate model shows some problems in recovering the true values of the parameters. We can appreciate a particular behaviour of the estimated Kaplan-Meier curve in Figure \ref{fig:KM2}: the jump crossing the threshold is not smooth as it is in the Gamma scenario; and also, it shows that censoring and cases happen after long time. We need to investigate more deeply about this particular behaviour. Perhaps, a higher flexibility into the parameter is not needed to raise the prediction accuracy. 
 \begin{figure}
     \centering
     \includegraphics[width = \linewidth]{PhD_thesis_template/plots/Rplot.pdf}
-    \caption{Kaplan-Meier on main subjects with a Gamma baseline survival function for cases.}
+    \caption{Kaplan-Meier estimate with a three-parameter Gamma distribution for the survival function of cases.}
     \label{fig:KM1}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics[width = \linewidth]{PhD_thesis_template/plots/Rplot01.pdf}
-    \caption{Kaplan-Meier on main subjects with a Lognormal baseline survival function for cases.}
+    \caption{Kaplan-Meier estimate with a three-parameter Lognormal distribution for the survival function of cases.}
     \label{fig:KM2}
 \end{figure}
-\newpage
-The findings presented in Tables \ref{tab:1.4}, \ref{tab:1.5}, \ref{tab:1.6}, \ref{tab:1.7}, and \ref{tab:1.8} align with our initial expectations, as the multivariate model was able to accurately identify and estimate the model parameters, given that the data was generated from a multivariate scenario, better than the univariate models. With the parameters identified, we can proceed to the risk prediction step by computing the posterior frailty mean, median, and mode using the parametric equations detailed in Section \ref{sec:1.4.2}. We still need to delve deeper into the analysis, explanation, and resolution of some identification issues, particularly regarding the three-parameters Lognormal distribution. 
 
-What we expect from the analysis on the parameter recovery is that the Univariate $FH$ Cure-Rate model is not able to recover well the parameters because the family history coefficient is not part of the data generating process.
+Once the parameters are estimated, we can proceed to run risk prediction by computing the posterior frailty mean, median, and mode by using the parametric equations reported in Section \ref{sec:1.4.2}. Notice that in this case we run the simulation with a Weibull($shape_0 = 8$, $scale_0 = 6$), cured fraction $p=0.85$, and frailty parameter $\theta = 0.2$. 
 
-Also, the cases Gamma distribution can almost accurately identify the true value of the parameters, used in the data generation process. Indeed, from the estimated Kaplan-Meier curve in Figure \ref{fig:KM1} we can appreciate how in these scenarios the survival curves remain constant before the time fixed as threshold, that in this case is set at 15, when censoring events and the event of interest begin to show up. At contrary, the cases Lognormal distribution shows some problems in correctly recovering the true values of the parameter. We can appreciate a particular behaviour of the estimated Kaplan-Meier curve in Figure \ref{fig:KM2}: the jump crossing the threshold is not smooth as in the Gamma scenario. We need to investigate more deeply about this issue. 
-\begin{table}
-    \centering
-    \begin{tabular}{l|cccc} 
-    \hline
-    &\multicolumn{4}{c}{($n_f,\lambda_F$)} \\ 
-    Multivariate &(2, 0.8) &(5, 0.8) &(10, 5) &(20, 10) \\ % &(50, 10) \\ 
-MSPE(mean) &3.873(0.049) &4.800(0.074) &3.843(0.071) &\hl{\textbf{3.433(0.049)}} \\ % &4.084(0.053) \\ 
-MSPE(median) &4.420(0.052) &5.401(0.078) &4.177(0.074) &\hl{\textbf{3.643(0.051)}} \\ % &4.319(0.055) \\ 
-MSPE(mode) &11.348(0.061)&12.198(0.088)&6.009(0.082) &\hl{\textbf{4.430(0.052)}} \\ % &5.168(0.059) \\ 
-$R^2$(mean) &0.202(0.002) &0.219(0.002)	&0.478(0.004) &\hl{\textbf{0.614(0.002)}}  \\ % &\hl{\textbf{0.624(0.003)}} \\ 
-$R^2$(median) &0.207(0.002) &0.222(0.002) &0.485(0.004) &\hl{\textbf{0.619(0.002)}} \\ % &\hl{\textbf{0.624(0.003)}} \\ 
-$R^2$(mode) &0.127(0.002) &0.115(0.002)	&0.383(0.003) &\hl{\textbf{0.583(0.002)}} \\ % &0.581(0.002) \\ 
-$\widehat{\beta}_{\text{mean}}$ &\hl{\textbf{1.553(0.008)}} &1.705(0.011) &2.401(0.018)	&2.781(0.018) \\ % &2.948(0.008) \\ 
-$\widehat{\beta}_{\text{median}}$ &\hl{\textbf{1.792(0.010)}} &1.975(0.013)	&2.608(0.019) &2.932(0.019) \\ % &3.099(0.009) \\ 
-$\widehat{\beta}_{\text{mode}}$ &\hl{\textbf{0.957(0.007)}} &0.927(0.009) &1.929(0.015)	&2.645(0.017) \\ % &2.767(0.009) \\ 
-$\rho$(mean) &0.447(0.002) &0.465(0.002) &0.689(0.007) &\hl{\textbf{0.783(0.001)}} \\ % &\hl{\textbf{0.787(0.002)}} \\ 
-$\rho$(median) &0.452(0.002) &0.468(0.002) &0.694(0.003) &\hl{\textbf{0.786(0.001)}} \\ % &\hl{\textbf{0.789(0.002)}} \\ 
-$\rho$(mode) &0.353(0.002) &0.335(0.003) &0.616(0.002) &\hl{\textbf{0.763(0.001)}} \\ % &0.761(0.002) \\ 
-Rank $\rho$(mean) &0.181(0.002) &0.226(0.002) &0.438(0.002) &\hl{\textbf{0.539(0.001)}} \\ % &\hl{\textbf{0.559(0.002)}} \\ 
-Rank $\rho$(median) &0.181(0.002) &0.226(0.002) &0.438(0.002) &\hl{\textbf{0.539(0.001)}} \\ % &\hl{\textbf{0.559(0.002)}} \\ 
-Rank $\rho$(mode) &0.151(0.002) &0.146(0.002) &0.332(0.002) &\hl{\textbf{0.490(0.002)}} \\ % &\hl{\textbf{0.492(0.002)}} \\ 
-\hline
-Univariate \\
-MSPE(mean) &\textbf{4.241(0.053)} &5.259(0.081)	&4.738(0.084) &4.507(0.059) \\ % &5.258(0.063) \\ 
-MSPE(median) &\textbf{4.536(0.055)} &5.594(0.084) &5.040(0.088)	&4.798(0.062) \\ % &5.598(0.067) \\ 
-MSPE(mode) &\textbf{6.511(0.060)} &7.666(0.091)	&7.019(0.098) &6.767(0.068) \\ % &7.685(0.076) \\ 
-$R^2$(mean) &0.136(0.003) &0.157(0.003)	&\textbf{0.183(0.002)} &0.126(0.002) \\ % &0.153(0.002) \\ 
-$R^2$(median) &0.138(0.003) &0.161(0.003)	&\textbf{0.191(0.003)}	&0.131(0.002) \\ % &0.157(0.002) \\ 
-$R^2$(mode) &0.128(0.003) &0.149(0.002)	&\textbf{0.190(0.002)} &0.128(0.002) \\ % &0.147(0.002) \\ 
-$\widehat{\beta}_{\text{mean}}$ &2.704(0.025) &3.158(0.021)	&3.326(0.037) &\textbf{2.685(0.023)} \\ % &3.175(0.027) \\ 
-$\widehat{\beta}_{\text{median}}$ &2.893(0.028) &3.369(0.023) &3.588(0.038) &\textbf{2.887(0.025)} \\ % &3.393(0.028) \\ 
-$\widehat{\beta}_{\text{mode}}$ &\textbf{2.621(0.028)} &3.032(0.022) &3.349(0.035) &2.658(0.022) \\ % &3.055(0.024) \\ 
-$\rho$(mean) &0.356(0.004) &0.391(0.003)	&\textbf{0.422(0.003)} &0.351(0.003) \\ % &0.387(0.003) \\ 
-$\rho$(median) &0.359(0.004) &0.395(0.003)	&\textbf{0.432(0.003)} &0.357(0.003) \\ % &0.392(0.003) \\ 
-$\rho$(mode) &0.348(0.004) &0.381(0.003)	&\textbf{0.431(0.003)} &0.353(0.002) \\ % &0.379(0.002) \\ 
- Rank $\rho$(mean) &0.201(0.004) &\textbf{0.206(0.002)} &0.194(0.002) &0.183(0.002) \\ % &\textbf{0.210(0.002)} \\ 
- Rank $\rho$(median) &0.201(0.004) &\textbf{0.206(0.002)}	&0.194(0.002) &0.183(0.002) \\ % &\textbf{0.210(0.002)} \\ 
- Rank $\rho$(mode) &0.167(0.003) &0.190(0.002) &\textbf{0.203(0.002)} &0.192(0.001) \\ % &0.175(0.001) \\ 
- \hline
-Univariate FH \\
-MSPE &5.388(0.057) &6.573(0.089) &5.625(0.097) &\textbf{5.034(0.062)} \\ % &5.988(0.069) \\ 
-$R^2$ &0.043(0.001) &0.043(0.001) &0.152(0.003) &\textbf{0.186(0.002)} \\ % &0.152(0.002) \\ 
-$\widehat{\beta}_{\text{fh}}$ &3.584(0.077) &3.971(0.077) &3.222(0.039)	&\textbf{2.806(0.019)} \\ % &2.828(0.023) \\ 
-$\rho$ &0.189(0.004) &0.195(0.003) &0.379(0.004) &\textbf{0.429(0.002)} \\ % &0.388(0.002) \\ 
-Rank $\rho$(mean) &0.147(0.002) &0.159(0.002) &0.348(0.001)	&\textbf{0.435(0.001)} \\ % &0.426(0.001) \\ 
-\hline
-    \end{tabular}
-    \caption{several prediction accuracy measures, for different family sizes with values of ($n_F, \lambda_F$). All the results are reported in average value over the 100 iterations and standard error in brackets.}
+\begin{center}
+\begin{table*}
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
+\toprule
+    &\multicolumn{4}{c}{($n_F, \lambda_F$)} \\\cmidrule{2-5} 
+    % &(1, 0.8) 
+    &(2, 0.8) &(5, 0.8) &(10, 5) &(20, 10) \\ \midrule % &(50, 10)
+    Multivariate frailty Cure-Rate \\ 
+    MSPE(mean) &3.873 (0.049) &4.800 (0.074) &3.843 (0.071) &3.433 (0.049) \\ 
+    MSPE(median) &4.420 (0.052) &5.401 (0.078) &4.177 (0.074) &3.643 (0.051) \\
+    MSPE(mode) &11.348 (0.061) &12.198 (0.088) &6.009 (0.082) &4.430 (0.052) \\ 
+    $R^2$(mean) &0.202 (0.002) &0.219 (0.002) &0.478 (0.004) &0.614 (0.002) \\ 
+    $R^2$(median) &0.207 (0.002) &0.222 (0.002) &0.485 (0.004) &0.619 (0.002) \\
+    $R^2$(mode) &0.127 (0.002) &0.115 (0.002) &0.383 (0.003) &0.583 (0.002) \\ 
+    $\widehat{\beta}_{\text{mean}}$ &1.553 (0.008) &1.705 (0.011) &2.401 (0.018) &2.781 (0.018) \\ 
+    $\widehat{\beta}_{\text{median}}$ &1.792 (0.010) &1.975 (0.013)	&2.608 (0.019) &2.932 (0.019) \\ 
+    $\widehat{\beta}_{\text{mode}}$ &0.957 (0.007) &0.927 (0.009) &1.929 (0.015) &2.645 (0.017) \\ 
+    $\rho$(mean) &0.447 (0.002) &0.465 (0.002) &0.689 (0.007) &0.783 (0.001) \\ 
+    $\rho$(median) &0.452 (0.002) &0.468 (0.002) &0.694 (0.003) &0.786 (0.001) \\
+    $\rho$(mode) &0.353 (0.002) &0.335 (0.003) &0.616 (0.002) &0.763 (0.001) \\ 
+    Rank $\rho$(mean) &0.181 (0.002) &0.226 (0.002) &0.438 (0.002) &0.539 (0.001) \\ 
+    Rank $\rho$(median) &0.181 (0.002) &0.226 (0.002) &0.438 (0.002) &0.539 (0.001) \\
+    Rank $\rho$(mode) &0.151 (0.002) &0.146 (0.002) &0.332 (0.002) &0.490 (0.002) \\ 
+    \midrule
+    Univariate frailty Cox \\
+    MSPE(mean) &4.241 (0.053) &5.259 (0.081) &4.738 (0.084) &4.507 (0.059) \\ 
+    MSPE(median) &4.536 (0.055) &5.594 (0.084) &5.040 (0.088) &4.798 (0.062) \\
+    MSPE(mode) &6.511 (0.060) &7.666 (0.091) &7.019 (0.098) &6.767 (0.068) \\ 
+    $R^2$(mean) &0.136 (0.003) &0.157 (0.003) &0.183 (0.002) &0.126 (0.002) \\
+    $R^2$(median) &0.138 (0.003) &0.161 (0.003)	&0.191 (0.003) &0.131 (0.002) \\ 
+    $R^2$(mode) &0.128 (0.003) &0.149 (0.002) &0.190 (0.002) &0.128 (0.002) \\ 
+    $\widehat{\beta}_{\text{mean}}$ &2.704 (0.025) &3.158 (0.021) &3.326 (0.037) &2.685 (0.023) \\ 
+    $\widehat{\beta}_{\text{median}}$ &2.893 (0.028) &3.369 (0.023) &3.588 (0.038) &2.887 (0.025) \\
+    $\widehat{\beta}_{\text{mode}}$ &2.621 (0.028) &3.032 (0.022) &3.349 (0.035) &2.658 (0.022) \\ 
+    $\rho$(mean) &0.356 (0.004) &0.391 (0.003) &0.422 (0.003) &0.351 (0.003) \\ 
+    $\rho$(median) &0.359 (0.004) &0.395 (0.003) &0.432 (0.003) &0.357 (0.003) \\ 
+    $\rho$(mode) &0.348 (0.004) &0.381 (0.003) &0.431 (0.003) &0.353 (0.002) \\ 
+    Rank $\rho$(mean) &0.201 (0.004) &0.206 (0.002) &0.194 (0.002) &0.183 (0.002) \\ 
+    Rank $\rho$(median) &0.201 (0.004) &0.206 (0.002) &0.194 (0.002) &0.183 (0.002) \\ 
+    Rank $\rho$(mode) &0.167 (0.003) &0.190 (0.002) &0.203 (0.002) &0.192 (0.001) \\ 
+    \midrule
+    Univariate $FH$ Cure-Rate \\
+    MSPE &5.388 (0.057) &6.573 (0.089) &5.625 (0.097) &5.034 (0.062) \\
+    $R^2$ &0.043 (0.001) &0.043 (0.001) &0.152 (0.003) &0.186 (0.002) \\ 
+    $\widehat{\beta}_{FH}$ &3.584 (0.077) &3.971 (0.077) &3.222 (0.039) &2.806 (0.019) \\ 
+    $\rho$ &0.189 (0.004) &0.195 (0.003) &0.379 (0.004) &0.429 (0.002) \\ 
+    Rank $\rho$(mean) &0.147 (0.002) &0.159 (0.002) &0.348 (0.001) &0.435 (0.001) \\ 
+\bottomrule
+    \end{tabular*}
+    \caption{Prediction accuracy measures.}
     \label{tab:1.9}
-\end{table}
-\newline
+\end{table*}
+\end{center}
 
-Once the parameter recovery is assessed for, above all, the multivariate model, we can move to the analysis of the posterior risk frailty from the posterior frailty distribution. We report for the family size parameters varying at $(n_f,\lambda_F)=((2,0.8),(5,0.8),(10,5),(20,10)^T$, the mean squared prediction error, the coefficient of determination, the coefficient of the predicted frailty covariate, the correlation coefficient, and the rank correlation coefficient. In the multivariate and univariate frailty scenario the predicted frailty is identified with the mean, the median, or the mode from the posterior frailty distribution. While in the univariate model with $FH$ the ``estimated frailty'' is the family history indicator itself. In bold are the best results by row, and in yellow are the best results by category across all the models. 
+In Table \ref{tab:1.9} we compare the posterior frailty risk mean, median, and mode by reporting their performances in terms of MSPE, $R^2$, coefficient of the predicted risk on the true risk, correlation coefficient, and rank correlation coefficient. Family size is varying across the parameter values $(n_f,\lambda_F)=((2,0.8),(5,0.8),(10,5),(20,10)^T$. In the multivariate and univariate frailty scenario the predicted frailty is identified with the mean, the median, or the mode from the posterior frailty distribution. While in the univariate model with $FH$ the ``estimated frailty'' is the family history indicator itself. In bold are the best results by row, and in yellow are the best results by category across all the models. 
 
 From Table \ref{tab:1.9} we can claim the following assessments: the mean square prediction error is not getting lower and lower as the family size increases, on the contrary of what we can expect. This can be due to the random generation of the samples every time. However, for the posterior mode frailty we can notice that with the increasing of the family size the mean square prediction error is halved. By comparing the multivariate model, the univariate model and the univariate FH model we can not notice a significative difference in terms of MSPE, with the best results by the multivariate model. The coefficient of determination is instead increasing when the family size tends to a bigger number, This is exactly what we expect from before the analysis: a sample with bigger families has a greater explainability power on the breast cancer development than a sample with families composed by few subjects. Moreover, here we can appreciate the higher power of the multivariate model in comparison to the other two because of the multivariate nature of itself. In the univariate models, the coefficient of determination is always computed on one subject per family. The best result is when the multivariate model with mean or median frailty as covariate, explains the 61.4\% of variability of the true frailty with the maximum values of family parameters. For what concerns the parameter of the frailty into the regression true frailty vs. predicted frailty, we would like a value that is as closest as possible to one. Here we notice that this value is increasing with the family size for the multivariate model, but for the univariate models we notice that it is around three independently to the parameters of the family size. This coefficient is not that meaningful. The correlation of Pearson and the rank correlation increase when the family size increases, as we expect before the analysis. Moreover, in the multivariate model these indices are higher than into the univariate models, but few rare cases. The best results are a Pearson correlation of 0.789 between the true frailty and the median frailty estimated through the multivariate likelihood, and the rank correlation with a value of 0.559 between the true frailty and both the mean and the median frailty, always estimated through the multivariate likelihood. Once again, the multivariate model outperforms the other, as expected and hoped.  
 % you can apply C:/Users/Vinattieri/OneDrive - Università Commerciale Luigi Bocconi/Research/Familiarity/simulated data/simulation-par-contfrailty-multiUniFh-postprediction-MVV.R in LOCAL COMPUTER only for the part of mspe...
@@ -810,10 +811,10 @@ Also, we can compare the models by applying the binary splitting of the predicte
     \hline
     &\multicolumn{4}{c}{($n_F, \lambda_F$)} \\ 
     Multivariate &(2, 0.8) &(5, 0.8) &(10, 5) &(20, 10) \\ % &(50, 10) \\
-AUC &0.697(0.002) &0.714(0.002)	&0.891(0.002) &\hl{\textbf{0.948(0.001)}} \\ % &\hl{\textbf{0.953(0.001)}} \\ 
-PPV &0.318(0.002) &0.352(0.003)	&0.532(0.003) &\hl{\textbf{0.624(0.003)}} \\ % &\hl{\textbf{0.589(0.003)}} \\ 
-NPV &0.951(<0.001) &0.959(<0.001)	&0.975(<0.001) &\hl{\textbf{0.980(<0.001)}} \\ % &0.978(<0.001) \\ 
-C &\hl{\textbf{0.960(<0.001)}} &0.959(<0.001) &0.943(0.001)	&0.929(0.001) \\ % &0.929(0.001) \\ 
+AUC &0.697(0.002) &0.714(0.002)	&0.891(0.002) &0.948(0.001) \\ % &0.953(0.001)}} \\ 
+PPV &0.318(0.002) &0.352(0.003)	&0.532(0.003) &0.624(0.003) \\ % &0.589(0.003)}} \\ 
+NPV &0.951(<0.001) &0.959(<0.001)	&0.975(<0.001) &0.980(<0.001) \\ % &0.978(<0.001) \\ 
+C &0.960(<0.001) &0.959(<0.001) &0.943(0.001)	&0.929(0.001) \\ % &0.929(0.001) \\ 
 \hline 
 Univariate \\
 AUC &0.627(0.002) &\textbf{0.637(0.002)	}&0.632(0.002) &0.621(0.001) \\ % &\textbf{0.639(0.001)} \\ 
