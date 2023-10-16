@@ -804,9 +804,27 @@ In Table \ref{tab:1.9} we compare the posterior frailty risk mean, median, and m
 
 We now employee the posterior mean as predicted frailty risk, because of its good performances in prediction accuracy with the Multivariate frailty Cure-Rate model and also because it is an index that is understandable to the end user rather than the median and the mode.
 
-We thus compare the three parametric models by applying the binary splitting of the predicted frailty and reporting the AUC, the PPV, the NPV and the Harrell's Concordance index (C) in Table \ref{tab:1.10}. The Multivariate frailty Cure-Rate model outperforms the other two Univariate models, with an AUC in the range 70\%-95\%, increasing according to a higher family size, against an AUC around the 62\% for the Univariate frailty Cure-Rate, and in the range 53\%-71\% for the Univariate $FH$ Cure-Rate model. These additional twenty percentile points in the Multivariate frailty Cure-Rate model allow to reach a strong predictive power that is not reached by any other model. Similarly to the semiparametric scenario, also here the positive predictive value is weaker than the negative predictive power, meaning that the low-risk families are better identified than the highest-risk families. This allows for a reduction of unnecessary costs, medical treatments and psychological stress for families who do not need to be under surveillance. Lastly, let us say that the Univariate frailty Cure-Rate model can coherently predict the risk according to the time-to-event (see Concordance around the 95\%), as well as the Multivariate frailty Cure-Rate model, whose concordance varies among the 93\% and the 96\%. Notice that the Concordance for the Univariate $FH$ Cure-Rate model can not be computed because that are too many ties in the predicted risk since it is the indicator of family history which only takes values 0/1. 
+Now, we can conclude by stating that the estimation of frailty risk mean through the maximization of the multivariate likelihood yields the most favorable results. Furthermore, the larger the family size in the sample, the better the prediction performance of this index is. From Figure \ref{fig:1.7} to observe the improved accuracy in prediction as the family size increases along with the mean frailty. The observed behavior in the plot with smaller family parameters is attributed to the aforementioned shrinkage issue of the mean frailty, which is effectively mitigated with a larger family size. 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{plots/Rplot06.pdf}
+    \includegraphics[width=\linewidth]{plots/Rplot09.pdf}
+    \caption{scatter-plot on 100,000 families of true frailty value versus predicted mean frailty with the bisector of the third quadrant (in red), the smoothed regression line (in green with confidence interval) and smoothed quantile regression line on the first, second and third quantile (in orange).}
+    \label{fig:1.7}
+\end{figure}
+
+No distinction can be observed in the conditional MSPE (mean squared prediction error), plotted against the true frailty value for 100,000 families in Figure \ref{fig:1.9}, between small family sizes and large family sizes. This observation highlights the need to explore alternative estimations for frailty risk in order to overcome the various challenges encountered with the mean estimation.
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{plots/Rplot07.pdf}
+    \includegraphics[width=\linewidth]{plots/Rplot10.pdf}
+    \caption{conditional MSPE for family size varying with the values $(n_F, \lambda_F)$: (5, 0.8), (20, 10).}
+    \label{fig:1.9}
+\end{figure}
+
+We thus compare the three parametric models by applying the binary splitting of the predicted frailty and reporting the AUC, the PPV, the NPV and the Harrell's Concordance index (C) in Table \ref{tab:1.10}. 
 \begin{center}
-\begin{table*}
+\begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
 \toprule
     &\multicolumn{4}{c}{($n_F, \lambda_F$)} \\\cmidrule{2-5} 
@@ -834,28 +852,22 @@ We thus compare the three parametric models by applying the binary splitting of 
     \label{tab:1.10}
 \end{table*}
 \end{center}
-
 % code is in C:/Users/Vinattieri/OneDrive - Università Commerciale Luigi Bocconi/Research/Familiarity/simulated data/simulation-par-contfrailty-multiUniFh-postprediction-MVV.R in LOCAL COMPUTER only for the part of auc, ppv, npv and concordance. 
 % code for plot LOCAL: postPredictionPlots.R
-Now, we can conclude by stating that the estimation of frailty mean through the maximization of the multivariate likelihood yields the most favorable results. Furthermore, the larger the family size in the sample, the better the performance of this index. Please refer to Figure \ref{fig:1.7} to observe the improved accuracy in prediction as the family size increases along with the mean frailty. The observed behavior in the plot with smaller family parameters is attributed to the aforementioned shrinkage issue of the mean frailty, which is effectively mitigated with a larger family size. 
+
+The Multivariate frailty Cure-Rate model outperforms the other two Univariate models, with an AUC in the range 70\%-95\%, increasing according to a higher family size, against an AUC around the 62\% for the Univariate frailty Cure-Rate, and in the range 53\%-71\% for the Univariate $FH$ Cure-Rate model. These additional twenty percentile points in the Multivariate frailty Cure-Rate model allow to reach a strong predictive power that is not reached by any other model. Similarly to the semiparametric scenario, also here the positive predictive value is weaker than the negative predictive power, meaning that the low-risk families are better identified than the highest-risk families. This allows for a reduction of unnecessary costs, medical treatments and psychological stress for families who do not need to be under surveillance. We refer to Figure \ref{fig:1.8} for one example of ROC curve over a hundred repetitions from the Multivariate frailty Cure-Rate model. One can appreciate how the AUC is significantly increasing from the 88\% with a maximum of five members, to 95\% with a maximum of twenty members per family.
+
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{plots/Rplot06.pdf}
-    \includegraphics[width=\linewidth]{plots/Rplot09.pdf}
-    \caption{scatter-plot on 100,000 families of true frailty value versus predicted mean frailty with the bisector of the third quadrant (in red), the smoothed regression line (in green with confidence interval) and smoothed quantile regression line on the first, second and third quantile (in orange).}
-    \label{fig:1.7}
+    \includegraphics[width=\linewidth]{plots/Rplot08.pdf}
+    \includegraphics[width=\linewidth]{plots/Rplot11.pdf}
+    \caption{ROC curve on 100,000 families of the mean frailty risk versus the true membership to the group of the highest-risk families (top 5\%). Family size is varying with the values of ($n_f, \lambda_F$): (5, 0.8), (20, 10).}
+    \label{fig:1.8}
 \end{figure}
 
-No distinction can be observed in the conditional MSPE (mean squared prediction error), plotted against the true frailty value for 100,000 families in Figure \ref{fig:1.9}, between small family sizes and large family sizes. This observation highlights the need to explore alternative estimations for frailty risk in order to overcome the various challenges encountered with the mean estimation.
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{plots/Rplot07.pdf}
-    \includegraphics[width=\linewidth]{plots/Rplot10.pdf}
-    \caption{conditional MSPE for family size varying with the values $(n_F, \lambda_F)$: (5, 0.8), (20, 10).}
-    \label{fig:1.9}
-\end{figure}
+Lastly, let us say that the Univariate frailty Cure-Rate model can coherently predict the risk according to the time-to-event (see Concordance around the 95\%), as well as the Multivariate frailty Cure-Rate model, whose concordance varies among the 93\% and the 96\%. It is worth noting that for the Univariate $FH$ Cure-Rate model, the Concordance index cannot be calculated without adjusting for ties. The presence of ties is caused by the family history indicator, which trivially can only take values 0 or 1.
 
-In conclusion, the multivariate model has the highest predictive power also for the binary splitting in terms of area under the ROC curve, reaching the 95.3\% of accuracy in prediction, a positive predictive value, with the highest value of 58.9\% of families truly belonging to the highest-risk group. Moreover, the multivariate model gives the best result in terms of negative predictive power, with the 98\% of families truly not belonging to the highest-risk group. In the multivariate model, 96\% of the pairs exhibit concordance between the observed time of diagnosis and risk values. In comparison, the univariate model shows a slightly lower concordance rate of up to 95.2\%. It is worth noting that for the univariate model with the $FH$ variable, the concordance index cannot be calculated without adjusting for ties. This is due to the presence of ties caused by the $FH$ indicator, which trivially can only have values of 0 or 1.
+In conclusion, the multivariate model has the highest predictive power also for the binary splitting in terms of area under the ROC curve, reaching the 95.3\% of accuracy in prediction, a positive predictive value, with the highest value of 58.9\% of families truly belonging to the highest-risk group. Moreover, the multivariate model gives the best result in terms of negative predictive power, with the 98\% of families truly not belonging to the highest-risk group. In the multivariate model, 96\% of the pairs exhibit concordance between the observed time of diagnosis and risk values. In comparison, the univariate model shows a slightly lower concordance rate of up to 95.2\%. 
 \clearpage 
 
 \section[Illustration to the Swedish Breast Cancer registry]{Illustration to the Swedish Multi-Generational Breast Cancer registry}\label{sec:1.6}
