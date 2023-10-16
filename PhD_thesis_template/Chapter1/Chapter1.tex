@@ -555,9 +555,7 @@ On the other side, the Multivariate frailty Cox model is poor in estimating some
 \subsection{Parametric scenario}
 Now we explore the Multivariate frailty Cure-Rate, the Univariate frailty Cure-Rate, and the Univariate $FH$ Cure-Rate model in terms of parameter recovery by varying the baseline survival function and accuracy in risk prediction. 
 
-What we expect from the analysis on the parameter recovery is that the Univariate $FH$ Cure-Rate model is not able to recover well the parameters because the family history coefficient is not part of the data generating process.
-
-Parameter estimation in the parametric case allows for a more detailed description compared to the semiparametric scenario, due to the inclusion of a parametric baseline survival function and of the fraction of ``non-cases'' assumed by the cure-rate structure incorporated in the models. We conduct this simulation study on $n=100,000$ families for 100 iterations to obtain average point estimates and their standard errors across repetitions. As above, to generate the family size we use the parameter to control the maximum of the family size $n_F$ and the frailty variance parameter of the Poisson distribution involved $\lambda_F$. For the parameter recovery we set the parameter at $(n_F, \lambda_F) = (5,0.8)$, and the other parameter values are fixed with values reported in the caption of the tables themselves, according to the baseline survival distributions. Indeed, we consider five different baseline survival functions, namely Weibull, Gamma, Lognormal, three-parameters Gamma, and three-parameters Lognormal. In Tables \ref{tab:1.4}, \ref{tab:1.5}, \ref{tab:1.6}, \ref{tab:1.7}, \ref{tab:1.8} we report the true value of the frailty parameters, varying among $(0.2,0.5,0.8)$ in the first column, followed by the baseline survival function parameters recovery, and the frailty parameter recovery in the last column. In bold there are the cases of a good recovery of the true parameter value. 
+Parameter estimation in the parametric case allows for a more detailed description compared to the semiparametric scenario, due to the inclusion of a parametric baseline survival function and the cure-rate structure. We conduct this simulation study on $n=100,000$ families for 100 iterations to obtain average point estimates and their standard errors across repetitions. As above, to generate the family size we use a parameter to control the maximum of the family size $n_F$ and the rate parameter of a Poisson distribution $\lambda_F$ which, recall, it can be seen as the average number of first-degree female relatives that a woman has. For the parameter recovery we set the parameters at $(n_F, \lambda_F) = (5,0.8)$. The cured fraction $p$ is set at $0.85$. The frailty parameter is varying to assess estimate stability across its values. While, the baseline survival distribution has parameters $shape_0 = \mu_0 = 8$, $scale_0 = \sigma_0 = 6$, $\gamma_0 = 15$, according to the distribution it takes among Weibull, Gamma, Lognormal, three-parameter Gamma and three-parameter Lognormal. In Tables \ref{tab:1.4}, \ref{tab:1.5}, \ref{tab:1.6}, \ref{tab:1.7}, \ref{tab:1.8} we report the true value of the frailty parameters, varying among 0.2, 0.5, 0.8 in the first column, followed by the recovery of the baseline survival parameters, and the recovery of the frailty parameter in the last column.
 \begin{center}
 \begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllll@{}}
@@ -569,7 +567,8 @@ Parameter estimation in the parametric case allows for a more detailed descripti
     &0.8 &0.85 (0.0011) &8.00 (0.0435) &6.00 (0.0062) &0.80 (0.0286) \\ \midrule
     Univariate frailty Cure-Rate \\
     &0.2 &0.79 (0.0008) &8.12 (0.0366) &6.37 (0.0374) &0.11 (0.0007) \\
-    &0.5 &0.81 (0.0011) &8.59 (0.0241) &6.06 (0.0030) &0.39 (0.0170) \\ \midrule
+    &0.5 &0.81 (0.0011) &8.59 (0.0241) &6.06 (0.0030) &0.39 (0.0170) \\ 
+    &0.8 &0.81 (0.0012) &8.36 (0.0247) &6.07 (0.0035) &0.62 (0.0568) \\ \midrule
     Univariate $FH$ Cure-Rate &&&&&$\widehat\beta_{FH}$ (se) \\ 
     &0.2 &0.89 (0.0014)  &5.06 (0.0653) &6.15 (0.0837) &2.88 (0.0587) \\
     &0.5 &0.88 (0.0016) &4.97 (0.0574) &5.90 (0.0119) &2.02 (0.0505) \\
@@ -666,7 +665,7 @@ Parameter estimation in the parametric case allows for a more detailed descripti
     &0.5 &0.94 (0.0012) &0.89 (0.0060) &3.27 (0.0122) &0.17 (0.0051) &0.09 (0.0059) \\ 
     &0.8 &0.93 (0.0014) &0.92 (0.0062) &3.30 (0.0131) &0.18 (0.0059) &0.06 (0.0056) \\ \bottomrule
     \end{tabular*}
-    \caption{parameter recovery with a three-parameter Lognormal($\mu_0 = 8$, $\sigma_0 = 6$, $\gamma_0 = 15$) baseline survival function. Simulations are based on the parameter values $(p_0,\mu_0,\sigma_0,\gamma_0)=(0.85,8,6,15)$ with 100 simulated samples of 100,000 families.}
+    \caption{Parameter recovery with a three-parameter Lognormal($\mu_0 = 8$, $\sigma_0 = 6$, $\gamma_0 = 15$) baseline survival function.}
     \label{tab:1.8}
 \end{table*}
 \end{center}
@@ -685,6 +684,8 @@ Parameter estimation in the parametric case allows for a more detailed descripti
 \end{figure}
 \newpage
 The findings presented in Tables \ref{tab:1.4}, \ref{tab:1.5}, \ref{tab:1.6}, \ref{tab:1.7}, and \ref{tab:1.8} align with our initial expectations, as the multivariate model was able to accurately identify and estimate the model parameters, given that the data was generated from a multivariate scenario, better than the univariate models. With the parameters identified, we can proceed to the risk prediction step by computing the posterior frailty mean, median, and mode using the parametric equations detailed in Section \ref{sec:1.4.2}. We still need to delve deeper into the analysis, explanation, and resolution of some identification issues, particularly regarding the three-parameters Lognormal distribution. 
+
+What we expect from the analysis on the parameter recovery is that the Univariate $FH$ Cure-Rate model is not able to recover well the parameters because the family history coefficient is not part of the data generating process.
 
 Also, the cases Gamma distribution can almost accurately identify the true value of the parameters, used in the data generation process. Indeed, from the estimated Kaplan-Meier curve in Figure \ref{fig:KM1} we can appreciate how in these scenarios the survival curves remain constant before the time fixed as threshold, that in this case is set at 15, when censoring events and the event of interest begin to show up. At contrary, the cases Lognormal distribution shows some problems in correctly recovering the true values of the parameter. We can appreciate a particular behaviour of the estimated Kaplan-Meier curve in Figure \ref{fig:KM2}: the jump crossing the threshold is not smooth as in the Gamma scenario. We need to investigate more deeply about this issue. 
 \begin{table}
