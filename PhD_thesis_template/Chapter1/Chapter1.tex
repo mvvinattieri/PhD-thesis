@@ -379,16 +379,19 @@ Parameter estimation is performed through an EM algorithm, that can be carried o
 \begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}llll@{}}
 \toprule
-    &$\theta$ &mean($\widehat{\theta}$) (se) &mean($\widehat{\beta}_{FH}$) (se) \\ \cmidrule{2-4} 
-    Multivariate frailty Cox &0.2 &0.199 (0.004) &- \\
-    Univariate $FH$ Cox &&- &2.835 (0.081) \\ 
-    Univariate $FH(t)$ Cox &&- &5.846 (0.166) \\ \midrule
-    Multivariate frailty Cox &0.5 &0.499 (0.012) &- \\ 
-    Univariate $FH$ Cox &&- &1.455 (0.040) \\
-    Univariate $FH(t)$ Cox &&- &2.956 (0.083) \\ \midrule
-    Multivariate frailty Cox &0.8 &0.802 (0.029) &- \\ 
-    Univariate $FH$ Cox &&- &1.102 (0.033) \\
-    Univariate $FH(t)$ Cox &&- &2.227 (0.066) \\ \bottomrule
+    &$\theta$ &$\widehat{\theta}$ (se) &$\widehat\beta_{FH}$ (se) \\ \cmidrule{2-4} 
+    Multivariate frailty Cox \\
+    &0.2 &0.199 (0.004) &- \\
+    &0.5 &0.499 (0.012) &- \\ 
+    &0.8 &0.802 (0.029) &- \\ \midrule
+    Univariate $FH$ Cox \\
+    &0.2 &- &2.835 (0.081) \\
+    &0.5 &- &1.455 (0.040) \\
+    &0.8 &- &1.102 (0.033) \\ \midrule
+    Univariate $FH(t)$ Cox \\
+    &0.2 &- &5.846 (0.166) \\ 
+    &0.5 &- &2.956 (0.083) \\ 
+    &0.8 &- &2.227 (0.066) \\ \bottomrule
     \end{tabular*}
     \caption{Mean and standard error of the estimated parameters and Harrell's Concordance index (C) in the last column. The first column $\theta$ stands for the true value set at the data generating step and varying among (0.2, 0.5, 0.8).}
     \label{tab:1.1}
@@ -396,7 +399,7 @@ Parameter estimation is performed through an EM algorithm, that can be carried o
 \end{center}
 % codice simulation-cox-contfrailty-multiFhCostantAndTimevar-MVV.R LOCAL COMPUTER
 
-Results from Table \ref{tab:1.1} show that the Multivariate frailty Cox model can accurately estimate the value of $\theta$ from the given data, while the Univariate models only estimate the parameter $\beta_F$ and nothing can be said about parameter recovery. Even though the parameter $\beta_F$ has little meaning because is not part of the data generating process, it is interesting to notice is always estimated positive. This means that the family history is a valid and positive indicator for breast cancer development.
+Results from Table \ref{tab:1.1} show that the Multivariate frailty Cox model can accurately estimate the value of $\theta$ from the given data, while the Univariate models only estimate the parameter $\beta_{FH}$ and nothing can be said about parameter recovery. Even though the parameter $\beta_{FH}$ has little meaning because is not part of the data generating process, it is interesting to notice is always estimated positive. This means that the family history is a valid and positive indicator for breast cancer development.
 
 % \begin{table}[ht] 
 %     \centering
@@ -459,7 +462,7 @@ Results show that the median performs poorly as a risk predictor, especially whe
     Univariate $FH(t)$ Cox \\ 
     MSPE &2.32 (0.0067) &2.30 (0.0065) &2.08 (0.006) &2.22 (0.0064) \\ 
     $R^2$ &0.03 (0.0004) &0.04 (0.0003) &0.05 (0.0002) &0.04 (0.0001) \\ 
-    $\widehat\beta_F$ &0.91 (0.0062) &0.87 (0.0049) &0.62 (0.0017) &0.47 (0.0010) \\ 
+    $\widehat\beta_{FH}$ &0.91 (0.0062) &0.87 (0.0049) &0.62 (0.0017) &0.47 (0.0010) \\ 
     $\rho$ &0.18 (0.0011) &0.19 (0.0009) &0.23 (0.0004) &0.19 (0.0004) \\ 
     Rank $\rho$ &0.18 (0.0008) &0.20 (0.0006) &0.28 (0.0004) &0.25 (0.0004) \\ 
   \bottomrule
@@ -557,99 +560,65 @@ Parameter estimation in the parametric case allows for a more detailed descripti
 \begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllll@{}}
 \toprule
-    &$\theta$ &$\widehat p_0$ &$\widehat shape_0$ &$\widehat scale_0$ &$\widehat\theta$ \\ \midrule
-    % &0.85 &8 &6 &\textbf{0.2} \\
+    &$\theta$ &$\widehat p_0$ (se) &$\widehat{shape}_0$ (se) &$\widehat{scale}_0$ (se) &$\widehat\theta$ (se) \\ \midrule
     Multivariate frailty Cure-Rate \\ 
-    Mean &0.2 &0.8500 &7.9974 &5.9997 &\textbf{0.2004} \\
-    Se &&0.0016 &0.0498 &0.0063 &0.0043 \\ 
-    Mean &0.5 &0.8499 &8.0048 &6.0001 &\textbf{0.5005} \\
-    Se &&0.0012 &0.0371 &0.0052 &0.0128 \\
-    Mean &0.8 &0.8501 &8.0006 &6.0002 &\textbf{0.8053} \\
-    Se &&0.0011 &0.0435 &0.0062 &0.0286 \\ \midrule
+    &0.2 &0.85 (0.0016) &7.99 (0.0498) &5.99 (0.0063) &0.20 (0.0043) \\
+    &0.5 &0.85 (0.0012) &8.00 (0.0371) &6.00 (0.0052) &0.50 (0.0128) \\
+    &0.8 &0.85 (0.0011) &8.00 (0.0435) &6.00 (0.0062) &0.80 (0.0286) \\ \midrule
     Univariate frailty Cure-Rate \\
-    % &0.85 &8 &6 &\textbf{0.2} \\
-    Mean &0.2 &0.7914 &8.1218 &6.3699 &0.1109 \\
-    Se &&0.0008 &0.0366 &0.0374 &0.0007 \\ 
-    Mean &0.5 &0.8138 &8.5950 &6.0571 &0.3868 \\
-    Se &&0.0011 &0.0241 &0.0030 &0.0170 \\ 
-    Mean &0.8 &0.8145 &8.3576 &6.0688 &0.6187 \\
-    Se &&0.0012 &0.0247 &0.0035 &0.0568 \\ \midrule
-    &&&&&$\widehat\beta_F$ \\ \midrule
-    Univariate FH Cure-Rate \\ 
-    Mean &0.2 &0.8961 &5.0588 &6.1471 &2.8782 \\
-    Se &&0.0014 &0.0653 &0.0837 &0.0587 \\ 
-    Mean &0.5 &0.8852 &4.9684 &5.9038 &2.0227 \\
-    Se &&0.0016 &0.0574 &0.0119 &0.0505 \\ 
-    Mean &0.8 &0.8961 &4.7195 &5.8500 &1.8392 \\
-    Se &&0.0013 &0.0633 &0.0146 &0.0385 \\ \hline
+    &0.2 &0.79 (0.0008) &8.12 (0.0366) &6.37 (0.0374) &0.11 (0.0007) \\
+    &0.5 &0.81 (0.0011) &8.59 (0.0241) &6.06 (0.0030) &0.39 (0.0170) \\ \midrule
+    Univariate $FH$ Cure-Rate &&&&&$\widehat\beta_{FH}$ (se) \\ 
+    &0.2 &0.89 (0.0014)  &5.06 (0.0653) &6.15 (0.0837) &2.88 (0.0587) \\
+    &0.5 &0.88 (0.0016) &4.97 (0.0574) &5.90 (0.0119) &2.02 (0.0505) \\
+    &0.8 &0.89 (0.0013) &4.72 (0.0633) &5.85 (0.0146) &1.84 (0.0385) \\ \bottomrule
     \end{tabular*}
-    \caption{Parameter recovery for the three parametric models, with \textbf{Weibull} baseline survival function. Simulations are based on the parameter values $(p_0,shape_0,scale_0)=(0.85,8,6)$ with 100 simulated samples of 100,000 families, with the true value of $\theta$ varying among (0.2, 0.5, 0.8).}
+    \caption{Parameter recovery with a Weibull($shape = 8$, $scale = 6$) baseline survival function.}
     \label{tab:1.4}
 \end{table*}
 \end{center}
 % codice: simulation-par-contfraily-multivariate-MVV.R, simulation-par-contfrailty-univariate-MVV, simulation-par-univariateFh-MVV, simulation-par-contfrailty-multivariate-univariate-3pars-multidistribution-MVV.R    
-\newpage
 \begin{center}
 \begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllll@{}}
 \toprule
-    &$\theta$ &$\widehat p_0$ &$\widehat shape_0$ &$\widehat scale_0$ &$\widehat\theta$ \\ \midrule
+    &$\theta$ &$\widehat p_0$ (se) &$\widehat{shape}_0$ (se) &$\widehat{scale}_0$ (se) &$\widehat\theta$ (se) \\ \midrule
     Multivariate frailty Cure-Rate \\
-    Mean &0.2 &0.8480 &8.2408 &5.9620 &\textbf{0.2252} \\
-    Se &&1.1231 &1.0132 &0.0958 &0.0745 \\ 
-    Mean &0.5 &0.8499 &8.0136 &5.9910 &\textbf{0.5001} \\
-    Se &&0.0016 &0.0966 &0.0847 &0.0217 \\ 
-    Mean &0.8 &0.8498 &7.9965 &6.0086 &\textbf{0.7985} \\
-    Se &&0.0016 &0.0942 &0.0812 &0.0421 \\ \midrule
+    &0.2 &0.85 (1.1231) &8.24 (1.0132) &5.96 (0.0958) &0.22 (0.0745) \\
+    &0.5 &0.85 (0.0016) &8.01 (0.0966) &5.99 (0.0847) &0.50 (0.0217) \\
+    &0.8 &0.85 (0.0016) &7.99 (0.0942) &6.01 (0.0812) &0.79 (0.0421) \\ \midrule
     Univariate frailty Cure-Rate \\
-    Mean &0.2 &0.7897 &9.0371 &5.7925 &0.1283 \\
-    Se &&0.0006 &0.0580 &0.0385 &0.0021 \\ 
-    Mean &0.5 &0.7883 &8.4697 &6.0302 &0.1744 \\
-    Se &&0.0009 &0.0384 &0.0335 &0.0039 \\ 
-    Mean &0.8 &0.7762 &8.0837 &6.8830 &0.2169 \\
-    Se &&0.0012 &0.0563 &0.0765 &0.0047 \\ \midrule
-    &&&&&$\widehat\beta_F$ \\ \midrule
-    Univariate FH Cure-Rate \\
-    Mean &0.2 &0.6863 &4.5108 &53.5929 &2.5122 \\
-    Se &&0.0103 &0.0776 &2.2848 &0.0662 \\ 
-    Mean &0.5 &0.8278 &5.9820 &15.0471 &1.1020 \\
-    Se &&0.0037 &0.0713 &0.6704 &0.0247 \\ 
-    Mean &0.8 &0.8503 &6.7744 &8.9505 &0.7939 \\
-    Se &&0.0012 &0.0737 &0.2033 &0.0247 \\ \bottomrule
+    &0.2 &0.79 (0.0006) &9.04 (0.0580) &5.79 (0.0385) &0.13 (0.0021) \\
+    &0.5 &0.79 (0.0009) &8.47 (0.0384) &6.03 (0.0335) &0.17 (0.0039) \\
+    &0.8 &0.78 (0.0012) &8.08 (0.0563) &6.88 (0.0765) &0.22 (0.0047) \\ \midrule
+    Univariate $FH$ Cure-Rate &&&&&$\widehat\beta_{FH}$ (se) \\ 
+    &0.2 &0.69 (0.0103) &4.51 (0.0776) &53.59 (2.2848) &2.51 (0.0662) \\
+    &0.5 &0.83 (0.0037) &5.98 (0.0713) &15.05 (0.6704) &1.10 (0.0247) \\
+    &0.8 &0.85 (0.0012) &6.77 (0.0737) &8.95 (0.2033) &0.79 (0.0247) \\ \bottomrule
     \end{tabular*}
-    \caption{Parameter recovery for the three parametric models, with \textbf{Gamma} baseline survival function. Simulations are based on the parameter values $(p_0,shape_0,scale_0)=(0.85,8,6)$ with 100 simulated samples of 100,000 families, with the true value of $\theta$ varying among (0.2, 0.5, 0.8).}
+    \caption{Parameter recovery with a Gamma($shape = 8$, $scale = 6$) baseline survival function.}
     \label{tab:1.5}
 \end{table*}
 \end{center}
-\newpage
 \begin{center}
 \begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllll@{}}
 \toprule
     &$\theta$ &$\widehat{p}_0$ &$\widehat{\mu}_0$ &$\widehat{\sigma}_0$ &$\widehat\theta$ \\ \midrule
     Multivariate frailty Cure-Rate \\ 
-    Mean &0.2 &0.8434 & 7.8914 & 5.9343 & \textbf{0.1975} \\ 
-    Se && 0.0006 & 0.0192 & 0.0060 & 0.0004 \\ 
-    Mean &0.5  & 0.8273 & 8.2779 & 6.0126 & \textbf{0.5495} \\ 
-    Se & &0.0009 & 0.0238 & 0.0068 & 0.0017 \\ 
-    Mean &0.8 & 0.8385 & 8.0476 & 6.0081 & 0.9485 \\ 
-    Se & &0.0008 & 0.0227 & 0.0066 & 0.0039 \\  \midrule
+    &0.2 &0.84 (0.0006) &7.89 (0.0192) &5.93 (0.0060) &0.19 (0.0004) \\ 
+    &0.5 &0.83 (0.0009) &8.28 (0.0238) &6.01 (0.0068) &0.55 (0.0017) \\ 
+    &0.8 &0.84 (0.0008) &8.05 (0.0227) &6.01 (0.0066) &0.95 (0.0039) \\  \midrule
     Univariate frailty Cure-Rate \\
-    Mean &0.2 &0.8858 &6.0477 &5.4248 &0.3720 \\
-    Se &&0.0001 &0.0015 &0.0015 &0.0036 \\ 
-    Mean &0.5 &0.8872 &6.1642 &5.3674 &2.4196 \\
-    Se &&0.0001 &0.0017 &0.0014 &0.0589 \\
-    Mean &0.8 &0.8896 &6.0668 &5.3379 &0.6449 \\
-    Se &&0.0001 &0.0028 &0.0021 &0.0052 \\ \midrule
-    Univariate FH Cure-Rate &&&&&$\widehat\beta_F$ \\
-    Mean &0.2 &0.9570 &0.3208 &3.7501 &0.1729 \\
-    Se &&0.0004 &0.0465 &0.0472 & 0.0398 \\ 
-    Mean &0.5 &0.9493 &0.8420 &3.8982 &-0.3137 \\
-    Se &&0.0007 &0.0525 &0.0665 &0.0439 \\ 
-    Mean &0.8 &0.9491 &1.0905 &3.6504 &-0.5317 \\
-    Se &&0.0006 &0.0555 &0.0266 &0.0467 \\ \bottomrule
+    &0.2 &0.89 (0.0001) &6.05 (0.0015) &5.42 (0.0015) &0.37 (0.0036) \\
+    &0.5 &0.89 (0.0001) &6.16 (0.0017) &5.37 (0.0014) &2.42 (0.0589) \\
+    &0.8 &0.89 (0.0001) &6.07 (0.0028) &5.34 (0.0021) &0.65 (0.0052) \\ \midrule
+    Univariate $FH$ Cure-Rate &&&&&$\widehat\beta_{FH}$ (se) \\
+    &0.2 &0.96 (0.0004) &0.32 (0.0465) &3.75 (0.0472) &0.17 (0.0398) \\
+    &0.5 &0.95 (0.0007) &0.84 (0.0525) &3.89 (0.0665) &-0.31 (0.0439) \\
+    &0.8 &0.95 (0.0006) &1.09 (0.0555) &3.65 (0.0266) &-0.53 (0.0467) \\ \bottomrule
     \end{tabular*}
-    \caption{Parameter recovery for the three parametric models, with \textbf{Lognormal} baseline survival function. Simulations are based on the parameter values $(p_0,\mu_0,\sigma_0)=(0.85,8,6)$ with 100 simulated samples of 100,000 families, with the true value of $\theta$ varying among (0.2, 0.5, 0.8).}
+    \caption{Parameter recovery with Lognormal($\mu_0 = 8$, $\sigma_0 = 6$) baseline survival function.}
     \label{tab:1.6}
 \end{table*}
 \end{center}
@@ -658,65 +627,48 @@ Parameter estimation in the parametric case allows for a more detailed descripti
 \begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllllll@{}}
 \toprule
-    &$\theta$ &$\widehat p_0$ &$\widehat shape_0$ &$\widehat scale_0$ &$\widehat\gamma_0$ &$\widehat\theta$ \\ \midrule
-    Multivariate frailty Cure-Rate \\ 
-    Mean &0.2 &0.8408 & 9.3397 & 6.8492 & 13.4594 & \textbf{0.1956} \\ 
-    Se &&0.0008 & 0.1751 & 0.0857 & 0.3991 & 0.0021 \\ 
-    Mean &0.5 &0.8438 & 7.9902 & 7.6431 & 17.3172 & 0.6095 \\ 
-    Se &&0.0004 & 0.1642 & 0.1154 & 0.3211 & 0.0121 \\ 
-    Mean &0.8 &0.8651 &8.0636 &6.4814 &17.5597 &0.8833 \\
-    Se &&0.0013 & 0.1817 & 0.2611 & 0.3511 & 0.0192 \\ \hline
-    Univariate frailty Cure-Rate \\
-    Mean &0.2 &0.7794 & 13.1800 & 4.5625 & 6.8431 & 102.8130 \\ 
-    Se &&0.0069 & 0.1567 & 0.0368 & 0.3131 & 2.7683 \\ 
-    Mean &0.5 &0.7648 & 13.1366 & 6.5679 & 9.1415 & 98.9017 \\ 
-    Se &&0.0071 & 0.2535 & 0.1449 & 0.3799 & 2.6522 \\ 
-    Mean &0.8 &0.7089 & 12.3406 & 7.7398 & 11.5973 & 68.9262 \\ 
-    Se &&0.0079 & 0.2673 & 0.1807 & 0.4246 & 2.7657 \\  \hline
-    Univariate FH Cure-Rate &&&&&&$\widehat\beta_F$ \\
-    Mean &0.2 & 0.8991 & 8.6957 & 5.4870 & 14.3725 & 3.2352 \\ 
-    Se &&$<$0.0001 & 0.0205 & 0.0084 & 0.0431 & 0.0048 \\ 
-    Mean &0.5 & 0.8756 & 8.2294 & 5.9623 & 14.7768 & 1.6410 \\ 
-    Se &&0.0001 & 0.0189 & 0.0110 & 0.0399 & 0.0022 \\ 
-    Mean &0.8 &0.8729 & 6.8551 & 6.8521 & 18.3364 & 1.3828 \\ 
-    Se &&0.0001 & 0.0208 & 0.0124 & 0.0413 & 0.0018 \\ \hline
+    &$\theta$ &$\widehat p_0$ (se) &$\widehat shape_0$ (se) &$\widehat scale_0$ (se) &$\widehat\gamma_0$ (se) &$\widehat\theta$ (se) \\ \midrule
+    MFCR \\ 
+    &0.2 &0.84 (0.0008) &9.34 (0.1751) &6.85 (0.0857) &13.46 (0.3991) &0.19 (0.0021) \\ 
+    &0.5 &0.84 (0.0004) &7.99 (0.1642) &7.64 (0.1154) &17.32 (0.3211) & 0.61 (0.0121) \\ 
+    &0.8 &0.86 (0.0013) &8.06 (0.1817) &6.48 (0.2611) &17.56 (0.3511) &0.88 (0.0192) \\ \midrule
+    UFCR \\
+    &0.2 &0.78 (0.0069) &13.18 (0.1567) &4.56 (0.0368) &6.84 (0.3131) &102.81 (2.7683) \\ 
+    &0.5 &0.76 (0.0071) & 13.14 (0.2535) & 6.57 (0.1449) & 9.14 (0.3799) & 98.90 (2.6522) \\ 
+    &0.8 &0.71 (0.0079) & 12.34 (0.2673) & 7.74 (0.1807) & 11.59 (0.4246) & 68.93 (2.7657) \\ \midrule
+    U$FH$CR &&&&&&$\widehat\beta_{FH}$ (se) \\
+    &0.2 & 0.89 ($<$0.0001) & 8.69 (0.0205) & 5.49 (0.0084) & 14.37 (0.0431) & 3.23 (0.0048) \\ 
+    &0.5 & 0.88 (0.0001) & 8.23 (0.0189) & 5.96 (0.0110) & 14.78 (0.0399) & 1.64 (0.0022) \\ 
+    &0.8 &0.87 (0.0001) & 6.85 (0.0208) & 6.85 (0.0124) & 18.34 (0.0413) & 1.38 (0.0018) \\ \bottomrule
     \end{tabular*}
-    \caption{Parameter recovery for the three parametric models, with \textbf{3-parameters Gamma} baseline survival function. Simulations are based on the parameter values $(p_0,shape_0,scale_0,\gamma_0)=(0.85,8,6,15)$ with 100 simulated samples of 100,000 families.}
+    \caption{Parameter recovery with a three-parameter Gamma($shape_0 = 8$, $scale_0 = 6$, $\gamma_0 = 15$) baseline survival function.}
     \label{tab:1.7}
 \end{table*}
 \end{center}
 % code in LOCAL: simulation-par-contfrailty-multivariate-univariate-3pars-gamma-MVV
-\newpage 
-\begin{table}
-    \centering
-    \begin{tabular}{l|cccccc}
-    \hline
-     Multivariate &$\theta$ &$\widehat p_0$ &$\widehat{\mu}_0$ &$\widehat{\sigma}_0$ &$\widehat\gamma_0$ &$\widehat\theta$ \\
-    Mean &0.2 &0.4003 & 4.3076 & 9.8430 & 14.9639 & 1.1814 \\ 
-    Se &&0.0006 & 0.0015 & 0.0055 & 0.0004 & 0.0019 \\ 
-    Mean &0.5 & 0.4644 & 4.1581 & 9.2905 & 14.9893 & 1.1827 \\ 
-    Se &&<0.0001 &<0.0001 &<0.0001 &<0.0001 &<0.0001 \\ 
-    Mean &0.8 & 0.5811 & 3.3800 & 6.8228 & 14.9573 & 2.0971 \\ 
-    Se &&0.0014 & 0.0037 & 0.0118 & 0.0003 & 0.0055 \\ \hline
-    Univariate &$\theta$ &$\widehat p_0$ &$\widehat shape_0$ &$\widehat scale_0$ &$\widehat\gamma_0$ &$\widehat\theta$ \\
-    Mean &0.2 & 0.3721 & 4.0631 & 9.3708 & 14.9097 & 2.5097 \\ 
-    Se &&0.0012 & 0.0063 & 0.0147 & 0.0012 & 0.0173 \\ 
-    Mean &0.5 &0.5613 & 3.4080 & 7.2050 & 14.9297 & 2.7473 \\ 
-    Se &&0.0017 & 0.0046 & 0.0147 & 0.0010 & 0.0116 \\ 
-    Mean &0.8 & 0.5885 & 3.4507 & 6.9386 & 14.9592 & 2.3564 \\ 
-    Se &&0.0013 & 0.0046 & 0.0134 & 0.0004 & 0.0072 \\ \hline
-    Univariate FH &$\theta$ &$\widehat p_0$ &$\widehat shape_0$ &$\widehat scale_0$ &$\widehat\gamma_0$ &$\widehat\beta_F$ \\
-    Mean &0.2 & 0.9525 & 0.8947 & 3.1513 & 0.0911 & 0.1705 \\ 
-    Se &&0.0007 & 0.0083 & 0.0081 & 0.0024 & 0.0045 \\  
-    Mean &0.5 & 0.9358 & 0.8942 & 3.2681 & 0.1673 & 0.0895 \\ 
-    Se &&0.0012 & 0.0060 & 0.0122 & 0.0051 & 0.0059 \\
-    Mean &0.8 & 0.9302 & 0.9183 & 3.3025 & 0.1850 & 0.0618 \\ 
-    Se &&0.0014 & 0.0062 & 0.0131 & 0.0059 & 0.0056 \\\hline
-    \end{tabular}
-    \caption{parameter recovery for the three parametric models, with \textbf{3-parameters Lognormal} baseline survival function. Simulations are based on the parameter values $(p_0,\mu_0,\sigma_0,\gamma_0)=(0.85,8,6,15)$ with 100 simulated samples of 100,000 families.}
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllllll@{}}
+\toprule
+    &$\theta$ &$\widehat p_0$ (se) &$\widehat{\mu}_0$ (se) &$\widehat{\sigma}_0$ (se) &$\widehat\gamma_0$ (se) &$\widehat\theta$ (se) \\ \midrule
+    MFCR \\ 
+    &0.2 &0.40 (0.0006) &4.31 (0.0015) &9.84 (0.0055) &14.96 (0.0004) &1.18 (0.0019) \\ 
+    &0.5 &0.46 (<0.0001) &4.16 (<0.0001) &9.29 (<0.0001) &14.99 (<0.0001) &1.18 (<0.0001) \\ 
+    &0.8 &0.58 (0.0014) &3.38 (0.0037) &6.82 (0.0118) &14.96 (0.0003) &2.09 (0.0055) \\ \midrule
+    UFCR \\
+    &0.2 &0.37 (0.0012) &4.06 (0.0063) &9.37 (0.0147) &14.91 (0.0012) &2.51 (0.0173) \\ 
+    &0.5 &0.56 (0.0017) &3.41 (0.0046) &7.20 (0.0147) &14.93 (0.0010) &2.75 (0.0116) \\ 
+    &0.8 &0.59 (0.0013) &3.45 (0.0046) &6.94 (0.0134) &14.96 (0.0004) &2.36 (0.0072) \\ \midrule
+    U$FH$CR &&&&&&$\widehat\beta_{FH}$ (se) \\
+    &0.2 &0.95 (0.0007) &0.89 (0.0083) &3.15 (0.0081) &0.09 (0.0024) &0.17 (0.0045) \\ 
+    &0.5 &0.94 (0.0012) &0.89 (0.0060) &3.27 (0.0122) &0.17 (0.0051) &0.09 (0.0059) \\ 
+    &0.8 &0.93 (0.0014) &0.92 (0.0062) &3.30 (0.0131) &0.18 (0.0059) &0.06 (0.0056) \\ \bottomrule
+    \end{tabular*}
+    \caption{parameter recovery with a three-parameter Lognormal($\mu_0 = 8$, $\sigma_0 = 6$, $\gamma_0 = 15$) baseline survival function. Simulations are based on the parameter values $(p_0,\mu_0,\sigma_0,\gamma_0)=(0.85,8,6,15)$ with 100 simulated samples of 100,000 families.}
     \label{tab:1.8}
-\end{table}
-
+\end{table*}
+\end{center}
+\newpage
 \begin{figure}
     \centering
     \includegraphics[width = \linewidth]{PhD_thesis_template/plots/Rplot.pdf}
@@ -1161,7 +1113,7 @@ When we select only main subjects with the complete information on the mother, t
 \begin{table}[ht]
     \centering
     \begin{tabular}{l|cccc} \hline
-    &Survival information mother &$\widehat\theta$ &$\widehat\beta_F$ &C \\
+    &Survival information mother &$\widehat\theta$ &$\widehat\beta_{FH}$ &C \\
     Multivariate &yes &1.3624 &- &\hl{\textbf{0.9968}} \\
     Univariate FH &&- &1.5372 &0.5021 \\
     Univariate FH(t) &&- &1.8017 &0.5042 \\ \hline
@@ -1179,7 +1131,7 @@ In Table \ref{tab:14} we report results from including the available reproductiv
     \centering
     \begin{tabular}{l|cccc} 
     \hline
-    &Survival information mother &$\widehat\theta$ &$\widehat\beta_F$ &C \\
+    &Survival information mother &$\widehat\theta$ &$\widehat{\beta}_{FH}$ &C \\
     Multivariate &yes &2 &- &\textbf{0.9335} \\
     Univariate FH &&- &1.3922 &0.6209 \\
     Univariate FH(t) &&- &2.2254 &0.5350 \\ \hline
@@ -1190,7 +1142,7 @@ In Table \ref{tab:14} we report results from including the available reproductiv
     \caption{estimated parameters and Harrell's concordance index for the three semiparametric models with parity, number of children, age at first child covariates.}
     \label{tab:14}
 \end{table}
-Also, we can not conclude anything about parameter recovery but the estimate of the frailty parameter $\widehat\theta$ in the second column of Table \ref{tab:13} has a reasonable value. Additionally, the estimated of the family history coefficient $\widehat\beta_F$ has a positive value (around 1.8) meaning that the family history has a positive effect on the breast cancer development, that is indeed coherent with this phenomenon.  
+Also, we can not conclude anything about parameter recovery but the estimate of the frailty parameter $\widehat\theta$ in the second column of Table \ref{tab:13} has a reasonable value. Additionally, the estimated of the family history coefficient $\widehat{\beta}_{FH}$ has a positive value (around 1.8) meaning that the family history has a positive effect on the breast cancer development, that is indeed coherent with this phenomenon.  
 % Code \texttt{finalEstimationCovariates-cox-swemultireg-MVV} in the SWEDISH COMPUTER.
 \newpage
 % Code in ParContinuousFrailty-multivariate-swemultireg-MVV.R in the SWEDISH COMPUTER for the estimation of parameters and ParContinuousFrailty-multiunifh-postprediction-swemultireg-MVV.R for concordance with adjustement on the parameter values.  
@@ -1304,11 +1256,11 @@ It is interesting to notice that support to the cure-rate structure is mainly gi
 
 However, on top of the AIC values, we are interested in the accuracy of the models to describe the observed cure-rate structure. 
 
-We report the values of the estimated parameters in Table \ref{tab:1.17} and \ref{tab:1.18}. We run the analysis both on main subjects with reported survival information on the mother and on all main subjects (with the Weibull distribution fixed as the baseline survival distribution). In Table \ref{tab:1.18} we compare different baseline survival distribution on all the main subjects. Notice that we can not assess the model fitting accuracy by comparing the estimated parameters value with true values, because we are with a real dataset, but the estimated cured fraction value has a reasonable value for this specific application in the range, for example for $\widehat p$ in the first column of Table \ref{tab:1.17}, around 87\%-96\%. In Tables also the estimates of the baseline survival distribution parameters are reported, that are $\widehat shape_0$, and $\widehat scale_0$ for the Weibull and Gamma, with the addition of $\widehat\gamma_0$ for the threshold parameter in the three-parameters Gamma; $\widehat\mu_0$, and $\widehat\sigma^2_0$ for the Lognormal, with the addition of $\widehat\gamma_0$ for the threshold parameter in the three-parameters Lognormal. The frailty parameter $\widehat\theta$ and the $FH$ coefficient $\widehat\beta_F$ are reported in the same column for a matter of space, because also notice that each model estimates one or the other. 
+We report the values of the estimated parameters in Table \ref{tab:1.17} and \ref{tab:1.18}. We run the analysis both on main subjects with reported survival information on the mother and on all main subjects (with the Weibull distribution fixed as the baseline survival distribution). In Table \ref{tab:1.18} we compare different baseline survival distribution on all the main subjects. Notice that we can not assess the model fitting accuracy by comparing the estimated parameters value with true values, because we are with a real dataset, but the estimated cured fraction value has a reasonable value for this specific application in the range, for example for $\widehat p$ in the first column of Table \ref{tab:1.17}, around 87\%-96\%. In Tables also the estimates of the baseline survival distribution parameters are reported, that are $\widehat shape_0$, and $\widehat scale_0$ for the Weibull and Gamma, with the addition of $\widehat\gamma_0$ for the threshold parameter in the three-parameters Gamma; $\widehat\mu_0$, and $\widehat\sigma^2_0$ for the Lognormal, with the addition of $\widehat\gamma_0$ for the threshold parameter in the three-parameters Lognormal. The frailty parameter $\widehat\theta$ and the $FH$ coefficient $\widehat{\beta}_{FH}$ are reported in the same column for a matter of space, because also notice that each model estimates one or the other. 
 \begin{table}[ht]
     \centering
     \begin{tabular}{l|cccccc} \hline
-    &Survival info mother &$\widehat p$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat\theta$/$\widehat\beta_F$ &C \\
+    &Survival info mother &$\widehat p$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat\theta$/$\widehat{\beta}_{FH}$ &C \\
     Multivariate &yes &0.8710  &6.2645 &73.2018  &4.9053 &\textbf{0.9592} \\
     Univariate &&0.9594 &0.1246 &0.1900 &1.2150 &0.3952 \\
     Univariate FH &&0.9635 &0.0926 &0.0394 &1.2174 &- \\ \hline
@@ -1323,7 +1275,7 @@ We report the values of the estimated parameters in Table \ref{tab:1.17} and \re
 \begin{table}
     \centering
     \begin{tabular}{l|cccccc} \hline
-    Multivariate &$\widehat p_0$ &$\widehat\mu_0 / \widehat{shape}_0$ &$\widehat\sigma^2_0 / \widehat{scale}_0$ &$\widehat\gamma_0$ &$\widehat\theta$/$\widehat\beta_F$ &C \\
+    Multivariate &$\widehat p_0$ &$\widehat\mu_0 / \widehat{shape}_0$ &$\widehat\sigma^2_0 / \widehat{scale}_0$ &$\widehat\gamma_0$ &$\widehat\theta$/$\widehat{\beta}_{FH}$ &C \\
     Weibull &0.8703  &6.1822 &72.9776 &- &4.3569 &\textbf{0.9663} \\ 
     Gamma &0.8552 &18.6981  &3.8617 &- &5.4790 &\textbf{0.9663} \\ 
     Lognormal &0.8419 &4.2911 &0.2604 &- &5.5265 &\textbf{0.9392} \\ 
