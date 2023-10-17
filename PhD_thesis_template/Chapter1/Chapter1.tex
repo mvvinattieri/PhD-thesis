@@ -976,9 +976,8 @@ To perform the NCC we match subjects based on their year of birth and select 19,
 We carry out a survival Cox model with the time-varying family history covariate $FH(t)$ on the NCCD \cite{zhang2018time}. The estimated relative risk results $RR = 1.8017$, which is aligned with the value from the literature equal to 1.8 \cite{collaborative2001familial, pharoah1997family}. This result validates the quality of our data. 
 
 \subsection{Descriptive statistics}
-Table \ref{tab:covsummaries} reports some descriptive statistics of the clean dataset composed by .
+Table \ref{tab:covsummaries} reports some descriptive statistics of the clean dataset composed by $4,267,803$ women, and only $n = 1,603,920$ when the term ``Red.'' accompanies the description. 
 
- $n = 1,603,920$ Swedish families, consisting of a total of $4,267,803$ women.
 \begin{center}
 \begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
@@ -1000,26 +999,25 @@ Table \ref{tab:covsummaries} reports some descriptive statistics of the clean da
     &2018-12-31 \\
     Emigration Red. &1951-05-01 &1992-08-24 &1991-02-02 
     &2018-12-31 \\ \hline
-    Observed follow-up &0 &53.2922 &52.8118 
+    Follow-up (years) &0 &53.2922 &52.8118 
     &69.9576 \\ \midrule
-    BC diagnosis &Yes &No \\
-    &47,914(0.0299) &1,556,006(0.9701) \\ \midrule
+    Breast cancer onset &Yes &No \\
+    &47,914 (2.99\%) &1,556,006 (97.01\%) \\ \midrule
     EFS &Alive &Dead/emigrated &Diagnosed \\ 
-    &1,408,072(0.8779) &147,914(0.0922) &47,934(0.0299) \\ \midrule
+    &1,408,072 (87.79\%) &147,914 (9.22\%) &47,934 (2.99\%) \\ \midrule
     & Yes & No \\
-    FH at end of FU &105,432(0.0657) &1,498,488(0.9343) \\ 
-    Parity &98,9422 (0.3831) &614,498 (0.6169)    \\ \midrule
+    FH at end of FU &105,432 (6.57\%) &1,498,488 (93.43\%) \\ 
+    Parity &989,422 (38.31\%) &614,498 (61.69\%)    \\ \midrule
     &Min. &Median &Mean &Max. \\ 
     Number of children &1 &1 &1.5 &10 \\
     Age at first child &13.08 &27.25 &27.67 &60.33 \\ \bottomrule
     \end{tabular*}
-    \caption{summaries of the main variables obtained from the Multi-Generational Swedish Dataset, where ``Red.'' means the birthday range window between 1947-01-01 and 1976-12-31. Notice that the acronym of EFS is ``status at the end of the follow-up'', and ``FU'' is for ``follow-up''.}
+    \caption{Summaries of the main variables obtained from the Multi-Generational Swedish dataset, where ``Red.'' refers to only the main subject (whose birthday ranges in [1947-01-01, 1976-12-31]); ``EFS'' means status at the end of the follow-up, ``FH'' means family history, and ``FU'' means follow-up.}
     \label{tab:covsummaries}
 \end{table*}
 \end{center}
 % code in descriptiveStatistics.R from SWEDISH COMPUTER 
-
-In particular, out of $n=1,603,920$ Swedish women, 47,934 (2.99\%) subjects have been diagnosed with invasive breast cancer, 147,914 (9.22\%) are censored due to death, emigration or DCIS before the end of the follow-up period, and 1,408,072 (87.79\%) are alive at the end of the follow-up without experiencing neither breast cancer onset nor any other censoring events, so that we can consider this percentage as our cured fractions. 
+From Table \ref{tab:covsummaries} around the 3\% (47,934 subjects) have been diagnosed with invasive breast cancer, the 9.22\% are censored due to death, emigration or DCIS before the end of the follow-up, and the 87.79\% are alive at the end of the follow-up without experiencing neither breast cancer onset nor any other censoring events, so that we can consider this percentage as our cured fractions. 
 
 The median follow-up is 53.3 years obtained by the inversion of the censoring indicator when computing the estimates of the survival function. A majority of families (45.06\%) consist of two members, followed by three members (33.7\%) and four members (11.37\%). To provide complete information on family structure, we also report in Table \ref{tab:freqsis} the frequencies of sisters, as they play a critical role in our analysis.  
 
