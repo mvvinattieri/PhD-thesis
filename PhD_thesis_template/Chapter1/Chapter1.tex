@@ -605,7 +605,7 @@ Parameter estimation in the parametric case allows for a more detailed descripti
 \begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllll@{}}
 \toprule
-    &$\theta$ &$\widehat{p}_0$ &$\widehat{\mu}_0$ &$\widehat{\sigma}_0$ &$\widehat\theta$ \\ \midrule
+    &$\theta$ &$\widehat{p}_0$ &$\widehat{\mu}_0$ &$\widehat{\sigma}^2_0$ &$\widehat\theta$ \\ \midrule
     Multivariate frailty Cure-Rate \\ 
     &0.2 &0.84 (0.0006) &7.89 (0.0192) &5.93 (0.0060) &0.19 (0.0004) \\ 
     &0.5 &0.83 (0.0009) &8.28 (0.0238) &6.01 (0.0068) &0.55 (0.0017) \\ 
@@ -651,7 +651,7 @@ Parameter estimation in the parametric case allows for a more detailed descripti
 \begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllllll@{}}
 \toprule
-    &$\theta$ &$\widehat p_0$ (se) &$\widehat{\mu}_0$ (se) &$\widehat{\sigma}_0$ (se) &$\widehat\gamma_0$ (se) &$\widehat\theta$ (se) \\ \midrule
+    &$\theta$ &$\widehat p_0$ (se) &$\widehat{\mu}_0$ (se) &$\widehat{\sigma}^2_0$ (se) &$\widehat\gamma_0$ (se) &$\widehat\theta$ (se) \\ \midrule
     MFCR \\ 
     &0.2 &0.40 (0.0006) &4.31 (0.0015) &9.84 (0.0055) &14.96 (0.0004) &1.18 (0.0019) \\ 
     &0.5 &0.46 (<0.0001) &4.16 (<0.0001) &9.29 (<0.0001) &14.99 (<0.0001) &1.18 (<0.0001) \\ 
@@ -1202,40 +1202,41 @@ It is interesting to notice that support to the cure-rate structure is mainly gi
 \end{figure}
 % code in sisters.R SWEDEN COMPUTER 
 
-Once proved that the cure-rate model is the most appropriate for describing this real case dataset, we proceed to parameter estimation. We report the values of the estimated parameters in Table \ref{tab:1.17} and \ref{tab:1.18}. We run the analysis both on main subjects with a recorded mother in the registry or on main subjects without restrictions. Notice that we set a Weibull survival function distribution. In Table \ref{tab:1.18} we compare different baseline survival distribution on all the main subjects. Notice that we can not assess the model fitting accuracy by comparing the estimated parameters value with true values, because we are with a real dataset, but the estimated cured fraction value has a reasonable value for this specific application in the range, for example for $\widehat p$ in the first column of Table \ref{tab:1.17}, around 87\%-96\%. In Tables also the estimates of the baseline survival distribution parameters are reported, that are $\widehat shape_0$, and $\widehat scale_0$ for the Weibull and Gamma, with the addition of $\widehat\gamma_0$ for the threshold parameter in the three-parameters Gamma; $\widehat\mu_0$, and $\widehat\sigma^2_0$ for the Lognormal, with the addition of $\widehat\gamma_0$ for the threshold parameter in the three-parameters Lognormal. The frailty parameter $\widehat\theta$ and the $FH$ coefficient $\widehat{\beta}_{FH}$ are reported in the same column for a matter of space, because also notice that each model estimates one or the other. 
+Once proved that the cure-rate model is the most appropriate for describing this real case dataset, we proceed to parameter estimation. We report the values of the estimated parameters in Table \ref{tab:1.17} and \ref{tab:1.18}. We run the analysis both on main subjects with a recorded mother in the registry or on main subjects without restrictions. In Table \ref{tab:1.17} the survival function has a Weibull distribution. On the contrary, in Table \ref{tab:1.18} we extend to different baseline survival distributions on all the main subjects. The estimated cured fraction value has a reasonable value for this specific application in the range around 87\%-96\% for $\widehat p$ in the first column of Table \ref{tab:1.17}. The tables also report the estimates of the baseline survival distribution parameters, that are $\widehat shape_0$, and $\widehat scale_0$ for the Weibull and Gamma, with the addition of $\widehat\gamma_0$ for the threshold parameter in the three-parameter Gamma; $\widehat\mu_0$, and $\widehat\sigma^2_0$ for the Lognormal, with the addition of $\widehat\gamma_0$ for the threshold parameter in the three-parameters Lognormal. The frailty parameter $\widehat\theta$ and the $FH$ coefficient $\widehat{\beta}_{FH}$ are reported in the same column because estimating one of the two exclude the estimation of the other. Notice that only the models with ``FH'' in the name estimate the family history coefficient $\beta_{FH}$.
 \begin{center}
 \begin{table*}[!h]%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllllll@{}}
     \toprule
-    &Survival info mother &$\widehat p$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat\theta$/$\widehat{\beta}_{FH}$ &C \\
-    Multivariate &yes &0.8710  &6.2645 &73.2018  &4.9053 &0.9592 \\
-    Univariate &&0.9594 &0.1246 &0.1900 &1.2150 &0.3952 \\
-    Univariate FH &&0.9635 &0.0926 &0.0394 &1.2174 &- \\ \hline
-    Multivariate &no &0.8703  &6.1822 &72.9776  &4.3569 &0.9663 \\
-    Univariate &&0.9750 &0.1176 &0.1193 &1.2614 &0.3963 \\  
-    Univariate FH &&0.9658 &0.0965 &0.0362 &1.1982 &- \\ \hline
+    &Survival info mother &$\widehat p$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat\theta$/$\widehat{\beta}_{FH}$ &C \\ \cmidrule{2-7}
+    MFCR &yes &0.8710  &6.2645 &73.2018  &4.9053 &0.9592 \\
+    UFCR &&0.9594 &0.1246 &0.1900 &1.2150 &0.3952 \\
+    U$FH$CR &&0.9635 &0.0926 &0.0394 &1.2174 &- \\ \midrule
+    MFCR &no &0.8703  &6.1822 &72.9776  &4.3569 &0.9663 \\
+    UFCR &&0.9750 &0.1176 &0.1193 &1.2614 &0.3963 \\  
+    U$FH$CR &&0.9658 &0.0965 &0.0362 &1.1982 &- \\ \midrule
     \end{tabular*}
-    \caption{estimated parameters and concordance index for the three parametric models.}
+    \caption{Estimated parameters and Concordance index for the Multivariate frailty Cure-Rate (MFCR), the Univariate frailty Cure-Rate (UFCR), and the Univariate $FH$ Cure-Rate (U$FH$CR) models.}
     \label{tab:1.17}
 \end{table*}
 \end{center}
 % Code in ParContinuousFrailty-multidistribution-multivariate-swemultireg-MVV.R, ParContinuousFrailty-multidistribution-univariate-swemultireg-MVV.R, ParContinuousFrailty-multidistribution-univariate-fh-swemultireg-MVV.R in the SWEDISH COMPUTER for the estimation of parameters and ParContinuousFrailty-multiunifh-postprediction-swemultireg-MVV.R for concordance with adjustement on the parameter values.  
 \begin{center}
 \begin{table*}[!h]%
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllllll@{}}
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllllll@{}}
     \toprule
-    Multivariate &$\widehat p_0$ &$\widehat\mu_0 / \widehat{shape}_0$ &$\widehat\sigma^2_0 / \widehat{scale}_0$ &$\widehat\gamma_0$ &$\widehat\theta$/$\widehat{\beta}_{FH}$ &C \\
-    Weibull &0.8703  &6.1822 &72.9776 &- &4.3569 &\textbf{0.9663} \\ 
-    Gamma &0.8552 &18.6981  &3.8617 &- &5.4790 &\textbf{0.9663} \\ 
-    Lognormal &0.8419 &4.2911 &0.2604 &- &5.5265 &\textbf{0.9392} \\ 
+    &$\widehat p_0$ &$\widehat\mu_0 / \widehat{shape}_0$ &$\widehat\sigma^2_0 / \widehat{scale}_0$ &$\widehat\gamma_0$ &$\widehat\theta$/$\widehat{\beta}_{FH}$ &C \\ \cmidrule{2-7}
+    Multivariate frailty Cure-Rate \\
+    Weibull &0.8703  &6.1822 &72.9776 &- &4.3569 &0.9663 \\ 
+    Gamma &0.8552 &18.6981  &3.8617 &- &5.4790 &0.9663 \\ 
+    Lognormal &0.8419 &4.2911 &0.2604 &- &5.5265 &0.9392 \\ 
     Gamma 3-pars &0.8529 &18.6685 &3.8172 &0.1546 &5.8116 &0.9679 \\
-    Lognormal 3-pars &0.8408 &4.2746 &0.2590 &2.7922 &5.9126 &\textbf{0.9663} \\ \hline
-    Univariate \\
+    Lognormal 3-pars &0.8408 &4.2746 &0.2590 &2.7922 &5.9126 &0.9663 \\ \hline
+    Univariate frailty Cure-Rate \\
     Weibull &0.9750 &0.1176 &0.1193 &- &1.2614 &0.3963 \\ 
     Gamma &0.8626 &5.9127 &11.5267 &- &-5.8713 &0.3963 \\ 
     Lognormal &0.6607 &4.5317 &0.3784 &- &1.4119 &0.5105 \\ 
     Gamma 3-pars &0.3250 &9.5974 &11.0534 &3.1358 &-1.4014 &0.4461 \\
-    Lognormal 3-pars &0.2527 &4.8125 &0.4431 &11.5269 &2.0759 &0.49 \\ \hline
+    Lognormal 3-pars &0.2527 &4.8125 &0.4431 &11.5269 &2.0759 &0.4900 \\ \hline
     Univariate FH \\
     Weibull &0.9635 &0.0926 &0.0394 &- &1.2174 &- \\ 
     Gamma &0.9590 &22.0724  &2.5169 &- &-1.1910 &- \\ 
@@ -1243,14 +1244,14 @@ Once proved that the cure-rate model is the most appropriate for describing this
     Gamma 3-pars &0.7076 &11.8656 &6.9557 &0.5153 &0.7802 &- \\
     Lognormal 3-pars &0.5237 &4.6639 &0.4117 &7.9716 &2.0892 &- \\ \hline
     \end{tabular*}
-    \caption{estimated parameters through the maximization of the multivariate, univariate likelihood or univariate likelihood with inclusion of family history as covariate, with baseline survival distribution varying.}
+    \caption{Estimated parameters for several baseline survival distribution for cases.}
     \label{tab:1.18}
 \end{table*}
 \end{center}
 % codice su server meb: ParContinuousFrailty-multidistribution-multivariate-swemultireg-MVV.R, ParContinuousFrailty-multidistribution-univariate-swemultireg-MVV.R, ParContinuousFrailty-multidistribution-univariate-fh-swemultireg-MVV.R and ParContinuousFrailty-multiunifh-postprediction-swemultireg-MVV.R for concordance with adjustement on the parameter values. 
 %  code for concordance multi-uni-unifh is in prova-concordance-2.R SWEDEN 
 
-The conclusion coincides to the one in the semiparametric scenario. The multivariate model outperforms the other two univariate models compared in terms of prediction accuracy through the Harrell's concordance index C, reported in the last column of Tables \ref{tab:1.17}, and \ref{tab:1.18}. It has indeed around the 96\% of concordant pairs. Also, in comparison to the semiparametric scenario we can say that the estimated frailty parameter has a higher value in the multivariate parametric scenario bringing to assess that the frailty distribution here has a higher variance and thus this brings to an easier distinction among low-risk and higher-risk families, than the semiparametric scenario. 
+Similarly to the semiparametric scenario, the multivariate model outperforms the other two univariate models compared in terms of prediction accuracy through the Harrell's concordance index C, reported in the last column of Tables \ref{tab:1.17}, and \ref{tab:1.18}. It has indeed around the 96\% of concordant pairs. Also, in comparison to the semiparametric scenario we can say that the estimated frailty parameter has a higher value in the multivariate parametric scenario bringing to assess that the frailty distribution here has a higher variance and thus this brings to an easier distinction among low-risk and higher-risk families, than the semiparametric scenario. 
 
 Now we can predict the posterior family-specific frailty as shown in Section \ref{sec:1.6}. We compute the mean, median and mode of the posterior frailty distribution for each family. Later, we compute the posterior high-risk probability and the posterior high-risk membership indicator, fixed a frailty mean threshold. Here, too, we can also compute the whole estimated family-specific survival distribution, conditionally on the family survival information. For each woman we can compute thus, as in the semiparametric scenario, all the interesting quantities to assess whether to address her to prevention strategies targeted for highest-risk families. 
 \clearpage
