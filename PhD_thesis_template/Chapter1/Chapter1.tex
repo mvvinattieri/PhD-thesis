@@ -1102,31 +1102,30 @@ We then use the estimated parameters to perform posterior prediction of family-s
 
 We compute an algorithm which takes as input the familial survival data of the female family members of a new woman. By providing information on her mother and sisters, the algorithm produces three quantities: the posterior mean frailty risk, the probability of belonging to the highest-risk families (top 5\%), and an indicator of whether the woman belongs to the highest-risk families compared to the population (prior) distribution of the probability of belonging to the highest-risk families, based on a fixed threshold. For example, from the Multivariate frailty Cox model we obtain that $\widehat{\theta} = 1.327$, and $\widehat{r}_{(1-\alpha)}$ is $0.1512$ for $\alpha = 0.05$. This means that if a woman has a probability of belonging to the highest-risk families over 15.12\%, then her indicator will take value one. Risk prediction can be easily done by using the estimated frailty parameter, the (1-$\alpha$) percentile value, and also the Breslow estimates of the cumulative hazard function obtained by fitting the Multivariate frailty Cox model. These values can be stored for later use, enabling fast prediction without having to recompute the entire process for new women. This algorithm has been developed based on the model chosen in Section \ref{sec5}.
 
-In Table \ref{tab:17} a summary of the distribution of the cumulative hazard function is provided. The plot of the  cumulative hazard function and its density function on the complete population are respectively in Figure \ref{fig:8} and \ref{fig:9}. Interestingly, we can notice how it can be split into two regions. It is worth noting that in the parametric scenario, the population parametric distribution provides more information and therefore there is no requirement for computing the nonparametric estimates of the cumulative hazard function and the quantile threshold. It is straightforward to extend this procedure to other percentile levels, although this necessitates refitting the model from the beginning, which can be time-consuming, nut we are certain that we can compute it for once and store it for later use. 
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{ccccccc}
-    \hline
-    Min. &1st Qu. &Median &Mean &3rd Qu. &Max. &NA's \\ 
-    0.0000  &0.0000 &0.0324 &0.0752 &0.1389 &0.2583 &360 \\ \hline
-    \end{tabular}
-    \caption{estimated population Breslow cumulative hazard function summary on a grid of time values.}
+In Table \ref{tab:17} a summary of the distribution of the cumulative hazard function is provided. The plot of the  cumulative hazard function and its density function on the complete population are respectively in Figure \ref{fig:8} and \ref{fig:9}. Interestingly, we can notice how the density function can be split into two regions. It is straightforward to extend this procedure to other percentile levels, although this necessitates refitting the model from the beginning, which can be time-consuming. On the other hand, every computation can be done for once and store it for a later use.
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllllll@{}}
+\toprule
+    Min. &1st Qu. &Median &Mean &3rd Qu. &Max. &NA's \\ \midrule
+    0.0000  &0.0000 &0.0324 &0.0752 &0.1389 &0.2583 &360 \\ \bottomrule
+    \end{tabular*}
+    \caption{Summary of the estimated Breslow cumulative hazard function on a grid of (time) values.}
     \label{tab:17}
-\end{table}
+\end{table*}
+\end{center}
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{PhD_thesis_template/plots/Rplot107.pdf}
-    \caption{estimated Breslow cumulative hazard function.}
+    \caption{Estimated Breslow cumulative hazard function.}
     \label{fig:8}
 \end{figure}
-\newpage
 \begin{figure}
     \centering\includegraphics[width=\linewidth]{PhD_thesis_template/plots/Rplot102.pdf}
-    \caption{density plot of the cumulative hazard function estimated from the entire population in object.}
+    \caption{Density plot of the Breslow cumulative hazard function estimated on the entire population in object.}
     \label{fig:9}
 \end{figure}
-\newpage
-An example is reported below for a woman with a family survival information as follows. Observed ages = (45, 90, 60) in years, and indicators of having observed the onset event = (0, 1, 0). Consider the first subject to be the woman who shows up at the hospital at 45 years of age, with the mother who had breast cancer onset at 90, and a sister who has not experienced the onset yet at age 60. The output from the algorithm is given by the following, which means that the woman does not belong to the highest-risk families: \\
+An example of risk prediction into the semiparametric scenario is reported below for a woman with complete family survival information. Observed ages = (45, 90, 60) in years, and indicators of having observed the onset event = (0, 1, 0). Consider the first subject to be the woman who shows up at the hospital at 45 years of age, with the mother who had breast cancer onset at 90, and a sister who has not experienced the onset yet at age 60. The output from the algorithm below means that the woman has a frailty risk with value 1.57 if estimated through the posterior mean; with value 2.78 if estimated through the posterior median. She also has a probability of belonging to the highest-risk families of 12.64\% that is slower than the top 5\% threshold of 15.12\% and thus she does not belong to the highest-risk families. All the quantities can be found in the following output: \\
 \begin{verbatim}
     Posterior mean frailty = 1.5762
     Posterior median frailty = 2.7801
@@ -1136,6 +1135,8 @@ An example is reported below for a woman with a family survival information as f
 % Code with name \texttt{postPredictionReal1Family} and in Appendix \ref{appendix:b}. 
 The significance of the observed times and breast cancer onset indicators on the probability of belonging to the highest-risk group is thus established. 
 
+It is worth noting that in the parametric scenario, the population parametric distribution provides more information and therefore there is no requirement for computing the nonparametric estimates of the cumulative hazard function and the quantile threshold. 
+ 
 \subsection{Focus on the cure-rate}
 The rich Swedish dataset also provides us with a precious opportunity to explore the debated issue of whether a cure-rate structure is reasonable in models for breast cancer onset. 
 
