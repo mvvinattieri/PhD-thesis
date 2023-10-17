@@ -1136,42 +1136,44 @@ An example of risk prediction into the semiparametric scenario is reported below
 
 It is worth noting that in the parametric scenario, the population parametric distribution provides more information and therefore there is no requirement for computing the nonparametric estimates of the cumulative hazard function and the quantile threshold. 
  
-\subsection{Focus on the Cure-Rate}
+\subsection{Parametric scenario}
 The Swedish real case dataset also provides us with a precious opportunity to explore the debated issue of whether a cure-rate structure is reasonable in models for breast cancer onset or not. 
 
-In order to evaluate the goodness of fit of the cure-rate structure for this dataset we now move to the parametric scenario and explore some parametric baseline survival function. Notice that this analysis gives some qualitative support to the hypothesis that a cure-rate exists, thus the frailty quantity here is not involved yet. We examine five distributions, namely Weibull, Gamma, Lognormal, three-parameters Gamma, and three-parameters Lognormal. We explore the multivariate and the univariate setting, fitting both the multivariate and the univariate multiplicative Lehmann frailty cure-rate and non-cure-rate models. Recall that in the univariate model, we only consider the survival information of the main subject per family, while in the multivariate model we consider all of the family survival information.
+We first focus on the goodness of fit of Cure-Rate models versus traditional models to the available dataset, to give a qualitative support to the hypothesis that a cured fraction exists and the Cure-Rate models are able to capture it. Notice that, in this preliminary analysis, the frailty quantity has not been involved yet. We employee five parametric distributions: Weibull, Gamma, Lognormal, three-parameter Gamma, and three-parameter Lognormal for the baseline survival function of cases. 
 
 Results from the analysis are presented in Table \ref{tab:10}, where the models are compared using the Akaike Information Criterion (AIC) that is exactly \[
 AIC = -2 n_{\pi} - \ln L(\pi),
-\] with $n_\pi$ the dimension of the parameter collection, and $L(\pi)$ the likelihood on the parameters. It should be noted that the models are not nested. We compare the fit across models and between the cure-rate and non-cure-rate survival structure but always within the multivariate and the univariate cases (which also have very different sample sizes). The Multivariate Cure-Rate three-parameters Lognormal model yields the best result, with an AIC value of 1687555, while the regular Lognormal distribution provided the best performance for the Univariate Cure-Rate model with an AIC of 438368.4. 
-\begin{table}[ht]
-\centering
-\begin{tabular}{l|cccc} 
-\hline
-% &\multicolumn{2}{c}{Multivariate model} &\multicolumn{2}{c}{Univariate model} \\
-% \cline{2-5}
-% &\multicolumn{2}{c}{AIC} &\multicolumn{2}{c}{AIC} \\
-Multivariate &non-cure &cure \\ % &non-cure &cure \\ \hline
-Weibull &1705353 &1692822 \\ 
-Gamma &1698245 &1688066 \\ 
-Lognormal &1693854 &2334626 \\ 
-Gamma 3-parameters &1707589 &1687749 \\
-Lognormal 3-parameters &1698257 &\textbf{1687555} \\ \hline
-Univariate \\ 
-Weibull &440685.6 &439053.4 \\ 
-Gamma &439516 &438391.8 \\
-Lognormal &438958.8 &\hl{\textbf{438368.4}} \\ 
-Gamma 3-parameters &444890.7 &438386.2 \\
-Lognormal 3-parameters &439460.9 &438369 \\ \hline
-\end{tabular}
-\caption{AIC comparison among different distributions, where in bold are the best results column-wise and according to the fitted model.}
-\label{tab:10}
-\end{table}
-% Code in oneGroupGamma.R, oneGroupLogNormal.R, oneGroupWeibullNecessary.R in SWEDISH COMPUTER
+\] where $n_\pi$ is the dimension of the parameter collection, and $L(\pi)$ is the likelihood on the parameter collection. It should be noted that the models are not nested. We compare the fit across the several survival function distributions, and also between the cure-rate and non-cure-rate survival structure but always within the multivariate and the univariate cases (which also have very different sample sizes). The Multivariate Cure-Rate three-parameter Lognormal model yields the best result, with an AIC value of 1687555, while the regular Lognormal distribution provides the best performance for the Univariate Cure-Rate model with an AIC of 438368.4. From results, the cure-rate models are always preferred to the non-cure-rate models (except for the case of the Multivariate Lognormal model).
 
-All the curves shown in Figures \ref{fig:1.13}, \ref{fig:1.14}, and \ref{fig:1.15} support the hypothesis of a cure-rate model and show good closeness to the observed survival distribution better with the cure-rate estimated survival than the non-cure estimated survival function. Indeed, the cure-rate model seems to fit the data (until the end of the follow-up) better than the non-cure-rate models. From results, the cure-rate models are always preferred to the non-cure-rate models (except for the case of multivariate Lognormal model).
+All the curves shown in Figures \ref{fig:1.13}, \ref{fig:1.14}, and \ref{fig:1.15} support the hypothesis of involving a cure-rate model rather than a (traditional) non-cure model. Indeed, the cure-rate model seems to fit the data (until the end of the follow-up) better than the non-cure models. 
 
 It is interesting to notice that support to the cure-rate structure is mainly given by the graphical analysis of the survival function of the mothers, due to their older ages: in Figure \ref{kmsisters}, the Kaplan-Meier curves by subjects (the main subject, the mother, and from the first sister to the last one) show that the tail of the Kaplan-Meier estimator and of the fitted cure-rate models (Figure \ref{fig:1.13}, \ref{fig:1.14}, \ref{fig:1.15}) is mostly attributable by the mothers (in black). A deepening about the reliability of the cure-rate structure and the heavy tail due to the presence of the oldest mothers is in Appendix \ref{appendix:1.e}. We do not find particular graphical differences in curves among the daughters, as it should be expected since the main subject is randomly sampled among all the sisters and so it is the ordering of the sisters. We do not consider in this graphical analysis the last sisters (the twelfth) because of the very limited number of subjects. We note here that one might extend the models to allow for a (say, polynomial) effect of birth cohort on the survival distribution and make distinction between the mother and the sisters.
+
+\begin{center}
+\begin{table*}
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lll@{}}
+\toprule 
+    &\multicolumn{2}{c}{Survival function} \\ \cmidrule{2-3}
+    &non-cure &cure-rate \\ \midrule
+    Multivariate model \\
+    Weibull &1705353 &1692822 \\ 
+    Gamma &1698245 &1688066 \\ 
+    Lognormal &1693854 &2334626 \\ 
+    three-parameter Gamma &1707589 &1687749 \\
+    three-parameter Lognormal &1698257 &1687555 \\ \midrule
+    Univariate model \\ 
+    Weibull &440685.6 &439053.4 \\ 
+    Gamma &439516 &438391.8 \\
+    Lognormal &438958.8 &438368.4 \\ 
+    Gamma 3-parameters &444890.7 &438386.2 \\
+    Lognormal 3-parameters &439460.9 &438369 \\ \bottomrule
+\end{tabular*}
+\caption{AIC comparison among different survival distributions.}
+\label{tab:10}
+\end{table*}
+\end{center}
+% Code in oneGroupGamma.R, oneGroupLogNormal.R, oneGroupWeibullNecessary.R in SWEDISH COMPUTER
+
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{PhD_thesis_template/plots/Rplot108.pdf}
