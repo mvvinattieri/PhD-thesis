@@ -1055,70 +1055,48 @@ Once the dataset has been cleaned and merged across families and all necessary s
 Parameter estimation must be distinguished between the semiparametric and the parametric scenario. Notice that the analysis is conducted both on those main subjects that has a recorded mother in the Multi-Generational dataset and on all main subjects (with or without recorded mother in the dataset). A preliminary analysis on the covariate extension to parity indicator, number of children, and age at first child from Table \ref{tab:14}, is also conducted into the semiparametric setting. We plan to extend this preliminary analysis to a proper study of the inclusion of covariates into all models (both from semiparametric and parametric scenario), with a proper simulation study before the real case analysis.
 
 \subsection{Semiparametric scenario}
-In Section \ref{sec5} three semiparametric models have been studied in simulation studies, and then the analysis has moved to the parametric scenario. Not surprisingly, based on the simulation results, the Multivariate Shared Frailty Cox (MSFCox) outperforms all others in terms of predictive accuracy, and also does it in the available dataset, with a concordance index of 0.965, which is significantly higher than the Univariate FH Cox (UFHCox) model (0.5150) and Time-varying version with 0.5036 of concordance (as reported in Table \ref{tab:13}).
-When we select only main subjects with the complete information on the mother, the concordance almost reaches the maximum value, up to a 99\% of concordant pairs. This result is outstanding, and the advantage of using the multivariate model instead of only the easier $FH$ model is immediately observed. Indeed, the Constant $FH$ and Time-varying $FH(t)$ models perform poorly, as their prediction concordance is comparable to that of a random flipping of a coin. Equally to the simulation study results, in bold is reported the best result by scenario, say by box, and the best across all scenario is highlighted.  
-% The posterior frailty distributions of both the MSFCox and the UFCox models on the dataset without covariates are shown in Figure \ref{fig:postfraildens}. 
-
-% \begin{figure}[ht]
-%     \centering
-%     \includegraphics[width=0.7\linewidth]{plots/Rplot85.pdf}
-%     \caption{Posterior frailty density from the multivariate model (in red) versus the prior (in blue).}
-%     \label{fig:postfraildens}
-% \end{figure}
-% \newline
-
-% The key information obtained from the inference step is the estimated frailty parameter from the multivariate likelihood. The complete analysis output is presented in Table \ref{tab:13}, with standard errors of the estimated coefficients shown in parentheses. The family history variable is included as both an end-of-follow-up indicator and a time-varying covariate, resulting in two versions of the FHCox model. Parameter estimation is performed on the entire dataset, as well as on a subset of subjects with at least maternal information and born between 1946 and 1974. Additionally, the analysis is repeated with the inclusion of covariates such as parity, number of children, and age at first child. Results of the estimated parameter values can be found in Table \ref{tab:14}.
-
-% \begin{table}[ht]
-%     \centering
-%     \begin{tabular}{l|ccc}
-%     \hline
-%     Model & Estimated $\widehat{\theta}$ &$\widehat{\beta}_{FH}$ & Concordance \\ \hline
-%     MSFCOx &1.327 &- &\textbf{0.965} (se = 0) \\
-%     UFCox &200 &- &- \\ 
-%     UFHCox &- &1.449 (0.0173) &0.515 (se = 0.001) \\ \hline
-%     \end{tabular}
-%     \caption{Frailty parameter, family history coefficient and concordance estimated for three models: Multivariate Shared Frailty Cox (MSFCOx), Univariate Frailty Cox (UFCox) and Univariate FH Cox (UFHCox) model.}
-%     \label{tab:ouputreal}
-% \end{table}
-
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{l|cccc} \hline
-    &Survival information mother &$\widehat\theta$ &$\widehat\beta_{FH}$ &C \\
-    Multivariate &yes &1.3624 &- &\hl{\textbf{0.9968}} \\
-    Univariate FH &&- &1.5372 &0.5021 \\
-    Univariate FH(t) &&- &1.8017 &0.5042 \\ \hline
-    Multivariate &no &1.327 &- &\textbf{0.9650} \\
-    Univariate FH &&- &1.449 &0.5150 \\ 
-    Univariate FH(t) &&- &1.8405 &0.5036 \\ \hline
-    \end{tabular}
-    \caption{estimated parameters and Harrell's concordance index C (last column) for the three semiparametric models.}
+In Section \ref{sec5} the Multivariate frailty Cox, the Univariate $FH$ Cox, and the Univariate $FH(t)$ Cox model have been analysed in simulation studies. Not surprisingly, based on the simulation results, the Multivariate frailty Cox model outperforms the others in terms of predictive accuracy. Similarly to simulation studies, also with the real case data the Multivariate frailty Cox model has a Concordance index of 0.965, which is significantly higher than the Univariate $FH$ Cox model (0.5150) and the Univariate $FH(t)$ Cox model with 0.5036 of concordance. All the results are reported in Table \ref{tab:13}. By selecting only the main subjects with a recorded mother into the dataset, the Concordance index almost reaches the maximum value, up to the 99\% of concordant pairs. This result is outstanding, and the advantage of using the Multivariate model instead of only the easier Univariate $FH$ model is immediately observed. Indeed, the Univariate $FH$ Cox and Univariate $FH(t)$ Cox models perform poorly, as their prediction concordance is comparable to that of a random flipping of a coin.
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
+\toprule
+    &Survival information mother &$\widehat\theta$ &$\widehat\beta_{FH}$ &C \\ \cmidrule{2-5}
+    Multivariate frailty Cox &yes &1.3624 &- &0.9968 \\
+    Univariate $FH$ Cox &&- &1.5372 &0.5021 \\
+    Univariate $FH(t)$ Cox &&- &1.8017 &0.5042 \\ \midrule
+    Multivariate frailty Cox &no &1.327 &- &0.9650 \\
+    Univariate $FH$ Cox &&- &1.449 &0.5150 \\ 
+    Univariate $FH(t)$ Cox &&- &1.8405 &0.5036 \\ \bottomrule
+    \end{tabular*}
+    \caption{Estimated parameters and Harrell's concordance index (C).}
     \label{tab:13}
-\end{table}
+\end{table*}
+\end{center}
 % Code \texttt{finalEstimation-cox-swemultireg-MVV} in the Swedish VDI.
 
-In Table \ref{tab:14} we report results from including the available reproductive covariates parity and number of children. No significant differences in terms of concordance index is noticed in comparison to the scenario without covariates.
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{l|cccc} 
-    \hline
-    &Survival information mother &$\widehat\theta$ &$\widehat{\beta}_{FH}$ &C \\
-    Multivariate &yes &2 &- &\textbf{0.9335} \\
+In Table \ref{tab:14} we report results from including the available reproductive covariates as parity, number of children, and age at first child. No significant differences in terms of Concordance index is noticed in comparison to the scenario without covariates.
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
+\toprule
+    &Survival information mother &$\widehat\theta$ &$\widehat{\beta}_{FH}$ &C \\ \cmidrule{2-5}
+    Multivariate &yes &2 &- &0.9335 \\
     Univariate FH &&- &1.3922 &0.6209 \\
-    Univariate FH(t) &&- &2.2254 &0.5350 \\ \hline
-    Multivariate &no &2 &- &\hl{\textbf{0.9436}} \\
+    Univariate FH(t) &&- &2.2254 &0.5350 \\ \midrule
+    Multivariate &no &2 &- &0.9436 \\
     Univariate FH &&- &1.3922 &0.5965 \\ 
-    Univariate FH(t) &&- &1.8049 &0.5184 \\ \hline
-    \end{tabular}
-    \caption{estimated parameters and Harrell's concordance index for the three semiparametric models with parity, number of children, age at first child covariates.}
+    Univariate FH(t) &&- &1.8049 &0.5184 \\ \bottomrule
+    \end{tabular*}
+    \caption{Estimated parameters and Harrell's concordance index (C) for the models with parity, number of children, and age at first child.}
     \label{tab:14}
-\end{table}
-Also, we can not conclude anything about parameter recovery but the estimate of the frailty parameter $\widehat\theta$ in the second column of Table \ref{tab:13} has a reasonable value. Additionally, the estimated of the family history coefficient $\widehat{\beta}_{FH}$ has a positive value (around 1.8) meaning that the family history has a positive effect on the breast cancer development, that is indeed coherent with this phenomenon.  
+\end{table*}
+\end{center}
 % Code \texttt{finalEstimationCovariates-cox-swemultireg-MVV} in the SWEDISH COMPUTER.
-\newpage
-% Code in ParContinuousFrailty-multivariate-swemultireg-MVV.R in the SWEDISH COMPUTER for the estimation of parameters and ParContinuousFrailty-multiunifh-postprediction-swemultireg-MVV.R for concordance with adjustement on the parameter values.  
-We then use the estimated parameters to perform posterior prediction of familial frailty. Firstly, we apply the posterior prediction to the subjects in the initial dataset. Secondly, we perform an in-sample validation to assess the accuracy of the prediction. This involves defining a training and a validation set by conducting a in-sample validation. 
+% Code in ParContinuousFrailty-multivariate-swemultireg-MVV.R in the SWEDISH COMPUTER for the estimation of parameters and ParContinuousFrailty-multiunifh-postprediction-swemultireg-MVV.R for concordance with adjustement on the parameter values. 
+
+Notice that the estimated family history coefficient $\widehat{\beta}_{FH}$ has a positive value (around 1.8) meaning that the family history has a positive effect on the breast cancer development, that is indeed coherent with the literature.  
+
+We then use the estimated parameters to perform posterior prediction of family-specific frailty risk. Firstly, we apply the posterior prediction to the subjects in the initial dataset. Secondly, we perform an in-sample validation to assess the accuracy of the prediction. This involves defining a training and a validation set by conducting a in-sample validation. 
 % Specifically, we remove one family at a time, fit the model on the remaining (n - 1) families, and predict only on the excluded family using the previously estimated parameters.
 
 In other words, the algorithm takes as input the familial survival data of the female family members of a new woman. By providing information on her mother and sisters, the algorithm produces three quantities: the posterior mean frailty, the probability of belonging to the highest-risk group (top 5\%), and an indicator of whether the woman belongs to the highest-risk families compared to the population distribution of the probability of belonging to the highest-risk group, based on a fixed threshold. For example, from the semiparametric multivariate model we obtain that $\widehat{\theta} = 1.327$, and $\widehat{r}_{(1-\alpha)}$ is $0.1512$ for $\alpha = 0.05$. This means that if a woman has a probability of belonging to the highest-risk families over 15.12\%, then her indicator will take value one. We can determine whether the woman should be targeted, e.g., for a more careful treatment path with more intensive screening, surveillance, and other prevention strategies. This prediction can be made quickly and easily using the estimated frailty parameter, the (1-$\alpha$) percentile value, and the Breslow estimates of the cumulative hazard function obtained by fitting the multivariate model. These values can be stored for later use, enabling fast prediction without having to recompute the entire process for new women. This algorithm has been developed based on the model chosen in Section \ref{sec5}.
