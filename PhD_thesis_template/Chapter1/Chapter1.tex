@@ -1147,8 +1147,7 @@ AIC = -2 n_{\pi} - \ln L(\pi),
 
 All the curves shown in Figures \ref{fig:1.13}, \ref{fig:1.14}, and \ref{fig:1.15} support the hypothesis of involving a cure-rate model rather than a (traditional) non-cure model. Indeed, the cure-rate model seems to fit the data (until the end of the follow-up) better than the non-cure models. 
 
-It is interesting to notice that support to the cure-rate structure is mainly given by the graphical analysis of the survival function of the mothers, due to their older ages: in Figure \ref{kmsisters}, the Kaplan-Meier curves by subjects (the main subject, the mother, and from the first sister to the last one) show that the tail of the Kaplan-Meier estimator and of the fitted cure-rate models (Figure \ref{fig:1.13}, \ref{fig:1.14}, \ref{fig:1.15}) is mostly attributable by the mothers (in black). A deepening about the reliability of the cure-rate structure and the heavy tail due to the presence of the oldest mothers is in Appendix \ref{appendix:1.e}. We do not find particular graphical differences in curves among the daughters, as it should be expected since the main subject is randomly sampled among all the sisters and so it is the ordering of the sisters. We do not consider in this graphical analysis the last sisters (the twelfth) because of the very limited number of subjects. We note here that one might extend the models to allow for a (say, polynomial) effect of birth cohort on the survival distribution and make distinction between the mother and the sisters.
-
+It is interesting to notice that support to the cure-rate structure is mainly given by the graphical analysis of the survival function of the mothers, due to their older ages: in Figure \ref{kmsisters}, the Kaplan-Meier curves by subjects (the main subject, the mother, and from the first sister to the last one) show that the tail of the Kaplan-Meier estimator and of the fitted cure-rate models (Figure \ref{fig:1.13}, \ref{fig:1.14}, \ref{fig:1.15}) is mostly attributable by the mothers (in black). A deepening about the reliability of the cure-rate structure and the heavy tail due to the presence of the oldest mothers is in Appendix \ref{appendix:1.e}. We do not find particular graphical differences in curves among the daughters, as it should be expected since the main subject is randomly sampled among all the sisters. One might extend the models to allow for a (say, polynomial) effect of birth cohort on the survival distribution and make distinction between the mother and the sisters.
 \begin{center}
 \begin{table*}
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}lll@{}}
@@ -1178,61 +1177,58 @@ It is interesting to notice that support to the cure-rate structure is mainly gi
     \centering
     \includegraphics[width=\linewidth]{PhD_thesis_template/plots/Rplot108.pdf}
     \includegraphics[width=\linewidth]{PhD_thesis_template/plots/Rplot109.pdf}
-   \caption{Kaplan-Meier for all subjects, in comparison to the estimated survival curves following the cure-rate (green) and the non-cure survival structure (blue) with Weibull and Gamma baseline survival function, on top and above, respectively.}
+   \caption{Kaplan-Meier for all subjects, in comparison to the estimated survival curves following the cure-rate (green) and the non-cure (blue) survival structure with Weibull and Gamma baseline survival function, on top and below, respectively.}
     \label{fig:1.13}
 \end{figure}
-\newline
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{plots/Rplot111.pdf}
         \includegraphics[width=\linewidth]{plots/Rplot112.pdf}
-    \caption{Kaplan-Meier for all subjects, in comparison to the estimated survival curves following the cure-rate (green) and the non-cure survival structure (blue), with Lognormal and three-parameters Lognormal survival function, on top and above, respectively.}
+    \caption{Kaplan-Meier for all subjects, in comparison to the estimated survival curves following the cure-rate (green) and the non-cure (blue) survival structure, with Lognormal and three-parameter Lognormal survival function, on top and below, respectively.}
     \label{fig:1.14}
 \end{figure}
-\newline
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{plots/Rplot110.pdf}
-    \caption{Kaplan-Meier for all subjects, in comparison to the estimated survival curves following the cure-rate (green) and the non-cure survival structure (blue), with a three-parameters Gamma baseline survival function.}
+    \caption{Kaplan-Meier for all subjects, in comparison to the estimated survival curves following the cure-rate (green) and the non-cure (blue) survival structure, with a three-parameter Gamma baseline survival function.}
     \label{fig:1.15}
 \end{figure}
 % Code for these plots is in: KMSubjectsMothers_Ultracentenary.R in the Swedish computer. 
-\newline
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\linewidth]{plots/Rplot106.pdf}
-    \caption{Kaplan-Meier of daughters, included the main subject, and mother (in black).}
+    \caption{Kaplan-Meier of daughters and mother (in black).}
     \label{kmsisters}
 \end{figure}
 % code in sisters.R SWEDEN COMPUTER 
-\clearpage
 
-However, on top of the AIC values, we are interested in the accuracy of the models to describe the observed cure-rate structure. 
-
-We report the values of the estimated parameters in Table \ref{tab:1.17} and \ref{tab:1.18}. We run the analysis both on main subjects with reported survival information on the mother and on all main subjects (with the Weibull distribution fixed as the baseline survival distribution). In Table \ref{tab:1.18} we compare different baseline survival distribution on all the main subjects. Notice that we can not assess the model fitting accuracy by comparing the estimated parameters value with true values, because we are with a real dataset, but the estimated cured fraction value has a reasonable value for this specific application in the range, for example for $\widehat p$ in the first column of Table \ref{tab:1.17}, around 87\%-96\%. In Tables also the estimates of the baseline survival distribution parameters are reported, that are $\widehat shape_0$, and $\widehat scale_0$ for the Weibull and Gamma, with the addition of $\widehat\gamma_0$ for the threshold parameter in the three-parameters Gamma; $\widehat\mu_0$, and $\widehat\sigma^2_0$ for the Lognormal, with the addition of $\widehat\gamma_0$ for the threshold parameter in the three-parameters Lognormal. The frailty parameter $\widehat\theta$ and the $FH$ coefficient $\widehat{\beta}_{FH}$ are reported in the same column for a matter of space, because also notice that each model estimates one or the other. 
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{l|cccccc} \hline
+Once proved that the cure-rate model is the most appropriate for describing this real case dataset, we proceed to parameter estimation. We report the values of the estimated parameters in Table \ref{tab:1.17} and \ref{tab:1.18}. We run the analysis both on main subjects with a recorded mother in the registry or on main subjects without restrictions. Notice that we set a Weibull survival function distribution. In Table \ref{tab:1.18} we compare different baseline survival distribution on all the main subjects. Notice that we can not assess the model fitting accuracy by comparing the estimated parameters value with true values, because we are with a real dataset, but the estimated cured fraction value has a reasonable value for this specific application in the range, for example for $\widehat p$ in the first column of Table \ref{tab:1.17}, around 87\%-96\%. In Tables also the estimates of the baseline survival distribution parameters are reported, that are $\widehat shape_0$, and $\widehat scale_0$ for the Weibull and Gamma, with the addition of $\widehat\gamma_0$ for the threshold parameter in the three-parameters Gamma; $\widehat\mu_0$, and $\widehat\sigma^2_0$ for the Lognormal, with the addition of $\widehat\gamma_0$ for the threshold parameter in the three-parameters Lognormal. The frailty parameter $\widehat\theta$ and the $FH$ coefficient $\widehat{\beta}_{FH}$ are reported in the same column for a matter of space, because also notice that each model estimates one or the other. 
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllllll@{}}
+    \toprule
     &Survival info mother &$\widehat p$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat\theta$/$\widehat{\beta}_{FH}$ &C \\
-    Multivariate &yes &0.8710  &6.2645 &73.2018  &4.9053 &\textbf{0.9592} \\
+    Multivariate &yes &0.8710  &6.2645 &73.2018  &4.9053 &0.9592 \\
     Univariate &&0.9594 &0.1246 &0.1900 &1.2150 &0.3952 \\
     Univariate FH &&0.9635 &0.0926 &0.0394 &1.2174 &- \\ \hline
-    Multivariate &no &0.8703  &6.1822 &72.9776  &4.3569 &\hl{\textbf{0.9663}} \\
+    Multivariate &no &0.8703  &6.1822 &72.9776  &4.3569 &0.9663 \\
     Univariate &&0.9750 &0.1176 &0.1193 &1.2614 &0.3963 \\  
     Univariate FH &&0.9658 &0.0965 &0.0362 &1.1982 &- \\ \hline
-    \end{tabular}
+    \end{tabular*}
     \caption{estimated parameters and concordance index for the three parametric models.}
     \label{tab:1.17}
-\end{table}
+\end{table*}
+\end{center}
 % Code in ParContinuousFrailty-multidistribution-multivariate-swemultireg-MVV.R, ParContinuousFrailty-multidistribution-univariate-swemultireg-MVV.R, ParContinuousFrailty-multidistribution-univariate-fh-swemultireg-MVV.R in the SWEDISH COMPUTER for the estimation of parameters and ParContinuousFrailty-multiunifh-postprediction-swemultireg-MVV.R for concordance with adjustement on the parameter values.  
-\begin{table}
-    \centering
-    \begin{tabular}{l|cccccc} \hline
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllllll@{}}
+    \toprule
     Multivariate &$\widehat p_0$ &$\widehat\mu_0 / \widehat{shape}_0$ &$\widehat\sigma^2_0 / \widehat{scale}_0$ &$\widehat\gamma_0$ &$\widehat\theta$/$\widehat{\beta}_{FH}$ &C \\
     Weibull &0.8703  &6.1822 &72.9776 &- &4.3569 &\textbf{0.9663} \\ 
     Gamma &0.8552 &18.6981  &3.8617 &- &5.4790 &\textbf{0.9663} \\ 
     Lognormal &0.8419 &4.2911 &0.2604 &- &5.5265 &\textbf{0.9392} \\ 
-    Gamma 3-pars &0.8529 &18.6685 &3.8172 &0.1546 &5.8116 &\hl{\textbf{0.9679}} \\
+    Gamma 3-pars &0.8529 &18.6685 &3.8172 &0.1546 &5.8116 &0.9679 \\
     Lognormal 3-pars &0.8408 &4.2746 &0.2590 &2.7922 &5.9126 &\textbf{0.9663} \\ \hline
     Univariate \\
     Weibull &0.9750 &0.1176 &0.1193 &- &1.2614 &0.3963 \\ 
@@ -1246,17 +1242,18 @@ We report the values of the estimated parameters in Table \ref{tab:1.17} and \re
     Lognormal &0.9774 &2.6356 &0.9717 &- &-3.0954 &- \\ 
     Gamma 3-pars &0.7076 &11.8656 &6.9557 &0.5153 &0.7802 &- \\
     Lognormal 3-pars &0.5237 &4.6639 &0.4117 &7.9716 &2.0892 &- \\ \hline
-    \end{tabular}
+    \end{tabular*}
     \caption{estimated parameters through the maximization of the multivariate, univariate likelihood or univariate likelihood with inclusion of family history as covariate, with baseline survival distribution varying.}
     \label{tab:1.18}
-\end{table}
+\end{table*}
+\end{center}
 % codice su server meb: ParContinuousFrailty-multidistribution-multivariate-swemultireg-MVV.R, ParContinuousFrailty-multidistribution-univariate-swemultireg-MVV.R, ParContinuousFrailty-multidistribution-univariate-fh-swemultireg-MVV.R and ParContinuousFrailty-multiunifh-postprediction-swemultireg-MVV.R for concordance with adjustement on the parameter values. 
 %  code for concordance multi-uni-unifh is in prova-concordance-2.R SWEDEN 
 
 The conclusion coincides to the one in the semiparametric scenario. The multivariate model outperforms the other two univariate models compared in terms of prediction accuracy through the Harrell's concordance index C, reported in the last column of Tables \ref{tab:1.17}, and \ref{tab:1.18}. It has indeed around the 96\% of concordant pairs. Also, in comparison to the semiparametric scenario we can say that the estimated frailty parameter has a higher value in the multivariate parametric scenario bringing to assess that the frailty distribution here has a higher variance and thus this brings to an easier distinction among low-risk and higher-risk families, than the semiparametric scenario. 
 
 Now we can predict the posterior family-specific frailty as shown in Section \ref{sec:1.6}. We compute the mean, median and mode of the posterior frailty distribution for each family. Later, we compute the posterior high-risk probability and the posterior high-risk membership indicator, fixed a frailty mean threshold. Here, too, we can also compute the whole estimated family-specific survival distribution, conditionally on the family survival information. For each woman we can compute thus, as in the semiparametric scenario, all the interesting quantities to assess whether to address her to prevention strategies targeted for highest-risk families. 
-\newpage
+\clearpage
 
 \section{Discussion}\label{sec:1.7}
 This study aims to contribute to the study of risk prediction models for breast cancer to better understand the nature and modeling of family-specific risk of onset. We consider the cure-rate structure as a realistic approach for the Swedish Multi-Generational Breast Cancer registry, where around the 85$\%$ of subjects have not experienced yet breast cancer onset within the observed follow-up. We thus extend the traditional proportional hazards assumption in this Lehmann family formulation to cure-rate models. We explore parametric (Gamma shared frailty) models in this cure-rate setting, as well as semiparametric models that do not assume the cure-rate structure. 
