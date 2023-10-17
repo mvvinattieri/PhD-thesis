@@ -1017,50 +1017,31 @@ Table \ref{tab:covsummaries} reports some descriptive statistics of the clean da
 \end{table*}
 \end{center}
 % code in descriptiveStatistics.R from SWEDISH COMPUTER 
+
 The median age at diagnosis is 50 years old, proving that the risk group that we select with ages in-between 40 and 70 is appropriate. This is reflected also in the median follow-up of around 53 years. Around the 3\% (47,934 subjects) have been diagnosed with invasive breast cancer, the 9.22\% are censored due to death, emigration or DCIS before the end of the follow-up, and the 87.79\% are alive at the end of the follow-up without experiencing neither breast cancer onset nor any other censoring events, so that we can consider this percentage as our cured fractions. Less than the 7\% has a positive family history at the end of the follow-up. For what concerns additional covariates that can be included into the models, the majority of women (61.69\%) is nulliparous, while, among those who have given birth, the average number of children is 1.5. The mean age at first child (27 years old) is appropriate for Sweden.
 
 A majority of families (45.06\%) consist of two members, followed by three members (33.7\%) and four members (11.37\%). To provide complete information on family structure, we also report in Table \ref{tab:freqsis} the frequencies of sisters, as they play a critical role in our analysis. The first row of Table \ref{tab:freqsis} shows the percentage of families having a specific number of sisters for the ``main subjects'', where it can be observed that no main subject has precisely eleven sisters. The second row presents the cumulative percentage of sisters for the main subjects, which is equivalent to the non-missing information on the sister columns. For instance, the first row shows that 36$\%$ of main subjects have precisely one sister (``Freq.'' in the first column), while the 52\% have at least one sister (``Cum. Freq.'' in the second column).
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{l|cccccccccccc}
-    \hline 
-    N. of sisters &0 &1 &2 &3 &4 &5 &6 &7 &$\ge$8 \\ 
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllllllll@{}}
+\toprule
+    &\multicolumn{9}{c}{Number of sisters} \\\cmidrule{2-10} 
+    % &(1, 0.8) 
+    &0 &1 &2 &3 &4 &5 &6 &7 &$\ge$8  \\ \midrule % &(50, 10)
     Freq. &0.48 &0.36 &0.12 &0.03 &0.01 &3.1$\cdot10^{-3}$ &9$\cdot10^{-3}$ &0.0005 \\
     Cum. Freq.  &1 &0.52 &0.16 &0.04 &0.01 &0.005 &0.001 &0.0008 &0.0002 \\ 
     % Number of sisters & &9 &10 &11 &12 \\ 
     % Freq. &1$\cdot10^{-3}$ &3.8$\cdot10^{-4}$ &2.4$\cdot10^{-4}$ &- &0.06$\cdot10^{-4}$ \\
     % Cum. freq. &6.72$\cdot10^{-5}$ &2.92$\cdot10^{-5}$ &5.60$\cdot10^{-6}$ &5.60$\cdot10^{-6}$ \\ 
-    \hline
-    \end{tabular}
-    \caption{frequency table of the number of sisters of the main subjects.}
+    \bottomrule
+    \end{tabular*}
+    \caption{Number of sisters of the main subjects.}
     \label{tab:freqsis}
 % \end{sidewaystable}
-\end{table}
+\end{table*}
+\end{center}
 % Code from covariates.R in SWEDISH COMPUTER
 % code in descriptiveStatistics.R from SWEDISH COMPUTER 
-
-% \begin{center}
-% \begin{verbatim}
-%
-% [1] "Sample size = 1606491"
-% [1] "Distribution of family size:"
-%      1      2      3      4      5      6      7      8 
-% 0.0556 0.4502 0.3370 0.1136 0.0306 0.0087 0.0030 0.0009 
-%      9     10     11     12     14 
-% 0.0003 0.0001 0.0000 0.0000 0.0000 
-
-% [1] "Fraction of censored main subjects (includes non-cases, if any):"
-%      0      1 
-% 0.9952 0.0048 
-
-% [1] "Median follow-up (main subjects only):"
-% Call: survfit(formula = Surv(registry$x, (1 - registry$delta)) ~ 1)
-
-%            n  events median 0.95LCL 0.95UCL
-% [1,] 1606491 1598858   53.4    53.4    53.4
-%
-% \end{verbatim}
-% \end{center}
 
 Returning to the primary dataset, it includes various covariates, including reproductive covariates such as the parity indicator, the number of children for each woman, the age at first child's birth, and the breast cancer family history, that is again defined as having at least a case of invasive breast cancer in the immediate family. All of these variables refer to the most recent follow-up time of each woman. Further details are provided in Table \ref{tab:covsummaries}.
 In addition, the data include information on birth date, breast cancer diagnosis (including age at diagnosis), death, and emigration, both overall and only covering the age range of 40 to 70 years.
