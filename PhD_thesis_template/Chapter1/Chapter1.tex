@@ -802,29 +802,29 @@ In Table \ref{tab:1.9} we compare the posterior frailty risk mean, median, and m
 % \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-We now employee the posterior mean as predicted frailty risk, because of its good performances in prediction accuracy with the Multivariate frailty Cure-Rate model and also because it is an index that is understandable to the end user rather than the median and the mode.
+We can conclude now that the posterior mean as predicted frailty risk through the maximization of the multivariate likelihood yields the most favorable results. Not of less importance is that fact that the mean is an understandable index to the end user, rather than the median and the mode. From Figure \ref{fig:1.7} one can observe the improved accuracy in prediction as the family size increases along with the mean frailty. The observed behavior in the plot with smaller families is attributed to the aforementioned (from semiparametric scenario) shrinkage issue of the mean frailty risk, which is effectively mitigated with a larger family size. No distinction can be observed in the conditional MSPE, plotted against the true risk on the x-axis, in Figure \ref{fig:1.9}. This observation highlights the need to explore alternative estimations for frailty risk in order to overcome the various challenges encountered also with the mean estimation even though we adopt it as the best summary of the posterior predicted frailty risk distribution so far. 
 
-Now, we can conclude by stating that the estimation of frailty risk mean through the maximization of the multivariate likelihood yields the most favorable results. Furthermore, the larger the family size in the sample, the better the prediction performance of this index is. From Figure \ref{fig:1.7} to observe the improved accuracy in prediction as the family size increases along with the mean frailty. The observed behavior in the plot with smaller family parameters is attributed to the aforementioned shrinkage issue of the mean frailty, which is effectively mitigated with a larger family size. 
+We thus compare the three parametric models by applying the binary splitting of the predicted risk mean and reporting the AUC, the PPV, the NPV and the Harrell's Concordance index (C) in Table \ref{tab:1.10}. The Multivariate frailty Cure-Rate model outperforms the other two Univariate models, with an AUC in the range 70\%-95\%, increasing according to a higher family size, against an AUC around the 62\% for the Univariate frailty Cure-Rate, and in the range 53\%-71\% for the Univariate $FH$ Cure-Rate model. These additional twenty percentile points in the Multivariate frailty Cure-Rate model allow to reach a strong predictive power that is not reached by any other model. Moreover, the Multivariate frailty Cure-Rate model gives the best result in terms of negative predictive power for maximum family size, with the 98\% of families truly not belonging to the highest-risk group in contract to the 96\% resulted from the Univariate frailty Cure-Rate model. Similarly to the semiparametric scenario, also here the positive predictive value is weaker than the negative predictive power, meaning that the low-risk families are better identified than the highest-risk families. This allows for a reduction of unnecessary costs, medical treatments and psychological stress for families who do not need to be under surveillance. We refer to Figure \ref{fig:1.8} for an example of ROC curve, one among a hundred repetitions, from the Multivariate frailty Cure-Rate model. One can appreciate how the AUC is significantly increasing from the 88\% with a maximum of five members, to 95\% with a maximum of twenty members per family. 
+
+Lastly, let us say that the Univariate frailty Cure-Rate model can coherently predict the risk according to the time-to-event (see Concordance around the 95\%), as well as the Multivariate frailty Cure-Rate model, whose concordance varies among the 93\% and the 96\%. It is worth noting that for the Univariate $FH$ Cure-Rate model, the Concordance index cannot be calculated without adjusting for ties. The presence of ties is caused by the family history indicator, which trivially can only take values 0 or 1.
+
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{plots/Rplot06.pdf}
     \includegraphics[width=\linewidth]{plots/Rplot09.pdf}
-    \caption{scatter-plot on 100,000 families of true frailty value versus predicted mean frailty with the bisector of the third quadrant (in red), the smoothed regression line (in green with confidence interval) and smoothed quantile regression line on the first, second and third quantile (in orange).}
+    \caption{True risk versus predicted risk mean with the bisector of the third quadrant (in red), the smoothed regression line, and smoothed quantile regression line on the first, second and third quantile (in orange).}
     \label{fig:1.7}
 \end{figure}
-
-No distinction can be observed in the conditional MSPE (mean squared prediction error), plotted against the true frailty value for 100,000 families in Figure \ref{fig:1.9}, between small family sizes and large family sizes. This observation highlights the need to explore alternative estimations for frailty risk in order to overcome the various challenges encountered with the mean estimation.
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{plots/Rplot07.pdf}
     \includegraphics[width=\linewidth]{plots/Rplot10.pdf}
-    \caption{conditional MSPE for family size varying with the values $(n_F, \lambda_F)$: (5, 0.8), (20, 10).}
+    \caption{True risk versus the conditional MSPE.}
     \label{fig:1.9}
 \end{figure}
-
-We thus compare the three parametric models by applying the binary splitting of the predicted frailty and reporting the AUC, the PPV, the NPV and the Harrell's Concordance index (C) in Table \ref{tab:1.10}. 
+\clearpage
 \begin{center}
-\begin{table*}[!h]%
+\begin{table*}
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
 \toprule
     &\multicolumn{4}{c}{($n_F, \lambda_F$)} \\\cmidrule{2-5} 
@@ -848,33 +848,26 @@ We thus compare the three parametric models by applying the binary splitting of 
     % C &0.980 (<0.001) &0.976 (<0.001) &0.918 (<0.001) &0.908 (0.001) 
     \\ \bottomrule
 \end{tabular*}
-\caption{average AUC, PPV, NPV, and Harrell's concordance index, with standard errors, corresponding to the ROC curve on the binary highest-risk group indicator with threshold $1 - \alpha = 0.95$. Family size is varying with ($n_F, \lambda_F$).}
+\caption{Mean and standard errors of AUC, PPV, and NPV corresponding to the binary split based on the highest-risk group indicator with threshold $1 - \alpha = 0.95$, and Harrell's concordance index C.}
     \label{tab:1.10}
 \end{table*}
 \end{center}
 % code is in C:/Users/Vinattieri/OneDrive - Università Commerciale Luigi Bocconi/Research/Familiarity/simulated data/simulation-par-contfrailty-multiUniFh-postprediction-MVV.R in LOCAL COMPUTER only for the part of auc, ppv, npv and concordance. 
 % code for plot LOCAL: postPredictionPlots.R
-
-The Multivariate frailty Cure-Rate model outperforms the other two Univariate models, with an AUC in the range 70\%-95\%, increasing according to a higher family size, against an AUC around the 62\% for the Univariate frailty Cure-Rate, and in the range 53\%-71\% for the Univariate $FH$ Cure-Rate model. These additional twenty percentile points in the Multivariate frailty Cure-Rate model allow to reach a strong predictive power that is not reached by any other model. Similarly to the semiparametric scenario, also here the positive predictive value is weaker than the negative predictive power, meaning that the low-risk families are better identified than the highest-risk families. This allows for a reduction of unnecessary costs, medical treatments and psychological stress for families who do not need to be under surveillance. We refer to Figure \ref{fig:1.8} for one example of ROC curve over a hundred repetitions from the Multivariate frailty Cure-Rate model. One can appreciate how the AUC is significantly increasing from the 88\% with a maximum of five members, to 95\% with a maximum of twenty members per family.
-
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{plots/Rplot08.pdf}
     \includegraphics[width=\linewidth]{plots/Rplot11.pdf}
-    \caption{ROC curve on 100,000 families of the mean frailty risk versus the true membership to the group of the highest-risk families (top 5\%). Family size is varying with the values of ($n_f, \lambda_F$): (5, 0.8), (20, 10).}
+    \caption{ROC curve of the true membership to the highest-risk families (top 5\%) versus the predicted risk mean.}
     \label{fig:1.8}
 \end{figure}
-
-Lastly, let us say that the Univariate frailty Cure-Rate model can coherently predict the risk according to the time-to-event (see Concordance around the 95\%), as well as the Multivariate frailty Cure-Rate model, whose concordance varies among the 93\% and the 96\%. It is worth noting that for the Univariate $FH$ Cure-Rate model, the Concordance index cannot be calculated without adjusting for ties. The presence of ties is caused by the family history indicator, which trivially can only take values 0 or 1.
-
-In conclusion, the multivariate model has the highest predictive power also for the binary splitting in terms of area under the ROC curve, reaching the 95.3\% of accuracy in prediction, a positive predictive value, with the highest value of 58.9\% of families truly belonging to the highest-risk group. Moreover, the multivariate model gives the best result in terms of negative predictive power, with the 98\% of families truly not belonging to the highest-risk group. In the multivariate model, 96\% of the pairs exhibit concordance between the observed time of diagnosis and risk values. In comparison, the univariate model shows a slightly lower concordance rate of up to 95.2\%. 
 \clearpage 
 
 \section[Illustration to the Swedish Breast Cancer registry]{Illustration to the Swedish Multi-Generational Breast Cancer registry}\label{sec:1.6}
 \subsection{Motivating framework}
-Cancer is a prevalent global health concern, and breast cancer stands as the most prevalent form of cancer among females, comprising approximately 30$\%$ of all cancer diagnoses \cite{siegel2019cancer}. The presence of lesions in secondary locations is a significant risk factor for cancer, as these lesions are known to be highly fatal due to the process of metastasis. Metastasis is responsible for over 90$\%$ of cancer-related deaths \cite{riggio2021lingering}.
+Breast cancer is the most prevalent form of cancer among females, comprising approximately 30$\%$ of all cancer diagnoses \cite{siegel2019cancer}. The presence of lesions in secondary locations is a significant risk factor for cancer, as these lesions are known to be highly fatal due to the process of metastasis, which causes over the 90$\%$ of cancer-related deaths \cite{riggio2021lingering}.
 
-In recent decades, a lot has  been discovered in cancer research with the goal of improving the survival rates of patients. Despite these progresses, a significant amount of information regarding the development of cancer remains unknown, which presents an opportunity for further improvement. Specifically, areas in which there is potential for improvement include the detection and treatment of primary tumors and metastases. This section will provide an overview of the most recent literature on the etiology, diagnosis, and treatment of cancer. Of particular interest is the advancement of early detection methods, as early detection is crucial for increasing treatment options and the probability of a successful recovery.
+In recent decades, a lot has  been discovered in cancer research with the goal of improving the survival rates of patients. Despite these progresses, a significant amount of information regarding the development of cancer remains unknown, which presents an opportunity for further improvement. Specifically, areas in which there is potential for improvement include the detection and treatment of primary tumors and metastases. This section will provide an overview of the most recent literature on the etiology, diagnosis, and treatment of cancer. Of particular interest is the advancement of early detection methods, as early detection is crucial for having more treatment options, increasing the probability of a successful recovery, and preventing mortal metastases. 
 
 Primary cancers have three distinct causes, namely genetic factors, individual lifestyle, and external environmental factors. In the context of breast cancer, several genes have been identified as crucial for its development. These include breast cancer genes (BRCA1, BRCA2), which are associated with the highest incidence of breast and ovarian cancers in families, as well as the tumor protein mutation (TP53), the single nucleotide polymorphisms (SNPs), and the polygenic risk scores (PRS) \citep{riskfactor, loibl2021breast}. BRCA1 and BRCA2 mutations are highly indicative of cancer detection; however, they only account for $20-25\%$ of familial cancer aggregation \cite{riggio2021lingering}. As a result, the remaining $75\%$ of cancer familial aggregation is unknown.
 
