@@ -24,54 +24,55 @@ We seek to illustrate and quantify how family data can be better used to learn a
 The chapter is outlined as follows: we introduce the univariate background of the frailty Cure-Rate model in Section \ref{sec:2.1}, the methods about the Multivariate frailty Cure-Rate model in Section \ref{sec:2.2}. A comparison among the Univariate $FH$ Cure-Rate model, the Univariate frailty Cure-Rate model, and the Multivariate frailty Cure-Rate model is run in Section \ref{sec:2.3}, and we close with some discussion in Section \ref{sec:2.4}. 
 
 \section{Univariate model for age at disease onset}\label{sec:2.1}
-\subsection{Latent Cure Rate survival models}
+\subsection{Latent cure-rate survival models}
 The Univariate Frailty model \cite{duchateau2008frailty} on the time-to-event $T = t$ allows the hazard function $\lambda_r(t) = \lambda(t\mid r)$ to have a particular form including the frailty risk $R$ which captures the unobserved heterogeneity among subjects. The hazard is given by 
 \[
 \lambda_r(t) = \alpha(r)\lambda_0(t),
 \] 
 where $\lambda_0(t)$ is the baseline hazard function that can assume a parametric distribution with parameter collection $\theta$ or a semiparametric form. The quantity $\alpha(r)$ is a general function of the risk, that we may use in the linear form $\lambda_r(t) = r\lambda_0(t)$. 
 
-The model can be extended to the inclusion of subject-specific covariates. In this case the frailty quantity explains the unobserved heterogeneity that the covariates are not able to capture. The hazard function is given by: \[
-\label{haz-fun}
-\lambda_r(t) =r\lambda_0(t;x),
-\] 
-where $x$ are the subject-specific covariates. The shared frailty hazard function allows to define the frailty as a family-specific quantity. Thus, this specification is used with clustered data, as it is our case where we see families as clusters. The hazard function has the same equation as in \ref{haz-fun}, but the frailty risk $r$ is a familial characteristic.
+The model can be extended to the inclusion of subject-specific covariates. In this case the frailty quantity explains the unobserved heterogeneity that the covariates are not able to capture. The hazard function is given by: 
+\begin{align}
+    \label{haz-fun}
+    \lambda_r(t) =r\lambda_0(t;x),
+\end{align}
+where $x$ are the subject-specific covariates. The shared frailty hazard function allows to define the frailty as a family-specific quantity. Thus, this specification is used with clustered data, as it is our case where we see families as clusters. The hazard function has the same equation as in \ref{haz-fun}, but the frailty risk $r$ is seen this time as a familial characteristic.
 
 In the binary case, the latent quantity can be represented as $R = (0, 1)$, where typically the relation between the hazard functions is $\lambda_1(t) = \alpha\lambda_0(t)$. This assumption allows the hazard and survival functions of group ``0'' to coincide with the baseline functions, while $\alpha<1$ ensures coherence with the assumption of a highest-risk group in the population and thus we can rely on the assumption of proportional hazard. Therefore, we obtain: \begin{align*}
-    &\lambda_0(t) = \lambda(t\mid R=0) = \lambda_0(t;x_{ij}), \qquad S_0(t) = S(t\mid R=0) = S_0(t;x_{ij}), \\
-    &\lambda_1(t) = \lambda(t\mid R=1) =  \alpha \lambda_0(t;x_{ij}), \qquad S_1(t) = S(t\mid R=1) = [S_0(t;x_{ij}) ]^\alpha.
+    &\lambda_0(t) = \lambda(t\mid R=0) = \lambda_0(t;x), \qquad S_0(t) = S(t\mid R=0) = S_0(t;x), \\
+    &\lambda_1(t) = \lambda(t\mid R=1) =  \alpha \lambda_0(t;x), \qquad S_1(t) = S(t\mid R=1) = [S_0(t;x) ]^\alpha.
 \end{align*}
 
-Now, recall the Multivariate Shared Frailty survival model \cite{hougaard2012analysis} to describe modeling jointly the time-to-events in a family \cite{rodriguez2010multivariate}. We handle multiple time-to-event data by leveraging the assumption of conditional independence. For instance, consider the case where two women belong to the same family, resulting in dependent time-to-events. However, assuming conditional independence given the family (i.e. given the shared frailty risk), and letting $T_1 = t_1$ and $T_2 = t_2$ be the time-to-events of the two women in the family, and let $r$ denote the frailty value, the joint survival function factorizes given the risk, so that \begin{align*}
+Now, recall the Multivariate frailty survival model \cite{hougaard2012analysis} to describe modeling jointly the time-to-events in a family \cite{rodriguez2010multivariate}. We handle multiple time-to-event data by leveraging the assumption of conditional independence. For instance, consider the case where two women belong to the same family, resulting in dependent time-to-events. However, assuming conditional independence given the family (i.e. given the shared frailty risk), and letting $T_1 = t_1$ and $T_2 = t_2$ be the time-to-events of the two women in the family, and let $r$ denote the risk value, the joint survival function factorizes given the risk, so that \begin{align*}
     S_{12}(t_1,t_2\mid R) \overset{T_1\perp T_2\mid R}{=} S_1(t_1\mid R)S_2(t_2\mid R),
-\end{align*} where one therefore assumes conditional independence given the frailty term $R$. Recall that, if $R = 0$, we have \[
+\end{align*} where one therefore assumes conditional independence given the frailty risk term $R$. Recall that, if $R = 0$, we have \[
     S_{12}(t_1,t_2) = S_0(t_1)S_0(t_2),
 \] while, if $R = 1$, we have \[
     S_{12}(t_1,t_2) = S_1(t_1)S_1(t_2) = [S_0(t_1)S_0(t_2)]^\alpha.
 \] 
 
-It is important to notice that this case can be immediately extended to more than two survival times per cluster sharing the same risk $R$. More generally, the marginal survival function for $n_i$ subjects per family is given by: \[
+It is important to notice that this case can be immediately extended to more than two survival times per cluster sharing the same risk $R$. More generally, the marginal survival function for $n_i$ subjects per family is given by \[
 S_{1\dots n_i}(t_1,\dots,t_{n_i}) = h\prod_{j=1}^{n_i}S_0(t_j) + (1-h)\prod_{j=1}^{n_i}\left[S_0(t_j)\right]^\alpha,
 \] with $h$ the probability of belonging to the low-risk group of families. 
 % If $S_0(t)$ is specified parametrically, inference can be performed through the traditional numerical methods to maximize the observed data likelihood.
 
-Now, given the nature of the phenomenon, not all women will experience breast cancer onset, regardless of how long they will live. Therefore, we rely on the cure rate survival function \cite{mota2022new}, which can be considered as a mixture of a proper survival function, which models the fraction of individuals who will experience the event, that we call the ``cases'' and a degenerate distribution, which models the fraction of individuals who will not experience the event, that we call the ``non-cases''. We define a ``proper'' survival function, the one that tends to 0 when the time-to-events tends to $+\infty$, such as $\lim_{t \to+\infty}S(t) = 0$, and has probability equal to one that the time-to-event can not assumes value $+\infty$, such as $P(T<+\infty) = 1$. 
+Now, given the nature of the phenomenon, not all women will experience breast cancer onset, regardless of how long they will live. Therefore, we rely on the cure-rate survival function \cite{mota2022new}, which can be considered as a mixture of a proper survival function, which models the fraction of individuals who will experience the event: the ``cases'', and a degenerate distribution, which models the fraction of individuals who will not experience the event: the ``non-cases''. We define a ``proper'' survival function in the case it tends to 0 when the time-to-events tends to $+\infty$, such as $\lim_{t \to+\infty}S(t) = 0$, and has probability equal to one that the time-to-event can not assumes value $+\infty$, such as $P(T<+\infty) = 1$. 
 
-Let $T$ indicate a non-negative time-to-event random variable, the survival function that defines a cure rate model takes the form: \[
+Let $T$ indicate a non-negative time-to-event random variable, the survival function that defines a cure-rate model takes the form: \[
 S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t)
-\] (see, e.g., \cite{bondi2023approximate}) with $\widetilde{S}_0(t)$ the proper survival function. Indeed, let the survival random variable $T$ be such that, conditionally on being a case, it is absolutely continuous, and let $\widetilde{f}_0(t)$ indicate the conditional density function of the cases corresponding to the proper survival function $\widetilde{S}_0(t)$. In contrast, the fraction $p_0$ is defined the ``cured fraction'', i.e. the fraction of the subjects who will never experience the event of interest, so that $T= \infty$ with probability $p_0$. Figure \ref{fig:cure_rate} shows the difference between a traditional (in blue) and a cure rate (in red) survival model on randomly generated data. 
+\] (see, e.g., \cite{bondi2023approximate}) with $\widetilde{S}_0(t)$ the proper survival function. Indeed, let the survival random variable $T$ be such that, conditionally on being a case, it is absolutely continuous, and let $\widetilde{f}_0(t)$ indicate the conditional density function of the cases corresponding to the proper survival function $\widetilde{S}_0(t)$. In contrast, the fraction $p_0$ is defined the ``cured fraction'', i.e. the fraction of the subjects who will never experience the event of interest, so that $T= +\infty$ with probability $p_0$. Figure \ref{fig:cure_rate} shows the difference between a traditional (in blue) and a cure-rate (in red) survival model on randomly generated data. 
 \begin{figure}[ht]
         \centering
         \includegraphics[width=\linewidth]{plots/Rplot04.pdf}
-        \caption{traditional survival function (in blue) vs. a cure rate survival function (in red).}
+        \caption{traditional survival function (in blue) vs. a cure-rate survival function (in red).}
   \label{fig:cure_rate}
 \end{figure}
 % code: KM_code_right-MVV.R from local problem
 
-The question of whether a cure rate model is appropriate for a given phenomenon can be addressed by noting that a traditional proper survival function can be seen as a special case of a cure rate model with $p_0=0$. In other words, allowing for a cure rate simply enlarges the set of available models, within which traditional survival functions are nested through such constraint. We believe that implementing a cure rate model is the right way to address this problem. 
+The question of whether a cure-rate model is appropriate for a given phenomenon can be addressed by noting that a traditional proper survival function can be seen as a special case of a cure-rate model with $p_0=0$. In other words, allowing for a cure-rate simply enlarges the set of available models, within which traditional survival functions are nested through such constraint. We believe that implementing a cure-rate model is the right way to address the problem of modelling breast cancer development. 
 
 % \begin{lem}
-% If $S(t)$ follows a cure rate structure, then it does not admit a density with respect to the Lebesgue measure. 
+% If $S(t)$ follows a cure-rate structure, then it does not admit a density with respect to the Lebesgue measure. 
 % \begin{proof}
 % Note that we have \begin{align}
 %     \label{formula:lemma_1}
@@ -90,7 +91,7 @@ The question of whether a cure rate model is appropriate for a given phenomenon 
 % \end{proof}
 % \end{lem}
 
-% which contradicts formula \ref{formula:lemma_1}. Thus, as expected, a proper density function associated with a cure rate survival function does not exist. Indeed, the density function conditionally to the uncured rate proportion $f(t) = (1-p)\widetilde{f}(t)$ is improper, as the cure rate marginal density function.
+% which contradicts formula \ref{formula:lemma_1}. Thus, as expected, a proper density function associated with a cure-rate survival function does not exist. Indeed, the density function conditionally to the uncured rate proportion $f(t) = (1-p)\widetilde{f}(t)$ is improper, as the cure-rate marginal density function.
 
 Thus, we assume that there exist two latent risk classes: low (or ``general'') risk (R=0) and high-risk (R=1). Let $h=P(R=1)$. For the two risk classes one has $S_r(t) = p_r + (1-p_r) \widetilde{S}_r(t)$, with $r \in \{0,1\}$ (see Figure \ref{fig:2.2} from a trivial simulation study in \texttt{R}), such that \begin{align*}
 &S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t) \\
@@ -99,7 +100,7 @@ Thus, we assume that there exist two latent risk classes: low (or ``general'') r
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\linewidth]{plots/Rplot02.pdf}
-    \caption{cure rate model with two latent risk groups.}
+    \caption{cure-rate model with two latent risk groups.}
 \label{fig:2.2}
 \end{figure}
 \newline
@@ -109,9 +110,9 @@ Suppose for now that the two conditional distributions $\widetilde{S}_0(t)$ and 
 Recall that the observed data $(\underline x=(x_1, x_2, \ldots, x_n)^T, \ \underline\delta=(\delta_1, \delta_2, \ldots, \delta_n)^T)$ is an i.i.d. sample of independently right-censored observed survival times from the population, where for the generic subject $i$, $x_{i}=\text{min}(t_{i}, c_{i})$, and $\delta_{i}=\mathbb{I}(t_{i} \le c_{i})$ following the usual notation that has $t_i$ indicate the survival time, where in our case is the age in years at breast cancer onset, and $c_i$ indicate the independent censoring time, both measured from the same origin. Without additional constraints, from the observed data $(\underline{x},\underline\delta)$ one may not identify the parameter vector $\underline\theta$. 
 
 \subsubsection*{A note on non-identifiability}
-When we talk about inference, we also want to deepen the topic of parameter identifiability. This argument is very interesting and not easy to manage in the case of two risk groups. Due to the complicate nature of this phenomenon, we explore different scenarios in the following lines as: (I) identifiability of the classical survival function $S_0(t) = \widetilde{S}_0(t)$; (II) identifiability of the cure rate survival function $S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t)$, with $\widetilde{S}_0(t)$ a proper survival function; (III) identifiability of the Lehmann structure $S_1(t) = [S_0(t)]^{\alpha(z)}$; 
-% (IV) identifiability of the cure rate survival model $S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t)$; 
-(IV) identifiability of the cure rate Lehmann structure $S_1(t) = [p_0 + (1-p_0)\widetilde{S}_0(t)]^{\alpha(z)}$; (V) identifiability of the marginal cure rate survival function $S(t) = (1-h)S_0(t) + hS_1(t)$. Notice that we generalize the form of $\alpha(z)$ to be in function of covariates $z$, but it may be also a constant. 
+When we talk about inference, we also want to deepen the topic of parameter identifiability. This argument is very interesting and not easy to manage in the case of two risk groups. Due to the complicate nature of this phenomenon, we explore different scenarios in the following lines as: (I) identifiability of the classical survival function $S_0(t) = \widetilde{S}_0(t)$; (II) identifiability of the cure-rate survival function $S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t)$, with $\widetilde{S}_0(t)$ a proper survival function; (III) identifiability of the Lehmann structure $S_1(t) = [S_0(t)]^{\alpha(z)}$; 
+% (IV) identifiability of the cure-rate survival model $S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t)$; 
+(IV) identifiability of the cure-rate Lehmann structure $S_1(t) = [p_0 + (1-p_0)\widetilde{S}_0(t)]^{\alpha(z)}$; (V) identifiability of the marginal cure-rate survival function $S(t) = (1-h)S_0(t) + hS_1(t)$. Notice that we generalize the form of $\alpha(z)$ to be in function of covariates $z$, but it may be also a constant. 
 
 Trivially cases (I), (II), and (III) can be proved. The proof of case (IV) follows. 
 \begin{proof}
@@ -132,7 +133,7 @@ Then also, \begin{align*}
     &\Rightarrow \theta = \theta'
 \end{align*}
 \end{proof}
-That proved the identifiability of the cure rate Lehmann survival function, in the case where the baseline survival function $S_0(t;\theta)$ has a parametric distribution. 
+That proved the identifiability of the cure-rate Lehmann survival function, in the case where the baseline survival function $S_0(t;\theta)$ has a parametric distribution. 
 
 The case (V) seems trickier than the other cases. The marginal survival function $S(t)$ can be expressed in terms of both the baseline $S_0(t)$ and the distribution of the frailty risk $R$. This relationship is determined through the moment generating function (MGF) of $R$ evaluated at the argument $\log \left( S_0(t) \right)$. Thus, the marginal survival function is given by
 \begin{eqnarray*}
@@ -148,7 +149,7 @@ MGF_R (u) = \mathbb{E}_R(e^{ur}) = {\rm e}^{u} (1-h) + {\rm e}^{u\alpha} h = {\r
 and as a consequence the marginal survival distribution of $T$ is equal to
 \[
 S(t) = MGF_R \left( \log(S_0(t)) \right) = {\rm e}^{\log ( S_0(t))} (1-h) + {\rm e}^{\log(S_0(t)) \alpha} = S_0(t) (1-h) + S_1(t) h.
-\] where, recall, the two survival functions follow a cure rate structure, such that $S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t)$ and $S_1(t) = p_1 + (1-p_1)\widetilde{S}_1(t)$. At this point we obtain the complete form of the marginal survival distribution of $T$, without specifying the baseline survival function that can be fixed later. The model, which may be seen as a double mixture of survival function, is not identifiable unless some constraint is set. The two conditional distributions $\widetilde{S}_0(t)$ and $\widetilde{S}_1(t)$ can in principle be chosen freely, and let us assume that they follow two given parametric distributions with densities $\widetilde f_0(t)$ and $\widetilde f_1(t)$ with (possibly vector) parameters $\theta_0$ and $\theta_1$, respectively. Thus the complete (vector) parameter for the model is $\underline\theta = (p_0, p_1, \theta_0^T, \theta_1^T, h)^T$, as already defined above.
+\] where, recall, the two survival functions follow a cure-rate structure, such that $S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t)$ and $S_1(t) = p_1 + (1-p_1)\widetilde{S}_1(t)$. At this point we obtain the complete form of the marginal survival distribution of $T$, without specifying the baseline survival function that can be fixed later. The model, which may be seen as a double mixture of survival function, is not identifiable unless some constraint is set. The two conditional distributions $\widetilde{S}_0(t)$ and $\widetilde{S}_1(t)$ can in principle be chosen freely, and let us assume that they follow two given parametric distributions with densities $\widetilde f_0(t)$ and $\widetilde f_1(t)$ with (possibly vector) parameters $\theta_0$ and $\theta_1$, respectively. Thus the complete (vector) parameter for the model is $\underline\theta = (p_0, p_1, \theta_0^T, \theta_1^T, h)^T$, as already defined above.
 
 Let us ignore the presence of administrative right censoring, and therefore assume that all censored observations are all (and the only) ``non-cases.'' This is a case in which more information is available on the model parameters, since additional right censoring would reduce the information available on the ``cases.'' The generic contribution $l_i$ to the likelihood function by subject $i$ with observed data $(x_i,\delta_i)$ is
 \[
@@ -176,11 +177,11 @@ Given the constraints $p_0 \in (0,1)$ and $p_1 \in (0,1)$, and the assumption th
 
 As a consequence of this fact, one may try to place some constraints on the parameters to create identifiability. One example is the following restriction, associated with the hazard functions $\widetilde{\lambda}_0(t)$ and $\widetilde{\lambda}_1(t)$ for the two time-to-event distributions for the cases in the two groups:
 \begin{eqnarray}
-\frac{\widetilde{\lambda}_1(t)}{\widetilde{\lambda}_0(t)} = \frac{p_0}{p_1} = \frac{1}{\alpha},   \label{CCR}  % For Constrained Cure Rate model
+\frac{\widetilde{\lambda}_1(t)}{\widetilde{\lambda}_0(t)} = \frac{p_0}{p_1} = \frac{1}{\alpha},   \label{CCR}  % For Constrained cure-rate model
 \end{eqnarray}
 thus imposing the PH structure on the distributions of the cases in the two groups, plus the assumption that the factor $\alpha \in (0,1)$ that relates $\widetilde{\lambda}_0(t) = \alpha \, \widetilde{\lambda}_1(t)$ is the same that relates $p_0$ to $p_1 = \alpha \, p_0$.
 
-We call such model the Proportional Hazards Constrained Cure Rate (PHCCR) model. Notably, in the PHCRR model the higher-risk group is associated with both a larger fraction of cases and earlier age at onset for their disease.
+We call such model the Proportional Hazards Constrained cure-rate (PHCCR) model. Notably, in the PHCRR model the higher-risk group is associated with both a larger fraction of cases and earlier age at onset for their disease.
 
 Note that to achieve identifiability one may also try to impose prior distributions on the parameters. Or, one may perform a sensitivity analysis that replaces this restriction with a fixed value for $p_1/p_0 = \rho$. 
 
@@ -230,8 +231,8 @@ Let the two conditional distributions of the survival times of the cases be Weib
 
 These two small examples confirm that the parameter values that are used to generate the data are recovered correctly by the maximum likelihood estimators, with only small residual biases for the estimators.
 
-\subsection{A two-latent-class Lehmann Cure Rate model}
-As an alternative to the PHCCR model, we now extend the definition of the Lehmann family of distributions to the case of cure rate models, still within the latent class framework.
+\subsection{A two-latent-class Lehmann cure-rate model}
+As an alternative to the PHCCR model, we now extend the definition of the Lehmann family of distributions to the case of cure-rate models, still within the latent class framework.
 
 Recall the Lehmann family of distributions is equivalent to the definition of the proportional hazards (PH) structure for proper survival distributions:
 \begin{equation*}
@@ -241,12 +242,12 @@ Recall the Lehmann family of distributions is equivalent to the definition of th
 where $S_0(t)$ is the (proper) baseline survival function and the parameter $\alpha$ modifies it to become the (also proper) survival function $S_{\alpha}(t)$. Let all random variables in the family be absolutely continuous random variables. It is then easy to check that $\lambda_{\alpha}(t) = \alpha \, \lambda_0(t)$ for any choice of (positive and finite) $\alpha$.
 Indeed, when $\alpha$ is modelled through a regression structure one has the celebrated semiparametric Cox proportional hazards (PH) survival model \cite{cox1972regression}.
 
-Here, we suggest extending the PH model to the model defined by the more general { Lehmann cure rate} family obtained by applying the Lehmann power transformation to a baseline cure rate model:
+Here, we suggest extending the PH model to the model defined by the more general { Lehmann cure-rate} family obtained by applying the Lehmann power transformation to a baseline cure-rate model:
 \begin{equation*}
     \left\{  S_{\alpha}(t) = \left[ p_0 + (1-p_0) \widetilde{S}_0(t) \right]^{\alpha}, \ \ \alpha >0  \right\}.   
     \label{formula:2.LehmannCR}
 \end{equation*}
-For a fixed value $\alpha$, the survival function $S_{\alpha}(t)$ also defines a cure rate model. Indeed, $\lim_{t \rightarrow \infty} S_{\alpha}(t) = p_0^{\alpha}$, and $S_{\alpha}(t)$ can be written as
+For a fixed value $\alpha$, the survival function $S_{\alpha}(t)$ also defines a cure-rate model. Indeed, $\lim_{t \rightarrow \infty} S_{\alpha}(t) = p_0^{\alpha}$, and $S_{\alpha}(t)$ can be written as
 \[
 S_{\alpha}(t) = p_0^{\alpha} + \left( 1-p_0^{\alpha} \right) \widetilde{S}_{\alpha}(t)
 \]
@@ -261,10 +262,10 @@ and conditional density function
 
 We note that here, too, a regression model with $\alpha=\alpha(z)$ can also be constructed for a vector $z$ of observed covariates if they are available.
 
-A two (or indeed more) latent class parametric Lehmann Cure Rate model can now be easily
+A two (or indeed more) latent class parametric Lehmann cure-rate model can now be easily
 defined. Recall the Lehmann structure on the survival function characterizing the risk group $S_r(t) = [S_0(t)]^{\alpha(r)}$, such that we have: \begin{align*}
     &S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t), &S_1(t) = [p_0 + (1-p_0)\widetilde{S}_0(t)]^\alpha.
-\end{align*} For a fixed $\alpha$, also the high-risk survival function $S_1(t)$ defines a cure rate model. % We identify the latent risk as a parameter $\alpha$ to be estimated. The proportional hazard (PH) structure allows the hazard function in a risk group to be written in function of the baseline hazard $\lambda_0(t)$, such that $\lambda_r(t) = \alpha(r) \lambda_0(t)$ (in particular $\lambda_0(t)$, and $\lambda_1(t) = \alpha \lambda_0(t)$), where $\lambda_0(t)$ is distributed according to a parametric distribution identified by the parameter collection $\underline{\theta}$, or a semiparametric distribution. Hence, it follows that the survival function is identified by a Lehmann structure, such that $S_r(t)=[S_0(t)]^{\alpha(r)}$. We thus have $S_0(t)$, and $S_1(t) = [S_0(t)]^{\alpha}$. Recall that the baseline survival function is defined by the more general Lehmann  family obtained by applying the Lehmann power transformation to a  survival function $S_r(t) = \left[p_0 + (1-p_0) \widetilde{S}(t) \right]^{\alpha(r)}$, with $\widetilde{S}(t)$ a proper survival function, so that we have $S_0(t) = p_0 + (1-p_0) \widetilde{S}(t)$, and $S_1(t) = [p_0 + (1-p_0) \widetilde{S}(t)]^\alpha$. For a fixed value $\alpha$, the aforementioned model is such that the survival function $S_1(t)$ also defines a  model. 
+\end{align*} For a fixed $\alpha$, also the high-risk survival function $S_1(t)$ defines a cure-rate model. % We identify the latent risk as a parameter $\alpha$ to be estimated. The proportional hazard (PH) structure allows the hazard function in a risk group to be written in function of the baseline hazard $\lambda_0(t)$, such that $\lambda_r(t) = \alpha(r) \lambda_0(t)$ (in particular $\lambda_0(t)$, and $\lambda_1(t) = \alpha \lambda_0(t)$), where $\lambda_0(t)$ is distributed according to a parametric distribution identified by the parameter collection $\underline{\theta}$, or a semiparametric distribution. Hence, it follows that the survival function is identified by a Lehmann structure, such that $S_r(t)=[S_0(t)]^{\alpha(r)}$. We thus have $S_0(t)$, and $S_1(t) = [S_0(t)]^{\alpha}$. Recall that the baseline survival function is defined by the more general Lehmann  family obtained by applying the Lehmann power transformation to a  survival function $S_r(t) = \left[p_0 + (1-p_0) \widetilde{S}(t) \right]^{\alpha(r)}$, with $\widetilde{S}(t)$ a proper survival function, so that we have $S_0(t) = p_0 + (1-p_0) \widetilde{S}(t)$, and $S_1(t) = [p_0 + (1-p_0) \widetilde{S}(t)]^\alpha$. For a fixed value $\alpha$, the aforementioned model is such that the survival function $S_1(t)$ also defines a  model. 
 It is easy to check that $\lim_{t \rightarrow \infty} S_{1}(t) = p_0^\alpha = p_1$, and that $S_1(t)$ can be written as
 \[
 S_1(t) = p_1 + \left( 1-p_1\right) \widetilde{S}_1(t),
@@ -278,7 +279,7 @@ and conditional density function:
 \widetilde{f}_1(t) = - \dfrac{d}{d t} \widetilde{S}_1(t) = \dfrac{1-p_0}{1-p_0^{\alpha}} \alpha \left[p_0 + (1-p_0) \widetilde{S}_0(t) \right]^{\left(\alpha -1 \right)} \widetilde{f}_0(t).   
 \]
 
-Since the cure rate survival function is not proper, the density function associated with the cure rate model is also not proper. Note that, without loss of generality, for $\alpha> 1$ one has $S_1(t) < S_0(t) \ \forall t > 0$ and $p_1 < p_0$.
+Since the cure-rate survival function is not proper, the density function associated with the cure-rate model is also not proper. Note that, without loss of generality, for $\alpha> 1$ one has $S_1(t) < S_0(t) \ \forall t > 0$ and $p_1 < p_0$.
 Indeed, we may reparametrize $\alpha_1 = 1/\alpha\in(0, 1)$ to impose $\alpha > 1$. 
 
 For example, if one assumes a survival function distributed according to the Exponential distribution $\widetilde{S}_0(t) = {\rm e}^{- \lambda_0 t}$ for the distribution of $(T \mid R=0, case)$, then
@@ -290,7 +291,7 @@ and
 \widetilde{f}_1(t) = \frac{\alpha ( 1 - p_0) \lambda_0}{1- p_0^\alpha}  \left[ p_0 + (1-p_0 ) {\rm e}^{-\lambda_0 t} \right]^{\alpha -1}  {\rm e}^{-\lambda_0 t}. 
 \]
 
-Interesting comments about the two-latent-class Lehmann Cure Rate model are in Appendix \ref{appendix:2.l}.
+Interesting comments about the two-latent-class Lehmann cure-rate model are in Appendix \ref{appendix:2.l}.
 
 % For simplicity, we have not included the term related to the risk thus far. To incorporate the risk group, we can rewrite the survival function $S_r(t) = [S_0(t)]^r$ as a function that depends on the risk group. Therefore, the generalized model is expressed as:
 % \begin{align*}
@@ -299,7 +300,7 @@ Interesting comments about the two-latent-class Lehmann Cure Rate model are in A
 % \end{align*} 
 % Note that if $T\sim S_0(t)$, then $P(T=+\infty)=p>0$, and a proper density function $f_T(t)$ does not exist. 
 
-\subsubsection*{Data generation from the two-latent-class Lehmann Cure Rate model}\label{fastdatagen}
+\subsubsection*{Data generation from the two-latent-class Lehmann cure-rate model}\label{fastdatagen}
 In simpler models (ex. the Exponential and Weibull seen above), the generation of observations from the high-risk group is easy by analytical inversion of $\widetilde{S}_1(t)$ (for cases), after having generated the case/non-case status.
 
 Splitting subjects into two risk groups, we have the closed form of the survival function on the observed time for cases into the low-risk and high-risk group. For the Exponential baseline survival function $\widetilde{S}_0(t) = \text{e}^{- \lambda t}$, and the Weibull survival function $\widetilde{S}_0(t) = \text{e}^{-(t/ \lambda)^{ k}}$, with scale $\lambda$ and shape $ k$ inverting the survival function brings to generating the time-to-events from, respectively, 
@@ -332,7 +333,7 @@ respectively for the low and high-risk groups. These can be easily computed from
 \subsection{Family data}
 Consider the family cluster formed by main subject, sister, mother, and grandmother. 
 
-Figure \ref{fig:2.3} shows a depiction of the calendar times of birth (b) and of the times to onset (t) for a group of four family members. Notice that in the figure all family members experience the onset event, so that the cure rate structure is not considered here. However, recall that the cure rate model also allows for one or more of the times $t$, $ts$, $tm$, or $tg$ to be equal to $+\infty$. 
+Figure \ref{fig:2.3} shows a depiction of the calendar times of birth (b) and of the times to onset (t) for a group of four family members. Notice that in the figure all family members experience the onset event, so that the cure-rate structure is not considered here. However, recall that the cure-rate model also allows for one or more of the times $t$, $ts$, $tm$, or $tg$ to be equal to $+\infty$. 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\linewidth]{plots/Rplot101.png}
@@ -346,8 +347,8 @@ The data generating process produces the family time-to-event data
     \end{align*}
 for families indexed by $i=1,\dots,n$. We observe a realization of the multivariate random variable $(B,Bg,Bm,Bs,X,Xg,Xm,Xs)^T$, where $\underline{X} = (min(T,C),\Delta)^T$, i.e. we observe the value $\underline{X}=\underline{x}=(x,\delta)^T$. Recall that $T$ indicate the survival time random variable, where in our case is the age in years at breast cancer onset, and $C$ indicate the independent censoring time random variable, both measured from the same origin, that in our case is birth. The notation for the other family members is obtained by having $x, \ t, \ c, \ b$ be followed by $g$, $m$, and $s$ (meaning respectively, ``granmother'', ``mother'', and ``sister''). The distinction between grandmother, mother and sister is not strictly needed here, it will make the extension to a more complex model easier. One may, for example, specify a relative-specific survival function to capture the generational differences among family members. 
 
-\subsection{Multivariate Shared Frailty Cure Rate model}
-Let us now finally extend the Lehmann Cure Rate model to a Multivariate Shared Frailty Lehmann Cure Rate model with two-latent-classes. The assumption we rely on to deal with the multivariate aspect of this model are the conditional independence among survival times within the same family and the assumption of shared frailty, or common risk class membership within families that allows the time-to-events to be i.i.d.. 
+\subsection{Multivariate Shared Frailty cure-rate model}
+Let us now finally extend the Lehmann cure-rate model to a Multivariate Shared Frailty Lehmann cure-rate model with two-latent-classes. The assumption we rely on to deal with the multivariate aspect of this model are the conditional independence among survival times within the same family and the assumption of shared frailty, or common risk class membership within families that allows the time-to-events to be i.i.d.. 
 
 In this model, the observed data likelihood function incorporates common family memberships by grouping their contributions to the likelihood within each risk group. A deepening about the observed data likelihood is in Appendix \ref{appendix:2.e}. Indeed, let $\underline\theta = \{p_0, \underline\lambda^T, \alpha, h_0\}^T$ be the whole parameter vector of the model. The observed data likelihood is given by \begin{align*}
     L(\underline\theta;{\rm all \ data}) &=  \prod_{i=1}^n \left[ f_{\underline{\mathbf{X}}}(\underline{\textbf{x}}_i|R_i=0;\theta)(1-h)+f_{\underline{\mathbf{X}}}(\underline{\textbf{x}}_i|R_i=1;\theta) \,h \right],
@@ -408,7 +409,7 @@ For simplicity we can see the expression as composed by the quantity
  and similarly for the other family members, and for the $R=0$ terms.
 
 \subsubsection*{Example 3.}
-An example of implementation of the Multivariate Lehmann Cure Rate model based on a Weibull baseline distribution for the cases in the low-risk group produces the output in Table \ref{tab:2.2} (recall that we reparametrize $\alpha_1=1/\alpha \in (0,1)$ to force $\alpha > 1$).
+An example of implementation of the Multivariate Lehmann cure-rate model based on a Weibull baseline distribution for the cases in the low-risk group produces the output in Table \ref{tab:2.2} (recall that we reparametrize $\alpha_1=1/\alpha \in (0,1)$ to force $\alpha > 1$).
 \begin{table}
     \centering
     \begin{tabular}{l|ccccc} \hline
@@ -420,7 +421,7 @@ An example of implementation of the Multivariate Lehmann Cure Rate model based o
     95\% C.I. Lower &0.7899 &10.1507 &69.8584 &0.3667 &0.1354 \\
     95\% C.I. Upper &0.7905 &10.1523 &69.8605 &0.3689 &0.1393 \\ \hline
     \end{tabular}
-    \caption{parameter recovery for the Multivariate Lehmann Cure Rate model.}
+    \caption{parameter recovery for the Multivariate Lehmann cure-rate model.}
     \label{tab:2.2}
 \end{table}
 
@@ -428,7 +429,7 @@ Parameters value are perfectly recovered by the multivariate likelihood estimati
 \newpage
 
 \subsection{Multivariate vs. univariate likelihood}
-Detailed multivariate family data may be hard to have. However, the latent risk class cure rate model can also be implemented on just one subject from each family. In that case the observed data likelihood to maximise reduces to \begin{align*}
+Detailed multivariate family data may be hard to have. However, the latent risk class cure-rate model can also be implemented on just one subject from each family. In that case the observed data likelihood to maximise reduces to \begin{align*}
     L_u(\underline\theta;{\rm subject \ data}) &=  \prod_{i=1}^n \left[ f_X(\underline{x}_i|R_i=0)(1-h)+f_X(\underline{x}_i|R_i=1) \,h \right],
 \end{align*}
 where subscript ``u'' stays for univariate likelihood. Now, one has just $\underline{x}_i=(x_i,\delta_i)^T$ for $i=1, \ldots, n$, again with
@@ -455,7 +456,7 @@ In this scenario only one subject per family contributes to the likelihood. As b
 Given the latent nature of the risk quantity, it may be necessary to replace it with an observable indicator. In this setting, we replace the frailty with the indicator of an observed family history of breast cancer. Specifically, we consider one main subject $i$ per family, and define $FH(u)$ as the indicator function that takes value $1$ if one or more relatives of the subject have experienced the disease by the subject age $u$. For a family with four members (subject, sister, mother, and grandmother), we have for example $FH(u) = 1 - \mathbb{I}(bg+tg\ge b+t)\mathbb{I}(bm+tm\ge b+t)\mathbb{I}(bs_1+ts_1\ge b+t)=1 - \mathbb{I}(tg\ge t+60)\mathbb{I}(tm\ge t+30)\mathbb{I}(ts_1\ge t)$, assuming each generation is 30 years apart one from the other (so that the grandmother is 60 years old, and the mother 30 years old when the subject and sister are born). The general form of the survival function depending on $FH(u)$ is given by: \[
 S_F(x_i) = [S_0(x_i)]^{\beta_F FH(x_i)}.
 \]
-Notice that, the same cure rate baseline survival function and conditional density function for the cases are involved for the low-risk group. Consequently, for the high-risk group we have\begin{align*}
+Notice that, the same cure-rate baseline survival function and conditional density function for the cases are involved for the low-risk group. Consequently, for the high-risk group we have\begin{align*}
     &S_1(x_i) = [S_0(x_i)]^{\beta_F} =[p_0+(1-p_0)\widetilde{S}_0(x_i)]^{\beta_F} =p_1 + (1-p_1)\widetilde{S}_1(x_i) \nonumber \\ 
     &f_1(x_i) = (1-p_1)\left(\dfrac{1-p_0}{1-p_1}\right)\beta_F\widetilde{f}_1(x_i)\left(p_0+(1-p_0)\widetilde{S}_0(x_i)\right)^{{\beta_F}-1} \nonumber \\
     &\text{with, }p_1 = p^{{\beta_F}}\text{ and, } \widetilde{S}_1(x_i)=\dfrac{(p_0+(1-p_0)\widetilde{S}_0(x_i))^{{\beta_F}}-p_1}{1-p_1} \nonumber
@@ -520,7 +521,7 @@ Most importantly, the times-to-event is the crucial point of the data generation
 In the following scenario, we simulated $n = 100,000$ families, each consisting of 4 members, and repeated this simulation 100 times. Within the algorithm, a reparametrization process was implemented for the parameters to guarantee adherence to the non-negative constraint.
 
 We aim to obtain the parameter value used in data generation by maximizing the likelihood. 
-At each iteration, given $n_p$ number of parameters, we fix the $(n_p-1)$ parameters and vary the risk parameter $\alpha$ over a few values. The cured fraction and the proportion of high-risk families into the population are set at $p = 0.8, h = 0.3$. Results are presented in Table \ref{tab:2.3} for a baseline survival function distributed according to an Exponential($\lambda = 0.3$), Table \ref{tab:2.4} for the Weibull($shape = 10, scale = 70$) case, Tables \ref{tab:2.5} for the Gamma($shape = 10, scale = 2$) case, using the univariate vs. the multivariate likelihood from the Lehmann Cure Rate model, and the family history univariate likelihood. Specifically, in the first column in reported the true value of the risk difference $\alpha = (0.2,0.5,0.8)$, fixed at the data generation step. All the other columns report the mean, standard error (Se) and mean square error ($\sqrt{\text{MSE}}$) associated to the estimated parameter values across the repeated simulations. 
+At each iteration, given $n_p$ number of parameters, we fix the $(n_p-1)$ parameters and vary the risk parameter $\alpha$ over a few values. The cured fraction and the proportion of high-risk families into the population are set at $p = 0.8, h = 0.3$. Results are presented in Table \ref{tab:2.3} for a baseline survival function distributed according to an Exponential($\lambda = 0.3$), Table \ref{tab:2.4} for the Weibull($shape = 10, scale = 70$) case, Tables \ref{tab:2.5} for the Gamma($shape = 10, scale = 2$) case, using the univariate vs. the multivariate likelihood from the Lehmann cure-rate model, and the family history univariate likelihood. Specifically, in the first column in reported the true value of the risk difference $\alpha = (0.2,0.5,0.8)$, fixed at the data generation step. All the other columns report the mean, standard error (Se) and mean square error ($\sqrt{\text{MSE}}$) associated to the estimated parameter values across the repeated simulations. 
 \begin{table}
     \centering
     \begin{tabular}{l|ccccc} \hline
@@ -1148,7 +1149,7 @@ We report some illustrative results based on one sample of varying number of fam
 % The question then is: what is $FH(x)$ truly estimating when used as a covariate in a univariate model?
 %   (VERONICA: COMPLETE THIS SECTION AND ADD MORE FROM YOUR TEXT TO THIS PART)
 \section{Discussion}\label{sec:2.4}
-Breast cancer is a significant global health concern, and despite some progress in recent years, there is still wide room for improvement. Prior studies have explored conventional survival models and the use of family history indicator. However, we firmly believe in adopting a cure rate structure when analysing the breast cancer development, being aware that a portion of subjects may never experience the disease onset, no matter how long will be their lifespan. In the hypothetical scenario where every person develops breast cancer, the cure rate model relies on the usual survival model. Our research proves the efficacy of the cure rate structure in modeling breast cancer time-to-onset, specifically when considering a latent binary risk factor.
+Breast cancer is a significant global health concern, and despite some progress in recent years, there is still wide room for improvement. Prior studies have explored conventional survival models and the use of family history indicator. However, we firmly believe in adopting a cure-rate structure when analysing the breast cancer development, being aware that a portion of subjects may never experience the disease onset, no matter how long will be their lifespan. In the hypothetical scenario where every person develops breast cancer, the cure-rate model relies on the usual survival model. Our research proves the efficacy of the cure-rate structure in modeling breast cancer time-to-onset, specifically when considering a latent binary risk factor.
 
 Additionally, family-related data plays a critical role in elucidating the clustering of breast cancer cases. Merely relying on a raw summary of familial information, such as a family history indicator, may prove inadequate in capturing the full complexity of the phenomenon.
 
