@@ -21,16 +21,15 @@ On the other hand, the family history indicator motivates the binary nature of t
 
 We seek to illustrate and quantify how family data can be better used to learn about family-specific risk of developing diseases by using such a Multivariate frailty Cure-Rate model for disease onset instead of summary-based methods (see family history), as usually is easier and used in the literature. Lastly, to provide a comprehensive and complete assessment, we implement the Univariate frailty Cure-Rate model to determine the significant loss of information incurred when subjects are viewed as not part of a family sharing the same risk of breast cancer development (as it is in the Multivariate frailty Cure-Rate model). 
 
-The chapter is delined as follows:
-We introduce the univariate background of the Frailty Cure Rate model in Section \ref{sec:2.1}, the methods about the Multivariate Shared Frailty Cure Rate model in Section \ref{sec:2.2}. A comparison between the the univariate and the multivariate framework is run in Section \ref{sec:2.3}, and we close with some discussion in Section \ref{sec:2.4}. 
+The chapter is outlined as follows: we introduce the univariate background of the frailty Cure-Rate model in Section \ref{sec:2.1}, the methods about the Multivariate frailty Cure-Rate model in Section \ref{sec:2.2}. A comparison among the Univariate $FH$ Cure-Rate model, the Univariate frailty Cure-Rate model, and the Multivariate frailty Cure-Rate model is run in Section \ref{sec:2.3}, and we close with some discussion in Section \ref{sec:2.4}. 
 
 \section{Univariate model for age at disease onset}\label{sec:2.1}
 \subsection{Latent Cure Rate survival models}
-The Univariate Frailty model \cite{duchateau2008frailty} on the time-to-event $T = t$ allows the hazard function $\lambda(t\mid r)$ to have a particular form including the frailty risk $R$ which captures the unobserved heterogeneity among subjects. The hazard is given by 
+The Univariate Frailty model \cite{duchateau2008frailty} on the time-to-event $T = t$ allows the hazard function $\lambda_r(t) = \lambda(t\mid r)$ to have a particular form including the frailty risk $R$ which captures the unobserved heterogeneity among subjects. The hazard is given by 
 \[
-\lambda(t\mid \alpha(r  )) = \alpha(r)\lambda_0(t),
+\lambda_r(t) = \alpha(r)\lambda_0(t),
 \] 
-where $\lambda_0(t)$ is the baseline hazard function that can assume a parametric distribution with parameter collection $\theta$ or a semiparametric form. The quantity $\alpha(r)$ is a general function of the risk, that we may use in the linear form $\lambda(t\mid R = r) = r\lambda_0(t)$. 
+where $\lambda_0(t)$ is the baseline hazard function that can assume a parametric distribution with parameter collection $\theta$ or a semiparametric form. The quantity $\alpha(r)$ is a general function of the risk, that we may use in the linear form $\lambda_r(t) = r\lambda_0(t)$. 
 
 The model can be extended to the inclusion of subject-specific covariates. In this case the frailty quantity explains the unobserved heterogeneity that the covariates are not able to capture. The hazard function is given by: \[
 \lambda_j(t\mid R = r) =r\lambda_0(t;x_j),
