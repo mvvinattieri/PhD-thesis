@@ -32,13 +32,10 @@ The Univariate Frailty model \cite{duchateau2008frailty} on the time-to-event $T
 where $\lambda_0(t)$ is the baseline hazard function that can assume a parametric distribution with parameter collection $\theta$ or a semiparametric form. The quantity $\alpha(r)$ is a general function of the risk, that we may use in the linear form $\lambda_r(t) = r\lambda_0(t)$. 
 
 The model can be extended to the inclusion of subject-specific covariates. In this case the frailty quantity explains the unobserved heterogeneity that the covariates are not able to capture. The hazard function is given by: \[
-\lambda_j(t\mid R = r) =r\lambda_0(t;x_j),
+\label{haz-fun}
+\lambda_r(t) =r\lambda_0(t;x),
 \] 
-where $x_j$ are the covariates of the $j$th subject. The shared frailty hazard function allows to define the frailty as a family-specific quantity. Thus, this specification is used with clustered data, as it is our case, where the shared frailty hazard function is given by:
-\[
-\lambda_{ij}(t\mid R = r_i) = r_i\lambda_0(t;x_{ij}),
-\] 
-with $x_{ij}$ the $i$th subject-specific covariates in the $j$th family. 
+where $x$ are the subject-specific covariates. The shared frailty hazard function allows to define the frailty as a family-specific quantity. Thus, this specification is used with clustered data, as it is our case where we see families as clusters. The hazard function has the same equation as in \ref{haz-fun}, but the frailty risk $r$ is a familial characteristic.
 
 In the binary case, the latent quantity can be represented as $R = (0, 1)$, where typically the relation between the hazard functions is $\lambda_1(t) = \alpha\lambda_0(t)$. This assumption allows the hazard and survival functions of group ``0'' to coincide with the baseline functions, while $\alpha<1$ ensures coherence with the assumption of a highest-risk group in the population and thus we can rely on the assumption of proportional hazard. Therefore, we obtain: \begin{align*}
     &\lambda_0(t) = \lambda(t\mid R=0) = \lambda_0(t;x_{ij}), \qquad S_0(t) = S(t\mid R=0) = S_0(t;x_{ij}), \\
