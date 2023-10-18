@@ -662,61 +662,64 @@ Results are presented in Table \ref{tab:2.3} for a baseline survival function di
 
 The slight discrepancies observed between the estimated and true values can be attributed to the approximation algorithm used for generating data. One way to overcome this issue is by increasing the sample size, particularly the average family size into the sample, as it would result in a more accurate estimate of the true value. Additionally, this would help in reducing the variance around the mean for sure. Nevertheless, on the contrary to the univariate models, the multivariate model is capable of accurately recovering the parameter values. 
 
-We notice also that the estimates of the model parameters for the univariate likelihood have standard errors that are much larger than those of the estimators based on the multivariate likelihood. We take as example the first scenario with the Weibull baseline survival function from Table \ref{tab:2.4}. Specifically, their standard errors are between 1.75 and 12.18 times larger than their multivariate counterparts, as we can assess from Table \ref{tab:2.10}
-\begin{table}
-    \centering
-    \begin{tabular}{l|ccccc}
-    \hline
-        &$\widehat p_0$ &$\widehat\alpha$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat h$ \\
+We notice also that the estimates of the model parameters for the univariate likelihood have standard errors that are much larger than those of the estimates based on the multivariate likelihood. We take as example the first scenario with the Weibull baseline survival function from Table \ref{tab:2.4}. Specifically, their standard errors are between 1.75 and 12.18 times larger than their multivariate counterparts, as we can assess from Table \ref{tab:2.10}
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllll@{}}
+    \toprule
+        &$\widehat p_0$ &$\widehat\alpha$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat h$ \\ \midrule
          Multivariate Se &0.0003 &0.0008 &0.0012 &0.0011 &0.0017 \\
          Univariate Se &0.0007 &0.0019 &0.0021 &0.0134 &0.0031 \\
-         Univariate / Multivariate Se &2.3333 &2.3750 &1.7500 &12.1818 &1.8235 \\
-         \hline
-    \end{tabular}
+         Univariate Se / Multivariate Se &2.3333 &2.3750 &1.7500 &12.1818 &1.8235 \\
+         \bottomrule
+    \end{tabular*}
     \caption{comparison between the SE from the Multivariate model vs. Univariate model.}
     \label{tab:2.10}
-\end{table}
+\end{table*}
+\end{center}
 
-Such increase is noteworthy in particular because one may expect the effective sample size of the multivariate estimator to represent a four-fold increase from the univariate estimator, given the use of information from not one but four relatives for each family). Indeed, in Appendix \ref{appendix:2.a} we illustrate such aspect for the univariate model.
+Such increase is noteworthy in particular because one may expect the effective sample size of the multivariate estimator to represent a four-fold increase from the univariate estimator, given the use of information from not one but four relatives for each family. Indeed, in Appendix \ref{appendix:2.a} we illustrate such aspect for the univariate model.
 
-The comparison of the root MSE (RMSE) for the estimated parameters from the univariate vs. the multivariate likelihood yields, as we can assess from Table \ref{tab:2.11} showing that, except for the baseline shape parameter, the RMSEs of the univariate estimators are larger than those of the multivariate estimators.
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{l|ccccc}
-        \hline
-        &$\widehat p_0$ &$\widehat\alpha$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat h$ \\
+The comparison of the root MSE (RMSE) for the estimated parameters from the univariate vs. the multivariate likelihood yields, as we can assess from Table \ref{tab:2.11} showing that the RMSEs of the univariate estimators are larger than those of the multivariate estimators.
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllll@{}}
+    \toprule
+        &$\widehat p_0$ &$\widehat\alpha$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat h$ \\ \midrule
         Multivariate RMSE &0.1011 &0.3334 &0.3553 &1.6226 &0.3304 \\
         Univariate RMSE &0.0256 &0.1068 &0.1907 &0.1876 &0.1745 \\
-        Univariate / Multivariate RMSE &3.9492 &3.1217 &1.8631 &8.6492 &1.8934 \\
-        \hline
-    \end{tabular}
-    \caption{comparison between the RMSE from the Multivariate model vs. Univariate model.}
+        Univariate RMSE / Multivariate RMSE &3.9492 &3.1217 &1.8631 &8.6492 &1.8934 \\
+        \bottomrule
+    \end{tabular*}
+    \caption{Comparison between the RMSE from the Multivariate model vs. Univariate model.}
     \label{tab:2.11}
-\end{table}
+\end{table*}
+\end{center}
 
 On the other hand, given the presence of bias in the estimators, such bias becomes more visible in the multivariate case, so that if one compares the standardized RMSE (SRMSE) obtained by dividing it by each estimator's estimated standard deviation, obtains the results in Table \ref{tab:2.12} which shows that, but the scale baseline parameter, the relative RMSE is larger for the univariate estimators.
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{l|ccccc}
-        \hline
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllll@{}}
+    \toprule
         &$\widehat p_0$ &$\widehat\alpha$ &$\widehat{shape}_0$ &$\widehat{scale}_0$ &$\widehat h$ \\
         Multivariate SRMSE &85.3333 &133.5000 &158.9167 &170.5454 &102.6471 \\
         Univariate SRMSE &144.4286 &175.4737 &169.1905 &121.0896 &106.5806 \\ 
         Univariate / Multivariate SRMSE &1.6925 &1.3144 &1.0646 &0.7100 &1.0383 \\
-        \hline
-    \end{tabular}
-    \caption{comparison between the standardized RMSE from the Multivariate model vs. Univariate model.}
+        \bottomrule
+    \end{tabular*}
+    \caption{Comparison between the standardized RMSE from the Multivariate model vs. Univariate model.}
     \label{tab:2.12}
-\end{table}
+\end{table*}
+\end{center}
 
 The increase in precision achieved by the estimators obtained from the multivariate likelihood is possibly due in part to the fact that the added relatives (grandmother and mother in particular), having been born earlier than the main subjects that appear in the univariate likelihood, are less likely to have their survival times be (administratively) censored.
 
-However, the effect of the shared frailty component of the model is also possibly contributing to the increase in precision. Such effect is however not easy to quantify, as estimating the parameters of a model that does not include the shared frailty component would be such that either a different data generating model should be used, or a misspecified model is being used.
+However, the effect of the shared frailty risk component of the model is also possibly contributing to the increase in precision. Such effect is however not easy to quantify, as estimating the parameters of a model that does not include the shared frailty component would be such that either a different data generating model should be used, or a misspecified model is being used.
 
 \subsection{Risk group prediction for univariate vs. multivariate models}\label{sec:2.4.2}
-Our primary goal is to predict the risk for an woman whose family is not part of the data used to fit the model. Subsequently, risk prediction and related metrics are calculated and presented, followed by a final evaluation to determine the most informative and effective approach among the three studied.
+Our primary goal is to predict the risk for an woman whose family is not part of the data used to fit the model. Subsequently, risk prediction and related metrics are calculated and presented, followed by a final evaluation to determine the most informative and effective approach among the three studied. Notice that we can run risk prediction only for the frailty Lehmann Cure-Rate model because in the case of the $FH$ Lehmann Cure-Rate model, the family history is used as the predicted risk. 
 
-We compute the posterior family-specific quantities in the parametric case of two-latent risk groups. We can obtain the complete shape of the low-risk and high-risk survival functions, which are: 
+The complete shape of the low-risk and high-risk survival functions are
 \begin{align*}
     &S_0(t)=\widehat{p}_0+(1-\widehat{p}_0)\widetilde{S}(t) \\
     &S_1(t)= \widehat{p}_0^{\widehat\alpha}+(1-\widehat{p}_0^{\widehat\alpha} )\widetilde{S}_1(t) \\
@@ -727,7 +730,7 @@ Risk prediction is achieved through calculation of the conditional probability f
 \begin{align*}
         P(R=1\mid \underline x;\widehat\theta) &= \dfrac{f(\underline x\mid R=1;\widehat\theta)P(R=1)}{f(\underline x)} = \dfrac{f(\underline x \mid R=1;\widehat\theta)P(R=1)}{f(\underline x \mid R=1;\widehat\theta)P(R=1)+f(\underline x \mid R=0;\widehat\theta)P(R=0)}.
     \end{align*} 
-Recall from above that $\underline x= (x, \delta)$ indicate the univariate survival data couple. The vector collection $\underline{\textbf{x}}=((x,\delta)^T,(xs,\delta s_1)^T,(xm, \delta m)^T,(xg, \delta g)^T)^T$ represents the whole family data, always for a four members family. The purpose to define the family with at least three members, i.e. the grandmother, the mother, and the first sister is to cover at least the second-degree-generational heritability of the disease (see e.g. heritability of breast cancer). Notice again that this is easily extendable to a higher number of sisters, or other degree members of the family (see e.g. father's mother, aunts, female cousins). Hence, the full multivariate model is a generalization of the formula above, involving here all survival information from all family members and accounting for the conditional independence assumption. The multivariate posterior probability of belonging to the high-risk group is given by: \begin{align}
+Recall from above that $\underline x= (x, \delta)$ indicate the univariate survival data couple. The vector collection $\underline{\textbf{x}}=((x,\delta)^T,(xs,\delta s_1)^T,(xm, \delta m)^T,(xg, \delta g)^T)^T$ represents the whole family data, always for a four members family. The purpose to define the family with at least three members, i.e. the grandmother, the mother, and the first sister is to cover at least the second-degree-generational heritability of breast cancer. Notice again that this is easily extendable to a higher number of sisters, or other degree members of the family (see e.g. father's mother, aunts, female cousins). Hence, the full multivariate model is a generalization of the formula above, involving here all survival information from all family members and accounting for the conditional independence assumption. The multivariate posterior probability of belonging to the high-risk group is given by: \begin{align}
     \label{formula:2.3}
         % P(R=1\mid \text{family};\underline{\widehat{\zeta}}) &= \dfrac{f(\text{family}\mid R=1;\underline{\widehat{\zeta}})P(R=1)}{f(\text{family};\underline{\widehat{\zeta}})} 
         &P(R=1\mid \underline{\textbf{x}};\widehat{\theta}) % = \dfrac{f(\underline{\textbf{x}}\mid R=1;\widehat{\theta})P(R=1)}{f(\underline{\textbf{x}})} 
