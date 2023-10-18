@@ -182,7 +182,7 @@ As a consequence of this fact, one may try to place some constraints on the para
 \end{eqnarray}
 thus imposing the PH structure on the distributions of the cases in the two groups, plus the assumption that the factor $\alpha \in (0,1)$ that relates $\widetilde{\lambda}_0(t) = \alpha \, \widetilde{\lambda}_1(t)$ is the same that relates $p_0$ to $p_1 = \alpha \, p_0$.
 
-We call such model the Proportional Hazards Constrained cure-rate (PHCCR) model. Notably, in the PHCRR model the higher-risk group is associated with both a larger fraction of cases and earlier age at onset for their disease.
+We call such model the Proportional Hazards Constrained Cure-Rate (PHCCR) model. Notably, in the PHCRR model the higher-risk group is associated with both a larger fraction of cases and earlier age at onset for their disease.
 
 Note that to achieve identifiability one may also try to impose prior distributions on the parameters. Or, one may perform a sensitivity analysis that replaces this restriction with a fixed value for $p_1/p_0 = \rho$. 
 
@@ -190,23 +190,24 @@ Note that to achieve identifiability one may also try to impose prior distributi
 Let the two conditional distributions of the survival times of the cases be distributed as Exp$(\lambda_0)$ and Exp$(\lambda_1)$ respectively for the two risk groups, with $\lambda_1 > \lambda_0$, i.e. such that $\lambda_0 = \alpha \, \lambda_1$ with $\alpha \in (0,1)$. Note that we also have $p_1 = \alpha \, p_0$. 
 
 The following output illustrates the PHCCR model with two exponential CR survival sub-models. The simulations are based on 1,000 simulated dataset of size n=100,000 individuals each.
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{l|cccc} \hline
-    &$p_0$ &$l_0$ &$\alpha$ &h \\
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllll@{}}
+    \toprule
+    &$p_0$ &$l_0$ &$\alpha$ &h \\ \midrule
     True value &0.8 &0.1 &0.3333 &0.8 \\
     Mean &0.7995 &0.1001 &0.3335 &0.7994 \\
-    Se &0.0005 &0.0002 &0.0004 &0.0002 \\
+    Standard error &0.0005 &0.0002 &0.0004 &0.0002 \\
     $\sqrt{MSE}$ &0.0220 &0.0051 &0.0152 &0.0059 \\ 
     95\% C.I. Lower &0.7981 &0.0998 &0.3326 &0.7991 \\ 
-    95\% C.I. Upper &0.8008 &0.1004 &0.3345 &0.7998 \\ \hline
-    \end{tabular}
-    \caption{results on the identifiability of a two risk groups CR model with Exponential survival functions.}
+    95\% C.I. Upper &0.8008 &0.1004 &0.3345 &0.7998 \\ \bottomrule
+    \end{tabular*}
+    \caption{Results on the identifiability of a two risk groups Cure-Rate model with Exponential survival function.}
     \label{tab:2.1}
-\end{table}
-\newpage
+\end{table*}
+\end{center}
 
-In Table \ref{tab:2.1} is reported the parameter recovery in mean and standard error of the estimated parameter values across the 1,000 repetitions; the square root of the mean square error $\sqrt{MSE}$, that represents a measure of the absolute distance between the true value from the data generation process and the estimated value from observed data. The $MSE$ is given by \[
+In Table \ref{tab:2.1} is reported the parameter recovery in mean and standard error of the estimated parameter values across the 1,000 repetitions. The square root of the mean square error $\sqrt{MSE}$ represents a measure of the absolute distance between the true value from the data generating process and the estimated value from observed data. The $MSE$ is given by \[
 MSE = \dfrac{1}{n}\sum_{i=1}^n(\widehat r_i - r_i)^2.
 \] 
 
@@ -215,22 +216,25 @@ Also, the lower-bound and the upper-bound of the 95\% confidence interval (C.I.)
 \subsubsection*{Example 2.}
 Let the two conditional distributions of the survival times of the cases be Weibull$(shape_0$, $scale_0)$ and Weibull$(shape_1, scale_1)$ respectively for the two risk groups, with $shape_0=shape_1$. To implement the conditional proportional hazards model $\widetilde{\lambda}_0(t)=\alpha \, \widetilde{\lambda}_1(t)$ one simply sets $scale_1 = scale_0 \, ( \alpha^{1/shape_0})$. Again, $p_1=\alpha \, p_0$ (easy to check).
 
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{l|ccccc} \hline
-    &$shape_0$ &$scale_0$ &$shape_1$ &$\alpha$ &h \\
+These two small examples confirm that the parameter values that are used to generate the data are recovered correctly by the maximum likelihood estimators, with only small residual biases for the estimators.
+
+\begin{center}
+\begin{table*}[!h]%
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllll@{}}
+    \toprule
+    &$shape_0$ &$scale_0$ &$shape_1$ &$\alpha$ &h \\ \midrule
     True value &20 &65 &20 &0.70 &0.80 \\
     Mean &20.2413 &64.9588 &20.1350 &0.7006 &0.8000 \\
     Se &0.0360 &0.0088 &0.0185 &0.0001 &0.0004 \\
     $\sqrt{MSE}$ &1.1626 &0.2814 &0.6014 &0.0032 &0.0131 \\ 
     95\% C.I. Lower &20.0184 &64.9042 &20.0201 &0.7000 &0.7974 \\ 
-    95\% C.I. Upper &20.4642 &65.0133 &20.2498 &0.7013 &0.8025 \\ \hline
-    \end{tabular}
-    \caption{results on the identifiability of a two risk groups CR model with Exponential survival functions.}
+    95\% C.I. Upper &20.4642 &65.0133 &20.2498 &0.7013 &0.8025 \\ \bottomrule
+    \end{tabular*}
+    \caption{Results on the identifiability of a two risk groups Cure-Rate model with Weibull survival functions.}
     \label{tab:2.1}
-\end{table}
-
-These two small examples confirm that the parameter values that are used to generate the data are recovered correctly by the maximum likelihood estimators, with only small residual biases for the estimators.
+\end{table*}
+\end{center}
+\newpage
 
 \subsection{A two-latent-class Lehmann cure-rate model}
 As an alternative to the PHCCR model, we now extend the definition of the Lehmann family of distributions to the case of cure-rate models, still within the latent class framework.
@@ -248,22 +252,23 @@ Here, we suggest extending the PH model to the model defined by the more general
     \left\{  S_{\alpha}(t) = \left[ p_0 + (1-p_0) \widetilde{S}_0(t) \right]^{\alpha}, \ \ \alpha >0  \right\}.   
     \label{formula:2.LehmannCR}
 \end{equation*}
+
 For a fixed value $\alpha$, the survival function $S_{\alpha}(t)$ also defines a cure-rate model. Indeed, $\lim_{t \rightarrow \infty} S_{\alpha}(t) = p_0^{\alpha}$, and $S_{\alpha}(t)$ can be written as
 \[
-S_{\alpha}(t) = p_0^{\alpha} + \left( 1-p_0^{\alpha} \right) \widetilde{S}_{\alpha}(t)
+S_{\alpha}(t) = p_0^{\alpha} + \left( 1-p_0^{\alpha} \right) \widetilde{S}_{\alpha}(t),
 \]
 with conditional (proper) survival function for the cases equal to
 \[
-\widetilde{S}_{\alpha}(t) = \frac{\left[ p_0 + (1-p_0) \widetilde{S}_0(t) \right] ^{\alpha} - p_0^{\alpha}}{1-p_0^{\alpha}}
+\widetilde{S}_{\alpha}(t) = \frac{\left[ p_0 + (1-p_0) \widetilde{S}_0(t) \right] ^{\alpha} - p_0^{\alpha}}{1-p_0^{\alpha}},
 \]
-and conditional density function
+whose conditional density function is
 \begin{eqnarray*}
 \widetilde{f}_{\alpha} (t) = - \frac{d}{d t} \widetilde{S}_{\alpha}(t) = \frac{1-p_0}{1-p_0^{\alpha}} \alpha \left[ p_0 + (1-p_0) \widetilde{S}_0(t) \right]^{\left(\alpha -1 \right)} \widetilde{f}_0(t).   \label{conddens}
 \end{eqnarray*}
 
 We note that here, too, a regression model with $\alpha=\alpha(z)$ can also be constructed for a vector $z$ of observed covariates if they are available.
 
-A two (or indeed more) latent class parametric Lehmann cure-rate model can now be easily
+A two (or indeed more) latent class parametric Lehmann Cure-Rate model can now be easily
 defined. Recall the Lehmann structure on the survival function characterizing the risk group $S_r(t) = [S_0(t)]^{\alpha(r)}$, such that we have: \begin{align*}
     &S_0(t) = p_0 + (1-p_0)\widetilde{S}_0(t), &S_1(t) = [p_0 + (1-p_0)\widetilde{S}_0(t)]^\alpha.
 \end{align*} For a fixed $\alpha$, also the high-risk survival function $S_1(t)$ defines a cure-rate model. % We identify the latent risk as a parameter $\alpha$ to be estimated. The proportional hazard (PH) structure allows the hazard function in a risk group to be written in function of the baseline hazard $\lambda_0(t)$, such that $\lambda_r(t) = \alpha(r) \lambda_0(t)$ (in particular $\lambda_0(t)$, and $\lambda_1(t) = \alpha \lambda_0(t)$), where $\lambda_0(t)$ is distributed according to a parametric distribution identified by the parameter collection $\underline{\theta}$, or a semiparametric distribution. Hence, it follows that the survival function is identified by a Lehmann structure, such that $S_r(t)=[S_0(t)]^{\alpha(r)}$. We thus have $S_0(t)$, and $S_1(t) = [S_0(t)]^{\alpha}$. Recall that the baseline survival function is defined by the more general Lehmann  family obtained by applying the Lehmann power transformation to a  survival function $S_r(t) = \left[p_0 + (1-p_0) \widetilde{S}(t) \right]^{\alpha(r)}$, with $\widetilde{S}(t)$ a proper survival function, so that we have $S_0(t) = p_0 + (1-p_0) \widetilde{S}(t)$, and $S_1(t) = [p_0 + (1-p_0) \widetilde{S}(t)]^\alpha$. For a fixed value $\alpha$, the aforementioned model is such that the survival function $S_1(t)$ also defines a  model. 
@@ -275,7 +280,7 @@ with conditional (proper) survival function for the cases equal to:
 \[
 \widetilde{S}_1(t) = \dfrac{\left[p_0 + (1-p_0) \widetilde{S}_0(t) \right] ^\alpha - p_0^{\alpha}}{1-p_0^{\alpha}},
 \]
-and conditional density function: 
+and conditional density function 
 \[
 \widetilde{f}_1(t) = - \dfrac{d}{d t} \widetilde{S}_1(t) = \dfrac{1-p_0}{1-p_0^{\alpha}} \alpha \left[p_0 + (1-p_0) \widetilde{S}_0(t) \right]^{\left(\alpha -1 \right)} \widetilde{f}_0(t).   
 \]
