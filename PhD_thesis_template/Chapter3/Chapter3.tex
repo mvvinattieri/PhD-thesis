@@ -22,7 +22,7 @@ A second model comes from considering the heritability to be different based on 
 
 We investigate an alternative model that can be used to address the effect of family history on survival from a fully multivariate perspective. Different from what we have seen so far, the quantity of interest $t_i$ is the time-to-event, where the event is death. We therefore develop survival analysis models and methods (see, e.g. \cite{lawless2011statistical}). We assume that families are split into groups with different hazard functions and characterized by different survival curves. 
 
-This structure recalls a mixture for survival models, where the family risk is the mixing quantity. Family risk is therefore treated as a latent family feature on survival, at the family level (where the family is seen as the cluster). So this means that all the family members have the same risk of death from birth and that is not directly observable. 
+This structure recalls a mixture for survival models, where the family risk is the mixing quantity. Family risk is therefore treated as a latent family feature on survival, at the family level (where the family is seen as the cluster). So this means that all the family members have the same risk of mortality from birth and that is not directly observable. 
 
 Frailty models offer a viable approach for constructing a mixture in the context of survival models. The frailty quantity is a random effect that captures the unobserved heterogeneity among groups, given different distributions to subjects who belong to different groups. We refer our proposal to the general conditional model (see \cite{hougaard2012analysis}) called the univariate frailty model. To fix the idea, conditionally to the frailty quantity of interest, i.e. the unobserved family risk, the hazard function has a multiplicative form involving the baseline hazard and the risk. Notice that the distribution of the risk can be seen as the mixture distribution. The very first set to develop the univariate frailty model is based on splitting families into two groups: a low-risk and a high-risk group. The latent family risk, which is called ``$R$'', assumes the value ``$R=low/high$''. The model for the risk of death is represented as follows. The hazard function for the survival times of all family members in the two groups can be defined as $\lambda_0(t)$ and $\lambda_1$(t) = $\alpha \lambda_0$(t) for $R=0$ and $1$, respectively. Notice that the hazard function in the low-risk group $\lambda_0(t)$ is taken as the baseline hazard. While the hazard of the high-risk group $\lambda_1(t)$ is proportional to the baseline hazard up to some constant $\alpha$. The corresponding survival functions are the baseline survival function and the high-risk group survival: \begin{align*}
     S_0(t) &= e^{-\int_0^t\lambda_0(u)\text{d}u} \\ 
@@ -115,7 +115,7 @@ The idea is represented in Figure \ref{classify EM}. For simplicity of interpret
 % Text Node
 \draw (259,84.95) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ]  {$f( x_{i} ,\hat{\theta })$};
 \end{tikzpicture}
-    \caption{a classification method for women in binary risk groups.}
+    \caption{Classification method for two risk groups.}
     \label{classify EM}
 \end{figure}
 If we rely on binary splitting we can then predict the risk groups for each woman in the sample. Especially, we may compute $P(R_i=1|\underline{x}_i, \widehat{\theta})$; hence the (actionable) classification into a risk group can be carried out with a threshold, say $q$: 
@@ -141,11 +141,11 @@ One can then apply some diagnostic tools to analyse the goodness in classificati
 R & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{TN}      & \multicolumn{1}{l|}{FP} \\ \cline{2-4} 
   & \multicolumn{1}{l|}{1} & \multicolumn{1}{l|}{FN}      & \multicolumn{1}{l|}{TP} \\ \cline{2-4} 
 \end{tabular}
-\caption{confusion matrix between $R$ vs. $\widehat{R}$.}
+\caption{Confusion matrix between $R$ vs. $\widehat{R}$.}
 \label{table:risk comparison}
 \end{table} \begin{align*}
     k = \frac{2(TP\cdot TN - FN\cdot FP)}{(TP + FP)\cdot (TN + FP) + (TP + FN)\cdot (TN + FN)}
-\end{align*} with $TP, TN, FP, FN$ indicate the true positive, true negative, false positive, and false negative proportions, where positive (negative) stands for $\widehat{RB}$=high-risk (low-risk). We can compute also the classic agreement index: \begin{align*}
+\end{align*} with $TP, TN, FP, FN$ indicate the true positive, true negative, false positive, and false negative proportions, where positive (negative) stands for $\widehat{RB}$=high-risk (low-risk). We can compute also the classic agreement index which is given by \begin{align*}
     \text{agreement index} = \frac{TP+TN}{TP+TN+FP+FN}.
 \end{align*} Both indices vary in the range $[0,1]$ where 0 means no agreement and 1 means perfect agreement. Also, sensitivity and specificity can be computed as additional classification accuracy measures. 
 
