@@ -24,7 +24,7 @@ We seek to illustrate and quantify how family data can be better used to learn a
 The chapter is outlined as follows: we introduce the univariate background of the frailty Cure-Rate model in Section \ref{sec:2.1}, the methods about the Multivariate frailty Cure-Rate model in Section \ref{sec:2.2}. A comparison among the Univariate $FH$ Cure-Rate model, the Univariate frailty Cure-Rate model, and the Multivariate frailty Cure-Rate model is run in Section \ref{sec:2.3}, and we close with some discussion in Section \ref{sec:2.4}. 
 
 \section{Univariate model for age at disease onset}\label{sec:2.1}
-\subsection{Latent cure-rate survival models}
+\subsection{Univariate frailty Cure-Rate models}
 The Univariate Frailty model \cite{duchateau2008frailty} on the time-to-event $T = t$ allows the hazard function $\lambda_r(t) = \lambda(t\mid r)$ to have a particular form including the frailty risk $R$ which captures the unobserved heterogeneity among subjects. The hazard is given by 
 \[
 \lambda_r(t) = \alpha(r)\lambda_0(t),
@@ -36,7 +36,7 @@ The model can be extended to the inclusion of subject-specific covariates. In th
     \label{haz-fun}
     \lambda_r(t) =r\lambda_0(t;x),
 \end{align}
-where $x$ are the subject-specific covariates. The shared frailty hazard function allows to define the frailty as a family-specific quantity. Thus, this specification is used with clustered data, as it is our case where we see families as clusters. The hazard function has the same equation as in \ref{haz-fun}, but the frailty risk $r$ is seen this time as a familial characteristic.
+where $x$ are the subject-specific covariates. Notice that in the multivariate setting, the shared frailty hazard function allows to define the frailty as a family-specific quantity. Thus, this specification is used with clustered data, as it is our case where we see families as clusters. The hazard function has the same equation as in \ref{haz-fun}, but the frailty risk $r$ is seen this time as a familial characteristic.
 
 In the binary case, the latent quantity can be represented as $R = (0, 1)$, where typically the relation between the hazard functions is $\lambda_1(t) = \alpha\lambda_0(t)$. This assumption allows the hazard and survival functions of group ``0'' to coincide with the baseline functions, while $\alpha<1$ ensures coherence with the assumption of a highest-risk group in the population and thus we can rely on the assumption of proportional hazard. Therefore, we obtain: \begin{align*}
     &\lambda_0(t) = \lambda(t\mid R=0) = \lambda_0(t;x), \qquad S_0(t) = S(t\mid R=0) = S_0(t;x), \\
@@ -236,7 +236,7 @@ These two small examples confirm that the parameter values that are used to gene
 \end{center}
 \newpage
 
-\subsection{A two-latent-class Lehmann cure-rate model}
+\subsection{The Univariate frailty Lehmann Cure-Rate model}
 As an alternative to the PHCCR model, we now extend the definition of the Lehmann family of distributions to the case of cure-rate models, still within the latent class framework.
 
 Recall the Lehmann family of distributions is equivalent to the definition of the proportional hazards (PH) structure for proper survival distributions:
@@ -306,26 +306,28 @@ Interesting comments about the two-latent-class Lehmann cure-rate model are in A
 % \end{align*} 
 % Note that if $T\sim S_0(t)$, then $P(T=+\infty)=p>0$, and a proper density function $f_T(t)$ does not exist. 
 
-\subsubsection*{Data generation from the two-latent-class Lehmann cure-rate model}\label{fastdatagen}
+\subsubsection*{Data generation from the two-latent-class Lehmann Cure-Rate model}\label{fastdatagen}
 In simpler models (ex. the Exponential and Weibull seen above), the generation of observations from the high-risk group can be easily achieved by applying the analytical inversion of $\widetilde{S}_1(t)$ (for cases), after having generated the case/non-case status.
 
-Splitting subjects into two risk groups, we have the closed form of the survival function on the observed time for cases into the low-risk and high-risk group. For the Exponential baseline survival function $\widetilde{S}_0(t) = \text{e}^{- \lambda t}$, and the Weibull survival function $\widetilde{S}_0(t) = \text{e}^{-(t/ \lambda)^{ k}}$, with scale $\lambda$ and shape $ k$ inverting the survival function brings to generating the time-to-events from, respectively, 
+Splitting subjects into two risk groups, we have the closed form of the survival function on the observed time for cases into the low-risk and high-risk group. For the Exponential baseline survival function $\widetilde{S}_0(t) = \text{e}^{- \lambda t}$, and the Weibull survival function $\widetilde{S}_0(t) = \text{e}^{-(t/ \lambda)^{ k}}$, with scale $\lambda$ and shape $k$, inverting the survival function brings to generating the time-to-events from, respectively, 
 \begin{align*}
-    &t = -\dfrac{1}{\lambda}log(u), &t = \lambda\log\left(\dfrac{1}{u}\right)^{1/ k}.
+    &t = -\dfrac{1}{\lambda}\log(u), &t = \lambda\log\left(\dfrac{1}{u}\right)^{1/ k}.
 \end{align*}
 where $u\sim\text{Unif}[0,1]$. Similarly, we obtain for an observation from $\widetilde S_1(t)$, where the time-to-event generation formula for Exponential and Weibull distribution is given by, respectively,  \begin{equation*}
     t = -\dfrac{1}{\lambda} \log \left( \dfrac{ \left[ (1-p_0^{\alpha}) u + p_0^{\alpha} \right]^{1/{\alpha}}-p_0}{1-p_0} \right), \qquad t = -\lambda\left[\log\left(\dfrac{[(1-p_0^{\alpha})u+p_0^{\alpha}]^{1/{\alpha}}-p_0}{1-p_0}\right)\right]^{1/ k}.
 \end{equation*}
 
-While this model is clearly appealing in its interpretation, it is difficult to identify its parameters. Thus, fitting of such latent model requires that one has additional external information on the value of some of the parameters. 
+While this model is clearly appealing in its interpretation, it is difficult to identify its parameters. Thus, fitting of such frailty model requires that one has additional external information on the value of some of the parameters. 
 
 When the distribution $\widetilde{S}_0(t)$ is not as trivial as the -- typically not very useful -- Exponential distribution, generation of observations from the high-risk group requires inversion of the survival function $\widetilde{S}_1(t)$ through numerical integration from $\widetilde{f}_1(t)$, the conditional density function of the cases in the high-risk group. This allows to produce samples from the distribution.
 
-However, a much faster and precise algorithm exists from the form of the marginal survival function for the high-risk group. One may generate values $u$ from the $U(0,1)$ distribution and invert $S_1(t)=[S_0(t)]^{\alpha}$ directly to produce the value $t=S_1^{-1}(u)$. One should produce the value $T=\infty$ whenever $u< p_1=p_0^{\alpha}$, and solve $u=S_1(t)$ for $t$ when $u \geq p_1$. It is easy to check that this yields
+However, a much faster and precise algorithm exists from the form of the marginal survival function for the high-risk group. One may generate values $u$ from the $U(0,1)$ distribution and invert $S_1(t)=[S_0(t)]^{\alpha}$ directly to produce the value $t=S_1^{-1}(u)$. One should produce the value $T=+\infty$ whenever $u< p_1=p_0^{\alpha}$, and solve $u=S_1(t)$ for $t$ when $u \geq p_1$. It is easy to check that this yields
 \[
 t= \widetilde{S}_0^{-1} \left( \frac{u-p_0}{1-p_0}  \right)=\widetilde{F}_0^{-1}\left( \frac{1-u}{1-p_0} \right), \ {\rm and}\ t= \widetilde{S}_0^{-1} \left( \frac{u^{1/\alpha}-p_0}{1-p_0}  \right) =\widetilde{F}_0^{-1}\left( \frac{1-u^{1/\alpha}}{1-p_0} \right) ,
 \]
-respectively for the low and high-risk groups. These can be easily computed from the quantile function available in most software packages for a large number of distributions (one just needs to make sure that the quantile function is never invoked for $u<p_0^{\alpha}$).
+respectively for the low-risk and high-risk groups. These can be easily computed from the quantile function available in most software packages for a large number of distributions (one just needs to make sure that the quantile function is never invoked for $u<p_0^{\alpha}$).
+
+We move now from the univariate setting to the multivariate setting by computing the multivariate likelihood after a description of the data which enters into the model.
 \newline
 % As an example, the data generation from the high-risk group of a Lehmann CR model based on the Weibull distribution for the times to onset for the cases in the low-risk group may be implemented as
 % %\begin{footnotesize}
@@ -339,14 +341,14 @@ respectively for the low and high-risk groups. These can be easily computed from
 \subsection{Family data}
 Consider the family cluster formed by main subject, sister, mother, and grandmother. 
 
-Figure \ref{fig:2.3} shows a depiction of the calendar times of birth (b) and of the times to onset (t) for a group of four family members. Notice that in the figure all family members experience the onset event, so that the cure-rate structure is not considered here. However, recall that the cure-rate model also allows for one or more of the times $t$, $ts$, $tm$, or $tg$ to be equal to $+\infty$. 
+Figure \ref{fig:2.3} shows a depiction of the calendar times of birth (b) and of the times to onset (t) for a group of four family members. Notice that in the figure all family members experience the breast cancer onset, so that the cure-rate structure is not considered here. However, recall that the Cure-Rate model also allows for one or more of the times $t$, $ts$, $tm$, or $tg$ to be equal to $+\infty$. 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\linewidth]{plots/Rplot101.png}
     \caption{birth calendar times and times to disease onset for a family.}
     \label{fig:2.3}
 \end{figure} 
-\newline
+
 The data generating process produces the family time-to-event data
         \begin{align*}
         (B,Bg,Bm,Bs,T,Tg,Tm,Ts)^T,
@@ -354,14 +356,12 @@ The data generating process produces the family time-to-event data
 for families indexed by $i=1,\dots,n$. We observe a realization of the multivariate random variable $(B,Bg,Bm,Bs,X,Xg,Xm,Xs)^T$, where $\underline{X} = (min(T,C),\Delta)^T$, i.e. we observe the value $\underline{X}=\underline{x}=(x,\delta)^T$. Recall that $T$ indicate the survival time random variable, where in our case is the age in years at breast cancer onset, and $C$ indicate the independent censoring time random variable, both measured from the same origin, that in our case is birth. The notation for the other family members is obtained by having $x, \ t, \ c, \ b$ be followed by $g$, $m$, and $s$ (meaning respectively, ``granmother'', ``mother'', and ``sister''). The distinction between grandmother, mother and sister is not strictly needed here, it will make the extension to a more complex model easier. One may, for example, specify a relative-specific survival function to capture the generational differences among family members. 
 
 \subsection{Multivariate Shared Frailty cure-rate model}
-Let us now finally extend the Lehmann cure-rate model to a Multivariate Shared Frailty Lehmann cure-rate model with two-latent-classes. The assumption we rely on to deal with the multivariate aspect of this model are the conditional independence among survival times within the same family and the assumption of shared frailty, or common risk class membership within families that allows the time-to-events to be i.i.d.. 
+Let us now finally extend the Univariate frailty Lehmann Cure-Rate model to the Multivariate frailty Lehmann Cure-Rate model with two-latent-classes. The assumptions we rely on to deal with the multivariate aspect of this model are the conditional independence among survival times within the same family and the assumption of shared frailty risk within a family which allows the time-to-events to be i.i.d.. 
 
-In this model, the observed data likelihood function incorporates common family memberships by grouping their contributions to the likelihood within each risk group. A deepening about the observed data likelihood is in Appendix \ref{appendix:2.e}. Indeed, let $\underline\theta = \{p_0, \underline\lambda^T, \alpha, h_0\}^T$ be the whole parameter vector of the model. The observed data likelihood is given by \begin{align*}
+In this model, the observed data likelihood function incorporates common family memberships by grouping their contributions to the likelihood within each risk group. A deepening about the observed data likelihood is in Appendix \ref{appendix:2.e}. Indeed, let $\underline\theta = \{p_0, \underline\lambda^T, \alpha, h_0\}^T$ be the whole parameter vector of the model, where all the parameters have been defined previously but $\underline\lambda^T,$ which is the collection of baseline survival parameters (whose dimension changes according to the assumed distribution). The observed data likelihood is given by \begin{align*}
     L(\underline\theta;{\rm all \ data}) &=  \prod_{i=1}^n \left[ f_{\underline{\mathbf{X}}}(\underline{\textbf{x}}_i|R_i=0;\theta)(1-h)+f_{\underline{\mathbf{X}}}(\underline{\textbf{x}}_i|R_i=1;\theta) \,h \right],
 \end{align*}
-where ``all data'' is composed by the observed time and the indicator of having observed the event, respectively $\underline{\textbf{x}}=(\underline{x}=(x,\delta)^T, \underline{x}s=(xs,\delta s)^T, \underline{x}m = (xm, \delta m)^T, \underline{x}g=(xg, \delta g)^T)^T$, the proportion of cured fraction of individuals in the population $p_0$, the proportion of high-risk families in the population $P(R=1) = h$, and $\underline\lambda$ that represents the collection of baseline survival parameters (whose dimension changes according to the assumed distribution). Here, $\alpha$ is the target parameter for inference because of its crucial meaning. Indeed, it is the risk difference between the low-risk and the high-risk group of developing breast cancer in this special case of two risk groups, involved in the PH structure: $\lambda_1(t) = \alpha\lambda_0(t)$. 
-
-Notice that if one know $R_i$ for each family, the integration over the distribution of $R$ is not necessary, clearly. This is in contrast to models that use an observable indicator replacing of the true risk indicator.
+where ``all data'' is composed by the observed time and the indicator of having observed the event, respectively $\underline{\textbf{x}}=(\underline{x}=(x,\delta)^T, \ \underline{x}s=(xs,\delta s)^T, \ \underline{x}m = (xm, \delta m)^T, \ \underline{x}g=(xg, \delta g)^T)^T$. Here, $\alpha$ is the target parameter for inference because of its crucial meaning. Indeed, it is the risk difference between the low-risk and the high-risk group of developing breast cancer in the two-latent-class setting involved in the PH structure which leads to $\lambda_1(t) = \alpha\lambda_0(t)$. 
 
 Let us compute the closed form of the likelihood. For ease of notation we drop writing the baseline survival parameter collection $\underline\lambda$ below. The first component is obtained, under the assumption of conditional independence of the survival times within each family, as
 \begin{align*}
