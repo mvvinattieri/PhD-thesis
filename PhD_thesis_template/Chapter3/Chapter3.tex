@@ -1,5 +1,5 @@
-\chapter{Family mortality: genetic risk estimation}{Published in the SIS 2022 | Book of Short Papers}
-\markboth{\textsc{Family mortality: genetic risk estimation}}{\textsc{Family mortality: genetic risk estimation}}\label{chapter:3}
+\chapter{Familial mortality risk - a simulation study}{Published in the SIS 2022 | Book of Short Papers}
+\markboth{\textsc{Familial mortality risk - a simulation study}}{\textsc{Familial mortality risk - a simulation study}}\label{chapter:3}
 
 \begin{abstract}
 We study the heritability of longevity, as we assume that families can be categorized in different groups of mortality risk. We may divide families into different clusters, within which they share the same risk. This risk is latent and unchanged from birth. 
@@ -131,8 +131,7 @@ If we rely on binary splitting we can then predict the risk groups for each woma
 Some possibilities would be: (i) $\Tilde{R}_i = \mathbb{I}(\mathbb{E}(R\mid\underline{x}_{i};\widehat{\theta})\ge 1)$ assuming a log Weibull-Gamma frailty model \citep{rodriguez2005multivariate, hougaard2012analysis}; (ii) $\Tilde{R}_i =\mathbb{I}(P(R>1\mid \underline{x}_{i};\widehat{\theta})\ge 0.5)$.} Alternative procedures can be implemented but are not treated here. 
 % An example is illustrated in Appendix \ref{appendix:3.a}.
 
-One can then apply some diagnostic tools to analyse the goodness in classification, such as the scatter-plot of $R$ versus $\widehat{R}$ (see \ref{cont_frailty}) to obtain a visual analysis of the classification accuracy, and the confusion matrix (see Table \ref{table:risk comparison}) between the median-based risk group $RB=\mathbb{I}(R \le \text{Median}(R))$ and the estimated risk group $\widehat{RB}$ obtained as in \ref{2_frailty} for a fixed $q$. We can use the agreement index Cohen's kappa \cite{cohen1960coefficient} to have a summary of the binary classification results.
-
+One can then apply some diagnostic tools to analyse the goodness in classification, such as the scatter-plot of $R$ versus $\widehat{R}$ (see \ref{cont_frailty}) to obtain a visual analysis of the classification accuracy, and the confusion matrix (see Table \ref{table:risk comparison}) between the median-based risk group $RB=\mathbb{I}(R \le \text{Median}(R))$ and the estimated risk group $\widehat{RB}$ obtained as in \ref{2_frailty} for a fixed $q$. 
 \begin{table}[ht]
 \centering
 \begin{tabular}{llll}
@@ -143,11 +142,16 @@ R & \multicolumn{1}{l|}{0} & \multicolumn{1}{l|}{TN}      & \multicolumn{1}{l|}{
 \end{tabular}
 \caption{Confusion matrix between $R$ vs. $\widehat{R}$.}
 \label{table:risk comparison}
-\end{table} \begin{align*}
-    k = \frac{2(TP\cdot TN - FN\cdot FP)}{(TP + FP)\cdot (TN + FP) + (TP + FN)\cdot (TN + FN)}
+\end{table} 
+
+We can use the agreement index Cohen's kappa \cite{cohen1960coefficient} to have a summary of the binary classification results, whose equation follows as 
+\begin{align*}
+    k = \frac{2(TP\cdot TN - FN\cdot FP)}{(TP + FP)\cdot (TN + FP) + (TP + FN)\cdot (TN + FN)},
 \end{align*} with $TP, TN, FP, FN$ indicate the true positive, true negative, false positive, and false negative proportions, where positive (negative) stands for $\widehat{RB}$=high-risk (low-risk). We can compute also the classic agreement index which is given by \begin{align*}
     \text{agreement index} = \frac{TP+TN}{TP+TN+FP+FN}.
-\end{align*} Both indices vary in the range $[0,1]$ where 0 means no agreement and 1 means perfect agreement. Also, sensitivity and specificity can be computed as additional classification accuracy measures. 
+\end{align*} 
+
+Both indices vary in the range $[0,1]$ where 0 means no agreement and 1 means perfect agreement. Also, sensitivity and specificity can be computed as additional classification accuracy measures. 
 
 % We may also apply other measures, properly used for our problem. The first measure is $R^2 = R_i\text{log}(p)+(R_i-1)(\text{log}(1-p))$. The second measure is the Brier score $(R_i-p)^2$, also written similar to the $R^2$: $R_i(1-p)^2+(1-R_i)p^2$. Values close to 0 mean a perfect model, while values close to 0.25 mean a non-informative model since $p=0.5$ randomly assigns to 0/1. 
 % \section{Comparison among estimators}
@@ -158,7 +162,9 @@ One can generate some family structures and survival times, and implement the tw
 %More details about data generation are in Appendix \ref{appendix:f2}. 
 The number of families in the dataset is fixed. Each woman has a mother and a grandmother. Instead, the number of sisters and aunts varies. They can be distributed as a Poisson($\lambda=\lambda_s$) and a Poisson($\lambda=\lambda_a$) respectively. We fix $\lambda_s=1, \ \lambda_a=0.5$, so that the resulting family size is \begin{equation*}
     \text{family size} = 3 + \text{Poisson}(1) + \text{Poisson}(0.5). 
-\end{equation*} The expected value of the sample size $N$ is therefore $\mathbb{E}(N)=3+1+0.5=4.5$. We have the family structure for each family, and for each family member, we build the day of birth (DOB), the observed time (X), and the observed event indicator ($\delta$). The data is visualized as:  \begin{table}[ht]
+\end{equation*} 
+
+The expected value of the sample size $N$ is therefore $\mathbb{E}(N)=3+1+0.5=4.5$. We have the family structure for each family, and for each family member, we build the day of birth (DOB), the observed time (X), and the observed event indicator ($\delta$). The data is visualized as:  \begin{table}[ht]
 \centering
 \begin{tabular}{l|l|l|l}
              & \texttt{DOB} & \texttt{X} & \texttt{$\delta$} \\ \hline
@@ -180,7 +186,8 @@ where X=min(today-DOB, diagnosis-DOB, death-DOB), and $\delta$ takes value 0/1 a
 1 &\text{X=diagnosis-DOB}.
 \end{cases}
 \end{align*}
-So far, we directly generate the time-to-event $T$ from the frailty Weibull distribution $T\sim\text{Weibull}(\text{shape}=\gamma,\text{scale}=\mu / R^{1/\gamma})$, with $R\sim\text{Gamma}(1,1)$, $\mu=1, \ \gamma=5$. The censoring time are generated from a Uniform distribution $C\sim\text{U}(0,12)$, and for each subject we generate $X=\text{min}(T,C)$ and $\delta=\mathbb{I}(X=T)$.
+
+We directly generate the time-to-event $T$ from the Weibull distribution $T\sim\text{Weibull}(\text{shape}=\gamma$, $\text{scale}=\mu / R^{1/\gamma})$ conditional to the frailty, with $R\sim\text{Gamma}(1,1)$, $\mu=1, \ \gamma=5$. The censoring time are generated from a Uniform distribution $C\sim\text{U}(0,12)$, and for each subject we generate $X=\text{min}(T,C)$ and $\delta=\mathbb{I}(X=T)$.
 
 Thus, we sample three thousands families and explore the classification accuracy in three different scenarios: (1) parametric hazard and binary classification with median as threshold; (2) semiparametric case with $q = 0.5$; (3) semiparametric case with $q = 0.25$. We extend to $q=0.25$ so that we keep low and realistic the posterior high-risk families proportion (see text below). We carry out this analysis stratified by family size and overall. The results for family size are not reported because irrelevant, while the summary of the overall results is in Table \ref{tab:1 pap2}. The posterior high-risk families proportion in the semiparametric case, varying $q$, is: 0.19 ($q = 0.25$); 0.24 ($q = 0.5$) reported in Table \ref{tab:1 pap2} in the last column ``HR''. Notice that we expect that involving the true value of parameter $\theta$, the true survival function $S_0(x_{ij})$ and hazard function $\lambda_0(x_{ij})$ we reach the best performance in classification. This is the best scenario, and we intend to compare this to the already seen scenarios above. \begin{table}[ht]
 \centering
