@@ -1,5 +1,5 @@
-\chapter{A binary Frailty Cure-Rate model for age at disease onset}{In progress}
-\markboth{\textsc{A binary Frailty CR model for age at disease onset}}{\textsc{A binary Frailty CR model for age at disease onset}}\label{chapter:2}
+\chapter{Two-latent-class Lehmann Cure-Rate models for age at disease onset - a simulation study}{In progress}
+\markboth{\textsc{Two-latent-class Lehmann Cure-Rate models for age at disease onset - a simulation study}}{\textsc{Two-latent-class  Lehmann Cure-Rate models for age at disease onset}}\label{chapter:2}
 
 \begin{abstract}
 We are interested on a specific aspect of survival modeling, namely the investigation of family-specific risk with a particular emphasis on the genetic component present from birth, as opposed to the environmental component. We assume that the true genetic family risk is latent and remains constant from birth, that we call ``frailty''. We focus on breast cancer development, even though this work can be extended to similar diseases. Our goal is to estimate this true family risk, as assessing the risk is crucial in improving individual survival chances by tailoring screening and prevention strategies to each individual's risk level. To achieve this goal, we employ a frailty model on the time to breast cancer onset, using a binary risk classification to split families into a low-risk group and a high-risk group. We compare this model to one that uses a strong risk factor, the family history indicator, to replace the latent binary risk. While the family history indicator solves the issue of latency, it is a weaker indicator of the complete detailed breast cancer familial history. 
@@ -801,38 +801,34 @@ From the ROC curve an overall measure of the performance of the classifier, the 
 
 This quantity is thus compared to the real risk group. Straightforwardly, one can obtain the univariate counterpart of the posterior expected value of the latent risk. 
 
-The results showing the average AUC over 100 simulated samples are in Table \ref{tab:2.6}. In this analysis, the sample size is allowed to vary over three values: $n = 10^2, \ 10^3, \ 10^4$ to appreciate possible change in increasing the sample size. It is noteworthy that, for each model, the variance of the AUC values decreases as the sample size increases, as expected. The models that perform the best are highlighted in bold. Notably, the multivariate model outperforms the other models for each sample size and distribution. Moving from the univariate to the multivariate likelihood shows an increase of 10\% and more in the AUC, and considering that 0.5 coincides with a classification procedure by following the flipping of a coin, such improvement in classification performance is indeed significant. Computing the AUC with $R$ vs. its expected value $\mathbb E(R)$ has no meaning with the observed family history model because the information of the frailty is not involved in this model. Due to this fact, a comparison between $FH$ and $R$ both obtained in the data simulation process is applied to replace $\mathbb E(R)$ (results always in Table \ref{tab:2.6}). Results are quite poor for the univariate $FH$ model because the AUC, in some cases ($\approx 0.4$), has a lower value than having accuracy in classification with the flipping of a coin.
-\begin{table}[ht]
-\centering
-\begin{tabular}{l|ccc} \hline
-&\multicolumn{3}{c}{Number of families} \\ 
-Multivariate &$10^2$ &$10^3$ &$10^4$ \\ 
-Exponential & {0.6917} (0.0062) & {0.6902} (0.0019) & {0.6907} (0.0006) \\
-Weibull & {0.6564} (0.0070) & {0.6559} (0.0023) & {0.6558} (0.0007)      \\
-Gamma &\textbf{0.6923(0.0046)} &\textbf{0.6988(0.0008)} &\textbf{0.6957($<$0.0001)} \\ 
-% Lognormal \\
-% 3-parameters Gamma \\
-% 3-parameters Lognormal \\ 
-\hline Univariate \\
-Exponential & 0.5393 (0.0139) & 0.5379 (0.0101)  & 0.5409 (0.0008) \\
-Weibull & 0.5492 (0.0068) & 0.5498 (0.0030) & 0.5503 (0.0007) \\
-Gamma & \textbf{0.5927 (0.0079)} & \textbf{0.5798 (0.0010)} &\textbf{0.5816 (0.0001)} \\ 
-% Lognormal \\
-% 3-parameters Gamma \\
-% 3-parameters Lognormal \\ 
-\hline Univariate FH \\
-Exponential &0.4492 (0.0905) &0.4137 (0.0231) &0.4137 (0.0079) \\ 
-Weibull &\textbf{0.5183 (0.0143)} &\textbf{0.5213 (0.0026)} &\textbf{0.5211 (0.0007)} \\
-Gamma &0.5140 (0.0892) &0.4969 (0.0892) &0.4698 (0.0008) \\ 
-% Lognormal \\
-% 3-parameters Gamma \\
-% 3-parameters Lognormal \\
-\hline  
-\end{tabular}
-\caption{AUC results for the multivariate and the univariate models.}
+The results showing the average AUC over 100 simulated samples are in Table \ref{tab:2.6}. In this analysis, the sample size is allowed to vary over three values: $n = 10^2, \ 10^3, \ 10^4$ to appreciate possible changes in increasing the sample size. 
+\begin{center}
+\begin{table*}[h!]
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llll@{}}
+\toprule
+    &\multicolumn{3}{c}{Number of families} \\ \cmidrule{2-4} 
+    &$10^2$ &$10^3$ &$10^4$ \\ 
+    Multivariate \\ 
+    Exponential & {0.6917} (0.0062) & {0.6902} (0.0019) & {0.6907} (0.0006) \\
+    Weibull & {0.6564} (0.0070) & {0.6559} (0.0023) & {0.6558} (0.0007)      \\
+    Gamma &\textbf{0.6923 (0.0046)} &\textbf{0.6988 (0.0008)} &\textbf{0.6957 ($<$0.0001)} \\ \midrule 
+    Univariate \\ 
+    Exponential & 0.5393 (0.0139) & 0.5379 (0.0101)  & 0.5409 (0.0008) \\ 
+    Weibull & 0.5492 (0.0068) & 0.5498 (0.0030) & 0.5503 (0.0007) \\
+    Gamma & \textbf{0.5927 (0.0079)} & \textbf{0.5798 (0.0010)} &\textbf{0.5816 (0.0001)} \\ \midrule 
+    Univariate $FH$ \\
+    Exponential &0.4492 (0.0905) &0.4137 (0.0231) &0.4137 (0.0079) \\ 
+    Weibull &\textbf{0.5183 (0.0143)} &\textbf{0.5213 (0.0026)} &\textbf{0.5211 (0.0007)} \\
+    Gamma &0.5140 (0.0892) &0.4969 (0.0892) &0.4698 (0.0008) \\ 
+\bottomrule  
+\end{tabular*}
+\caption{AUC results from the Multivariate frailty Lehmann Cure-Rate model, the Univariate frailty Lehmann Cure-Rate model, and the Univariate $FH$ Lehmann Cure-Rate model.}
 \label{tab:2.6}
-\end{table}
+\end{table*}
+\end{center}
 % MVV-AUC-SAMEGENDATA-univariate-fh-exponential-RIGHT.R 
+
+It is noteworthy that, for each model, the variance of the AUC values decreases as the sample size increases, as expected. The models that perform the best are highlighted in bold. Notably, the multivariate model outperforms the other models for each sample size and distribution. Moving from the univariate to the multivariate likelihood shows an increase of 10\% and more in the AUC, and considering that 0.5 coincides with a classification procedure by following the flipping of a coin, such improvement in classification performance is indeed significant. Computing the AUC with $R$ vs. its expected value $\mathbb E(R)$ has no meaning with the observed family history model because the information of the frailty is not involved in this model. Due to this fact, a comparison between $FH$ and $R$ both obtained in the data simulation process is applied to replace $\mathbb E(R)$ (results always in Table \ref{tab:2.6}). Results are quite poor for the univariate $FH$ model because the AUC, in some cases ($\approx 0.4$), has a lower value than having accuracy in classification with the flipping of a coin.
 
 Notice that by increasing the sample size there is no significant change in the value of the AUC. ROC curves from one of the 100 dataset are reported in Figures \ref{fig:ROC2.1}, \ref{fig:ROC2.2}, \ref{fig:ROC2.3}, \ref{fig:ROC2.4}, and \ref{fig:ROC2.5} as a graphical example. We report the number of the families into the sample, but no the number of subjects involved. Consider that this last is greater or equal to the number of families.
 \begin{figure}
@@ -847,7 +843,7 @@ Notice that by increasing the sample size there is no significant change in the 
     \includegraphics[width = \linewidth]{plots/roc-curve-uni-wei_1000.pdf}
     \includegraphics[width = \linewidth]{plots/roc-curve-uni-wei_10000.pdf}
 \end{minipage}
-\caption{univariate -- Exponential (left), and Weibull (right) -- model ROC curves with number of families (sample size) varying among $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom).}
+\caption{Exponential (left) and Weibull (right) ROC curves with n = $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom) for the Univariate model.}
 \label{fig:ROC2.1}
 \end{figure}
 \newpage
@@ -863,7 +859,7 @@ Notice that by increasing the sample size there is no significant change in the 
     \includegraphics[width = \linewidth]{plots/roc-curve-multi-wei_1000.pdf}
     \includegraphics[width = \linewidth]{plots/roc-curve-multi-wei_10000.pdf}
 \end{minipage}
-\caption{multivariate -- Exponential (left), and Weibull (right) -- model ROC curves with number of families (sample size) varying among $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom).}
+\caption{Exponential (left) and Weibull (right) ROC curves n = $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom) for the Multivariate model.}
 \label{fig:ROC2.2}
 \end{figure}
 \newpage
@@ -879,7 +875,7 @@ Notice that by increasing the sample size there is no significant change in the 
     \includegraphics[width = \linewidth]{plots/roc-curve-fh-wei_1000.pdf}
     \includegraphics[width = \linewidth]{plots/roc-curve-fh-wei_10000.pdf}
 \end{minipage}
-\caption{observed FH -- Exponential (left), and Weibull (right) -- model ROC curves with number of families (sample size) varying among $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom).}
+\caption{Exponential (left) and Weibull (right) ROC curves with n = $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom), for the Univariate $FH$ model.}
 \label{fig:ROC2.3}
 \end{figure}
 % Code always in stuff like MB-AUC-univariate-weibull.R from local computer. 
@@ -896,7 +892,7 @@ Notice that by increasing the sample size there is no significant change in the 
     \includegraphics[width = \linewidth]{plots/roc-curve-uni-gamma_1000.pdf}
     \includegraphics[width = \linewidth]{plots/roc-curve-uni-gamma_10000.pdf}
 \end{minipage}
-\caption{observed FH for Gamma distribution (left) and Univariate model (right) ROC curves with number of families (sample size) varying among $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom). Consider that the subjects sample size coincides to the number of families.}
+\caption{Gamma Univariate $FH$ (left) and Univariate model (right) ROC curves with n = $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom).}
 \label{fig:ROC2.4}
 \end{figure}
 \newpage
@@ -905,57 +901,57 @@ Notice that by increasing the sample size there is no significant change in the 
     \includegraphics[width = .5\linewidth]{plots/roc-curve-multi-gamma_100.pdf}
     \includegraphics[width = .5\linewidth]{plots/roc-curve-multi-gamma_1000.pdf}
     \includegraphics[width = .5\linewidth]{plots/roc-curve-multi-gamma_10000.pdf}
-    \caption{multivariate Gamma model ROC curves with number of families (sample size) varying among $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom). Consider that the subjects sample size coincides to the number of families.}
+    \caption{Gamma Multivariate model ROC curves with n = $10^2$ (top), $10^3$ (middle), and $10^4$ (bottom).}
     \label{fig:ROC2.5}
 \end{figure}
 \clearpage
 
-We report some illustrative results based on one sample of varying number of families into the sample: n = 100, 1,000, 10,000, exploring the three baseline survival distributions, Exponential, Weibull and Gamma. Figures \ref{fig:ER1}, \ref{fig:ER2}, \ref{fig:ER3}, \ref{fig:ER4}, \ref{fig:ER5}, \ref{fig:ER6}, \ref{fig:ER7}, \ref{fig:ER8}, \ref{fig:ER9} show the histograms of the family-specific estimated $P(R_i \mid \underline{x}_i, \underline\delta_i; \widehat\theta)$ as estimated from the simulated dataset using the univariate likelihood and the multivariate likelihood with overlapping densities, for the two risk groups and divided by distributions. Consider that the lighter area with dashed borders is the results of the distribution from the multivariate case, while the darker area without borders is from the univariate case. We can generally notice from these figures that the multivariate distribution of the probability of belonging to the high-risk group is more distributed on all window [0,1], contrarily to the univariate distribution. This allows to better identify the highest-risk families in order to be more accurate in addressing families to more intensive prevention strategies or not.
+We report some illustrative results based on one sample of varying number of families into the sample: n = 100, 1,000, 10,000, exploring the three baseline survival distributions, Exponential, Weibull and Gamma. Figures \ref{fig:ER1}, \ref{fig:ER2}, \ref{fig:ER3}, \ref{fig:ER4}, \ref{fig:ER5}, \ref{fig:ER6}, \ref{fig:ER7}, \ref{fig:ER8}, \ref{fig:ER9} show the histograms of the family-specific posterior frailty risk probability $P(R_i \mid \underline{x}_i, \underline\delta_i; \widehat\theta)$ as estimated from the simulated dataset using the univariate likelihood and the multivariate likelihood with overlapping densities, for the two risk groups and distinguished by distributions. Consider that the lighter area with dashed borders represents the results of the distribution from the Multivariate frailty Lehmann Cure-Rate  model, while the darker area without borders is from the Univariate frailty Lehmann Cure-Rate model. We can generally notice from these figures that the multivariate distribution of the probability of belonging to the high-risk group is more distributed over all the range [0,1], contrarily to the univariate distribution. This allows to better identify the highest-risk families in order to accurately address them to more intensive prevention strategies.
 \begin{figure}[ht]
     \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_exp_100.pdf}
-    \caption{family-specific estimated probability of belonging to the high-risk group through maximization of the Exponential univariate likelihood (in grey) vs. the Exponential multivariate likelihood (lighter with dashed borders) grouped by true risk $R=0/1$ for $n=100$.}
+    \caption{Family-specific estimated probability of belonging to the high-risk group, through maximization of the Exponential univariate likelihood (in grey) vs. the Exponential multivariate likelihood (lighter with dashed borders) grouped by true risk $R=0/1$ for $n=100$.}
     \label{fig:ER1}
 \end{figure}
 \begin{figure}
     \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_exp_1000.pdf}
-    \caption{same as Figure \ref{fig:ER1} but with $n=1000$.}
+    \caption{Same as Figure \ref{fig:ER1} with $n=1,000$.}
     \label{fig:ER2}
 \end{figure}
 \begin{figure}
     \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_exp_10000.pdf}
-    \caption{same as Figure \ref{fig:ER1} but with $n=10000$.}
+    \caption{Same as Figure \ref{fig:ER1} with $n=10,000$.}
     \label{fig:ER3}
 \end{figure}
 \begin{figure}
     \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_wei_100.pdf}
-    \caption{family-specific estimated probability of belonging to the high-risk group through maximization of the Weibull  univariate likelihood (in grey) vs. the Weibull multivariate likelihood (lighter with dashed borders) grouped by true risk $R=0/1$ for $n=100$.}
+    \caption{Family-specific estimated probability of belonging to the high-risk group through maximization of the Weibull  univariate likelihood (in grey) vs. the Weibull multivariate likelihood (lighter with dashed borders) grouped by true risk $R=0/1$ for $n=100$.}
     \label{fig:ER4}
 \end{figure}
 \begin{figure}
     \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_wei_1000.pdf}
-    \caption{same as Figure \ref{fig:ER4} but with $n=1000$.}
+    \caption{Same as Figure \ref{fig:ER4} with $n=1,000$.}
     \label{fig:ER5}
 \end{figure}
 \begin{figure}
     \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_wei_10000.pdf}
-    \caption{same as Figure \ref{fig:ER4} but with $n=10000$.}
+    \caption{Same as Figure \ref{fig:ER4} with $n=10,000$.}
     \label{fig:ER6}
 \end{figure}
 \begin{figure}
     \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_gamma_100.pdf}
-    \caption{family-specific estimated probability of belonging to the high-risk group through maximization of the Gamma univariate likelihood (in grey) vs. the Gamma multivariate likelihood (in grey with dashed borders) grouped by true risk $R=0/1$ for $n=100$.}
+    \caption{Family-specific estimated probability of belonging to the high-risk group through maximization of the Gamma univariate likelihood (in grey) vs. the Gamma multivariate likelihood (in grey with dashed borders) grouped by true risk $R=0/1$ for $n=100$.}
     \label{fig:ER7}
 \end{figure}
 \newpage
 \begin{figure}
     \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_gamma_1000.pdf}
-    \caption{same as Figure \ref{fig:ER7} but with $n=1000$.}
+    \caption{Same as Figure \ref{fig:ER7} with $n=1,000$.}
     \label{fig:ER8}
 \end{figure}
 \newpage
 \begin{figure}
     \centering\includegraphics[width = .8\linewidth]{plots/ER_hist_gamma_10000.pdf}
-    \caption{same as Figure \ref{fig:ER7} but with $n=10000$.}
+    \caption{Same as Figure \ref{fig:ER7} with $n=10,000$.}
     \label{fig:ER9}
 \end{figure}
 % code in LOCAL post_prob_high-risk_group.R
@@ -1159,11 +1155,11 @@ We report some illustrative results based on one sample of varying number of fam
 % The question then is: what is $FH(x)$ truly estimating when used as a covariate in a univariate model?
 %   (VERONICA: COMPLETE THIS SECTION AND ADD MORE FROM YOUR TEXT TO THIS PART)
 \section{Discussion}\label{sec:2.4}
-Breast cancer is a significant global health concern, and despite some progress in recent years, there is still wide room for improvement. Prior studies have explored conventional survival models and the use of family history indicator. However, we firmly believe in adopting a cure-rate structure when analysing the breast cancer development, being aware that a portion of subjects may never experience the disease onset, no matter how long will be their lifespan. In the hypothetical scenario where every person develops breast cancer, the cure-rate model relies on the usual survival model. Our research proves the efficacy of the cure-rate structure in modeling breast cancer time-to-onset, specifically when considering a latent binary risk factor.
+Breast cancer is a significant global health concern, and despite some progress in recent years, there is still wide room for improvement. Prior studies have explored conventional survival models and the use of family history indicator. We believe that solely involving the family history into a risk prediction model can be inadequate to capture the dynamic of breast cancer development. By relying on frailty models, in this work we proved that a two-latent-class approach can outperforms a family history model in terms of inference precision and prediction accuracy. To compare models on the same level, we firstly introduce frailty models and cure-rate survival function as we firmly believe in adopting a cure-rate structure when analysing the breast cancer development, being aware that a portion of subjects may never experience the disease onset, no matter how long will be their lifespan. In the hypothetical scenario where every person develops breast cancer, the cure-rate model relies on the usual survival model. Our research proves the efficacy of the cure-rate structure in modeling breast cancer time-to-onset, specifically when considering a latent binary risk factor. Thus, we develop a Univariate $FH$ which allows for the extension of the Lehmann family to a Cure-Rate model. Drawing inspiration from the family history models which motivates the two-latent-class approach, we develop a Univariate frailty Lehmann Cure-Rate model and a Multivariate frailty Lehmann Cure-Rate model. We deeply discussed about identifiability of univariate models, and after that we have moved to the comparative analysis. What comes out from it is the superiority of the Multivariate frailty Lehmann Cure-Rate model over the univariate models. This means that family-related data plays a critical role in elucidating the clustering of breast cancer cases. And merely relying on a raw summary of familial information, such as a family history indicator, may prove inadequate in capturing the full complexity of the phenomenon. 
 
-Additionally, family-related data plays a critical role in elucidating the clustering of breast cancer cases. Merely relying on a raw summary of familial information, such as a family history indicator, may prove inadequate in capturing the full complexity of the phenomenon.
+Although the family history model justifies the two-latent-class approach, an extension to more than two risk groups may bring great improvement in risk prediction. 
 
-A potential extension of our work is to increase the number of risk groups beyond two. We propose building models with k-class risk groups. Another interesting direction is to explore higher levels of heritability than the first-degree-generational level. This could involve the grandmother from both the maternal and paternal sides. Additionally, covariates may be incorporated to tailor the risk, including the family history indicator as a simple covariate. We talk about our preliminary analysis on the extension to covariates in Appendix \ref{appendix:2.b}. Moreover, moving to the analysis on available data would be a crucial point to validate our work in a real-world setting.
+And also, another improvement may come from including relatives over the first-degree relationship. This could involve the grandmother from both the maternal and paternal sides. Additionally, covariates may be incorporated to tailor the risk, including the family history indicator as a simple covariate. We talk about our preliminary analysis on the extension to covariates in Appendix \ref{appendix:2.b}. Moreover, moving to the analysis on available data would be a crucial point to validate our work in a real case setting.
 \clearpage
 \renewcommand{\bibname}{References}
 \bibliographystyle{apalike}
