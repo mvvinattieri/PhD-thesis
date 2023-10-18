@@ -307,7 +307,7 @@ Interesting comments about the two-latent-class Lehmann cure-rate model are in A
 % Note that if $T\sim S_0(t)$, then $P(T=+\infty)=p>0$, and a proper density function $f_T(t)$ does not exist. 
 
 \subsubsection*{Data generation from the two-latent-class Lehmann cure-rate model}\label{fastdatagen}
-In simpler models (ex. the Exponential and Weibull seen above), the generation of observations from the high-risk group is easy by analytical inversion of $\widetilde{S}_1(t)$ (for cases), after having generated the case/non-case status.
+In simpler models (ex. the Exponential and Weibull seen above), the generation of observations from the high-risk group can be easily achieved by applying the analytical inversion of $\widetilde{S}_1(t)$ (for cases), after having generated the case/non-case status.
 
 Splitting subjects into two risk groups, we have the closed form of the survival function on the observed time for cases into the low-risk and high-risk group. For the Exponential baseline survival function $\widetilde{S}_0(t) = \text{e}^{- \lambda t}$, and the Weibull survival function $\widetilde{S}_0(t) = \text{e}^{-(t/ \lambda)^{ k}}$, with scale $\lambda$ and shape $ k$ inverting the survival function brings to generating the time-to-events from, respectively, 
 \begin{align*}
