@@ -730,7 +730,7 @@ Risk prediction is achieved through calculation of the conditional probability f
 \begin{align*}
         P(R=1\mid \underline x;\widehat\theta) &= \dfrac{f(\underline x\mid R=1;\widehat\theta)P(R=1)}{f(\underline x)} = \dfrac{f(\underline x \mid R=1;\widehat\theta)P(R=1)}{f(\underline x \mid R=1;\widehat\theta)P(R=1)+f(\underline x \mid R=0;\widehat\theta)P(R=0)}.
     \end{align*} 
-Recall from above that $\underline x= (x, \delta)$ indicate the univariate survival data couple. The vector collection $\underline{\textbf{x}}=((x,\delta)^T,(xs,\delta s_1)^T,(xm, \delta m)^T,(xg, \delta g)^T)^T$ represents the whole family data, always for a four members family. The purpose to define the family with at least three members, i.e. the grandmother, the mother, and the first sister is to cover at least the second-degree-generational heritability of breast cancer. Notice again that this is easily extendable to a higher number of sisters, or other degree members of the family (see e.g. father's mother, aunts, female cousins). Hence, the full multivariate model is a generalization of the formula above, involving here all survival information from all family members and accounting for the conditional independence assumption. The multivariate posterior probability of belonging to the high-risk group is given by: \begin{align}
+Recall from above that $\underline x= (x, \delta)$ indicate the univariate survival data couple. The vector collection $\underline{\textbf{x}}=((x,\delta)^T,(xs,\delta s_1)^T,(xm, \delta m)^T,(xg, \delta g)^T)^T$ represents the whole family data, always for a four members family. The purpose to define the family with at least three members, i.e. the grandmother, the mother, and the first sister is to cover at least the second-degree-generational heritability of breast cancer. Notice again that this is easily extendable to a higher number of sisters, or other degree members of the family (see e.g. father's mother, aunts, female cousins). Hence, the multivariate model is a generalization of the formula above, involving here all survival information from all family members and accounting for the conditional independence assumption. The multivariate posterior probability of belonging to the high-risk group is given by: \begin{align}
     \label{formula:2.3}
         % P(R=1\mid \text{family};\underline{\widehat{\zeta}}) &= \dfrac{f(\text{family}\mid R=1;\underline{\widehat{\zeta}})P(R=1)}{f(\text{family};\underline{\widehat{\zeta}})} 
         &P(R=1\mid \underline{\textbf{x}};\widehat{\theta}) % = \dfrac{f(\underline{\textbf{x}}\mid R=1;\widehat{\theta})P(R=1)}{f(\underline{\textbf{x}})} 
@@ -740,7 +740,7 @@ Recall from above that $\underline x= (x, \delta)$ indicate the univariate survi
         &f(\underline{\textbf{x}}\mid R=1)  \overset{\overset{\perp\mid R}{\downarrow}}{=} f(\underline{x}\mid R=1)f(\underline{xg}\mid R=1)f(\underline{xm}\mid R=1)f(\underline{xs}\mid R=1), \\
         &f(\underline{\textbf{x}}\mid R=0)  \overset{\overset{\perp\mid R}{\downarrow}}{=} f(\underline{x}\mid R=0)f(\underline{xg}\mid R=0)f(\underline{xm}\mid R=0)f(\underline{xs}\mid R=0),
     \end{align*}
-    where the univariate density function, split for the two risk groups, for the subject is given by: 
+    where the univariate density function, split for the two risk groups, for the subject is
     \begin{align*}
         &f(\underline{x}\mid R=1)=f_1(x)^\delta S_1(x)^{(1-\delta)}, \\
         &f(\underline{x}\mid R=0)=f_0(x)^\delta S_0(x)^{(1-\delta)},
@@ -773,7 +773,7 @@ P(R_i=1\ | (x_i, \delta_i); \widehat{\theta})= \frac{h \, \widetilde{f}_1(x_i) ^
 \end{align}
 where $\widehat{\theta}$ is the vector of the estimated model parameters, such that in the aforementioned Formula \ref{formula:2.4} each survival and density function are of the type $f(x) = f(x;\widehat\theta)$.
 
-The formula for the full multivariate model is similar, but it involves the survival information from all family members, taking into account the conditional independence assumption within each family:
+The formula for the multivariate model is similar, but it involves the survival information from all family members, taking into account the conditional independence assumption within each family:
 \[
 P(R_i=1\mid (\textbf{x}_i, \text{\boldmath$\delta$}_i); \widehat\theta)= \frac{h \, \widetilde{f}_1(\textbf{x}_i) ^{\text{\boldmath$\delta$}_i} \,  \widetilde{S}_1(\textbf{x}_i)^{1-\text{\boldmath$\delta$}_i}}{h \, \widetilde{f}_1(\textbf{x}_i) ^{\text{\boldmath$\delta$}_i} \,  \widetilde{S}_1(\textbf{x}_i)^{1-\text{\boldmath$\delta$}_i} + (1-h) \, \widetilde{f}_0(\textbf{x}_i) ^{\text{\boldmath$\delta$}_i} \,  \widetilde{S}_0(\textbf{x}_i)^{1-\text{\boldmath$\delta$}_i}}.
 \]
@@ -782,24 +782,24 @@ To simplify the expressions, above we have used the notation
 \[
 \widetilde{f}_r(\textbf{x}_i)^{\text{\boldmath$\delta$}_i}= \widetilde{f}_r(xg_i) ^{{\delta}g_i}  \,  \widetilde{f}_r(xm_i) ^{{\delta}m_i}  \,  \widetilde{f}_r(xs_i) ^{{\delta}s_i}  \,  \widetilde{f}_r(x_i) ^{\delta_i}  \, 
 \]
-for $r=0,1$, and where the four terms refer to the grandmother, the mother, the sister, and the subject, respectively. The notation for $\widetilde{S}_r(\textbf{x}_i)^{1-\text{\boldmath$\delta$}_i}$ is analogous.
+for $r=0,1$. The notation for $\widetilde{S}_r(\textbf{x}_i)^{1-\text{\boldmath$\delta$}_i}$ is analogous.
 
 % qui 
 \subsection{ROC and AUC: univariate vs. multivariate model}
-The overall performance of the risk group classifier as a function of the cutoff for assignment to the groups can be assessed through the ROC curve \cite{pepe2003statistical}. The ROC shows the plot of the points (1-specificity, sensitivity) for all values of $p$ in $(0,1)$. Figure \ref{fig:Shinyapp} is an example of the output of a shiny-app that we developed to illustrate the functioning of the ROC curve and the AUC measure for the general setting of diagnostic tests. The shiny-app can be accessed at  (\href{https://marcobonetti.shinyapps.io/shinyapp}{https://marcobonetti.shinyapps.io/shinyapp}).
+The overall performance of the risk group classifier as a function of the cutoff for assignment to the groups can be assessed through the ROC curve \cite{pepe2003statistical}. The ROC shows the plot of the points (1-specificity, sensitivity) for all values of $p$ in $(0,1)$. Figure \ref{fig:Shinyapp} is an example of the output of a shiny-app that we developed to illustrate the functioning of the ROC curve and the AUC measure for the general setting of diagnostic tests. The link \href{https://marcobonetti.shinyapps.io/shinyapp}{https://marcobonetti.shinyapps.io/shinyapp} gives access to the shiny-app.
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\linewidth]{plots/Shinyapp.pdf}   
-    \caption{sample output from shiny-app illustrating ROC curves.}
+    \caption{Sample output from shiny-app illustrating ROC curves.}
 \label{fig:Shinyapp}
 \end{figure}
 
 % Figure \ref{fig:ROCUniv+MV} shows an example of ROC curves for risk class classification produced from fitting the univariate vs. the multivariate model.
-From the ROC curve an overall measure of the performance of the classifier, the Area Under the Curve (AUC), can be computed \cite{pepe2003statistical}. The AUC estimates are constructed from 100 simulated multivariate samples by comparing the known true value $R$, which we generate at the data generation step,to its posterior family-specific expected value obtained through likelihood estimation, with either one subject in the univariate case or all family members in the multivariate case. We consider the baseline survival distribution and the family sample size, which is one in the univariate case and four in the multivariate case. The posterior expected value of the latent risk is given by \begin{align*}
+From the ROC curve an overall measure of the performance of the classifier, the Area Under the Curve (AUC), can be computed \cite{pepe2003statistical}. The AUC estimates are constructed from 100 simulated multivariate samples by comparing the known true value $R$, which we generate at the data generation step, to its posterior family-specific expected value obtained through likelihood estimation, with either one subject in the univariate case or all family members in the multivariate case. We consider the baseline survival distribution and the family sample size, which is one in the univariate case and four in the multivariate case. The posterior expected value of the latent risk is given by \begin{align*}
     \mathbb E(R\mid \text{family data};\widehat\theta) = \frac{ P(R_i=1)f_\textbf{X}(\underline{\textbf{x}}_i\mid R_i=1;\widehat\theta)}{P(R_i=0)f_\textbf{X}(\underline{\textbf{x}}_i\mid R_i=0;\widehat\theta)+P(R_i=1)f_\textbf{X}(\underline{\textbf{x}}_i\mid R_i=1;\widehat\theta)}.
 \end{align*} 
 
-This quantity is thus compare to the real risk group. Straightforwardly, one can obtain the univariate counterpart of the posterior expected value of the latent risk. 
+This quantity is thus compared to the real risk group. Straightforwardly, one can obtain the univariate counterpart of the posterior expected value of the latent risk. 
 
 To obtain the AUC from the ROC curve and compare the univariate vs. the multivariate models, we run some simulation studies on three different baseline survival function distributed according to an Exponential, a Weibull, or a Gamma distribution. We fix the parameter values at $(p, r, h, \lambda_0) \ = \ (0.8, 0.5, 1/30, 0.2)$ for the Exponential distribution, while at $(p, r, shape_0, scale_0, h) = (0.8, 0.5, 10, 70, 0.2)$ for the Weibull distribution and $(p, r, shape_0, scale_0, h) = (0.8, 10, 2, 0.5, 0.2)$ for the Gamma distribution. Notice that these cases coincide with the first scenario of each simulation above.  
 % For the Lognormal case we fix parameters at $(r, \ p, \ h, \mu_0, \ \sigma_0^2) \ = \ (0.8, \ 1 / 2, \ 0.1, \ 5, \ 1.5)$. When there are three parameters, the threshold $\gamma_0$ is set at $\gamma_0 = 40$. 
