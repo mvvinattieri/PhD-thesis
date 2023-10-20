@@ -482,7 +482,7 @@ Results show that the median performs poorly as a risk predictor, especially whe
 \end{figure}
 % Code from postPredBackup3.R in SWEDISH COMPUTER varying the sample size (in terms of families) and the internal family size parameters.
 
-Also, another limitation of the posterior frailty risk mean is the variability in the prediction. The mean squared prediction error (MSPE) is quite high to provide an accurate estimate of the risk of breast cancer occurrence in a family. We explore the values of the root MSPE conditional on the value of the true frailty risk in Figure \ref{fig:cspe}. The MSPE increases as the true frailty risk increases too, regardless of the family size. We observe a possible flattening of the curve with a larger family size in the second plot of Figure \ref{fig:cspe}, but the prediction error remained high. This could lead to accurately identify the lower-risk families but not the higher-risk families. This means that we may encounter a large number of false negative cases. 
+Also, another limitation of the posterior frailty risk mean is the variability in the prediction. The mean squared prediction error (MSPE) is quite high to provide an accurate estimate of the risk of breast cancer occurrence in a family. We explore the values of the root MSPE conditional on the value of the true frailty risk in Figure \ref{fig:cspe}. The MSPE increases as the true frailty risk increases too, regardless of the family size. We observe a possible flattening of the curve with a larger family size in the second plot of Figure \ref{fig:cspe}, but the prediction error remained high. This could lead to accurately identify the lower-risk families but not the higher-risk families. This means that we may encounter a large number of false negative cases. Notice that the family size is not an actionable but it acts directly on the equation of mean, median and family history. We would expect to be more accurate with more information from the family, however it is not guaranteed to happen.
 
 \begin{figure}
     \centering
@@ -563,7 +563,7 @@ Parameter estimation in the parametric case allows for a more detailed descripti
     &$\theta$ &$\widehat p_0$ (se) &$\widehat{shape}_0$ (se) &$\widehat{scale}_0$ (se) &$\widehat\theta$ (se) \\ \midrule
     Multivariate frailty Cure-Rate \\ 
     &0.2 &0.85 (0.0016) &7.99 (0.0498) &5.99 (0.0063) &0.20 (0.0043) \\
-    &0.5 &0.85 (0.0012) &8.00 (0.0371) &6.00 (0.0052) &0.50 (0.0128) \\
+    &0.5 &0.85 (<0.0001) &8.00 (0.0004) &6.00 (0.0003) &0.50 (0.0001) \\
     &0.8 &0.85 (0.0011) &8.00 (0.0435) &6.00 (0.0062) &0.80 (0.0286) \\ \midrule
     Univariate frailty Cure-Rate \\
     &0.2 &0.79 (0.0008) &8.12 (0.0366) &6.37 (0.0374) &0.11 (0.0007) \\
@@ -585,7 +585,7 @@ Parameter estimation in the parametric case allows for a more detailed descripti
 \toprule
     &$\theta$ &$\widehat p_0$ (se) &$\widehat{shape}_0$ (se) &$\widehat{scale}_0$ (se) &$\widehat\theta$ (se) \\ \midrule
     Multivariate frailty Cure-Rate \\
-    &0.2 &0.85 (1.1231) &8.24 (1.0132) &5.96 (0.0958) &0.22 (0.0745) \\
+    &0.2 &0.85 (<0.0001) &8.24 (0.0003) &5.96 (0.0003) &0.22 (<0.0001) \\
     &0.5 &0.85 (0.0016) &8.01 (0.0966) &5.99 (0.0847) &0.50 (0.0217) \\
     &0.8 &0.85 (0.0016) &7.99 (0.0942) &6.01 (0.0812) &0.79 (0.0421) \\ \midrule
     Univariate frailty Cure-Rate \\

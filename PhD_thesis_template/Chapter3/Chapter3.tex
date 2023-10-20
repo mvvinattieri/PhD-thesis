@@ -156,7 +156,7 @@ Both indices vary in the range $[0,1]$ where 0 means no agreement and 1 means pe
 % We may also apply other measures, properly used for our problem. The first measure is $R^2 = R_i\text{log}(p)+(R_i-1)(\text{log}(1-p))$. The second measure is the Brier score $(R_i-p)^2$, also written similar to the $R^2$: $R_i(1-p)^2+(1-R_i)p^2$. Values close to 0 mean a perfect model, while values close to 0.25 mean a non-informative model since $p=0.5$ randomly assigns to 0/1. 
 % \section{Comparison among estimators}
 % We can perform some interesting comparisons, as (i) estimate $\widehat{\beta}$ (which was called $\beta$ above) from the full likelihood of the multivariate model through the use of the EM algorithm; (ii) estimate $\beta^*$ from the individual women model when using the family history estimated risk group $\widetilde{R}_i = \mathbf{I}(P(R_i=1|y_i;\widehat{\theta}))\ge 0.5$; (iii) estimate $\widehat{\beta}$ when using the univariate covariate $\widetilde{R}_i=FH(x_i)$ in the same univariate model. Recall that ``FH'' stands for family history, the survival collection of the other members of the family. The simplest form of the family history is used, the one that gives the same weight to grandmothers, mothers and daughters; (iv) estimate parameters replacing $FH(x_i)$ with $FH^{*}(x_i)$ from Appendix \ref{appendix:3.c} in the model; (v) we can then perform the following comparisons: 1) $FH(x_i)$ vs the $\widetilde{R}_i$; 2) $FH(x_i)$ vs the true risk group indicator $R$ on simulated data; 3) $\widetilde{R}_i$ vs the true risk group $R$ on simulated data. We now move to the simulation studies. The simulated data can be used to implement the classification procedure introduced in this section. 
-\section{A simulation scenario}
+\section{A preliminary simulation scenario}
 \label{sec: simulation pap2}
 One can generate some family structures and survival times, and implement the two-group risk classification. 
 %More details about data generation are in Appendix \ref{appendix:f2}. 
@@ -189,7 +189,7 @@ where X=min(today-DOB, diagnosis-DOB, death-DOB), and $\delta$ takes value 0/1 a
 
 We directly generate the time-to-event $T$ from the Weibull distribution $T\sim\text{Weibull}(\text{shape}=\gamma$, $\text{scale}=\mu / R^{1/\gamma})$ conditional to the frailty, with $R\sim\text{Gamma}(1,1)$, $\mu=1, \ \gamma=5$. The censoring time are generated from a Uniform distribution $C\sim\text{U}(0,12)$, and for each subject we generate $X=\text{min}(T,C)$ and $\delta=\mathbb{I}(X=T)$.
 
-Thus, we sample three thousands families and explore the classification accuracy in three different scenarios: (1) parametric hazard and binary classification with median as threshold; (2) semiparametric case with $q = 0.5$; (3) semiparametric case with $q = 0.25$. We extend to $q=0.25$ so that we keep low and realistic the posterior high-risk families proportion (see text below). We carry out this analysis stratified by family size and overall. The results for family size are not reported because irrelevant, while the summary of the overall results is in Table \ref{tab:1 pap2}. The posterior high-risk families proportion in the semiparametric case, varying $q$, is: 0.19 ($q = 0.25$); 0.24 ($q = 0.5$) reported in Table \ref{tab:1 pap2} in the last column ``HR''. Notice that we expect that involving the true value of parameter $\theta$, the true survival function $S_0(x_{ij})$ and hazard function $\lambda_0(x_{ij})$ we reach the best performance in classification. This is the best scenario, and we intend to compare this to the already seen scenarios above. \begin{table}[ht]
+Thus, we sample three thousands families and explore the classification accuracy in three different scenarios: (1) parametric hazard and binary classification with median as threshold; (2) semiparametric case with $q = 0.5$; (3) semiparametric case with $q = 0.25$. We extend to $q=0.25$ so that we keep low and realistic the posterior high-risk families proportion (see text below). We carry out this analysis stratified by family size and overall. The results for family size are not reported because irrelevant, while the summary of the overall results is in Table \ref{tab:1 pap2}. The posterior high-risk families proportion in the semiparametric case, varying $q$, is: 0.19 ($q = 0.25$); 0.24 ($q = 0.5$) reported in Table \ref{tab:1 pap2} in the last column ``HR''. Notice that we expect that involving the true value of parameter $\theta$, the true survival function $S_0(x_{ij})$ and hazard function $\lambda_0(x_{ij})$ we are able to reach the best performance in classification. This is the best scenario, and we intend to compare this to the already seen scenarios above. \begin{table}[ht]
 \centering
 \begin{tabular}{ccccccccc}
  \hline
@@ -200,7 +200,7 @@ Thus, we sample three thousands families and explore the classification accuracy
  3 &\textbf{0.90(0.01)} &\textbf{0.95(0.01)} &95.41(1.01) &\textbf{95.53(0.92)} &\textbf{0.19(0.01)} \\
 \hline
 \end{tabular}
-\caption{average point and standard deviation of some diagnostics measures for the three models under study.}
+\caption{Mean and standard deviation of some diagnostics measures for the three models under study.}
 \label{tab:1 pap2}
 \end{table}
 
@@ -374,9 +374,11 @@ In Table \ref{tab:1 pap2} in bold, there are the best results in each category. 
 \section{Discussion}
 \label{sec: discussion pap2}
 Preliminary results suggest the absence of important differences in classification
-accuracy across different family sizes. Important is to notice a substantial difference in classification accuracy between the parametric and the semiparametric setting, particularly when employing the median as the classification threshold. Moreover, the use of the first quantile appears to be favorable in terms of both classification accuracy and posterior proportion of high-risk families. These conclusions can be further supported by additional examinations by plotting some figures. The results are promising. As a next step, we wish to extend to other proper distribution of the survival baseline distribution. This further exploration is driven by the fact that the time-to-event variable in observational studies is unlikely to be distributed according to a simple distribution, as the Exponential or the Weibull can be. We may try to analyse a three-parameters distribution to gain higher flexibility to explain the phenomenon of heritability of longevity. 
+accuracy across different family sizes. Important is to notice a substantial difference in classification accuracy between the parametric and the semiparametric setting, particularly when employing the median as the classification threshold. Moreover, the use of the first quantile appears to be favorable in terms of both classification accuracy and posterior proportion of high-risk families. These conclusions can be further supported by additional examinations by plotting some figures and being validated also through a real case dataset. 
 
-Lastly, we aim to apply the current analysis to an available dataset. 
+The results are thus so far promising and may help clinicians in identifying high-risk families to target them to intensive prevention paths according to different health problems. Thus, identifying the families with the lowest longevity is directly connected to improve their survival by carrying out disease screening for early detection. We also believe that knowing to be at high-risk of mortality can increase a family's awareness and lead the family's members to live a life with better habits and attention on their health. 
+
+As a next step, we wish to complete the simulation studies by, for example, exploring several distributions of the survival baseline function. This further exploration is driven by the fact that the time-to-event variable in observational studies is unlikely to be distributed according to a simple distribution, as the Exponential or the Weibull can be. We may try to analyse a three-parameters distribution to gain higher flexibility to explain the phenomenon of heritability of longevity. 
 \clearpage
 \bibliographystyle{apalike}
 \bibliography{biblio}
